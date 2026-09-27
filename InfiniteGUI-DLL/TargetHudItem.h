@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <string>
 #include <mutex>
@@ -88,7 +88,7 @@ private:
 	float displayMaxHealth = 20.0f;
 
 	// ---- 设置 ----
-	int dataMode = Mode_Auto;   // 默认自动：优先 JNI 读取准星前的玩家，失败回退点击跟踪
+	int dataMode = Mode_Manual;   // 默认点击跟踪：JNI 模式为实验性可选   // 默认自动：优先 JNI 读取准星前的玩家，失败回退点击跟踪
 	std::string manualName = u8"Target";
 	float manualHealth = 20.0f;
 	bool showHpText = true;

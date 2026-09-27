@@ -1,4 +1,4 @@
-#include "TargetHudItem.h"
+﻿#include "TargetHudItem.h"
 
 #include "Anim.h"
 #include "GameStateDetector.h"
@@ -22,7 +22,7 @@ void TargetHudItem::Reset()
 	isEnabled = false;
 
 	// 默认自动：优先 JNI 读取准星前的玩家（仅玩家），失败自动回退点击跟踪
-	dataMode = Mode_Auto;
+	dataMode = Mode_Manual;
 	manualName = u8"Target";
 	manualHealth = 20.0f;
 	showHpText = true;

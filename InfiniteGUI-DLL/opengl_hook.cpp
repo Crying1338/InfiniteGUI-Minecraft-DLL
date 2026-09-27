@@ -1,4 +1,4 @@
-#include "opengl_hook.h"
+﻿#include "opengl_hook.h"
 #include <Windows.h>
 #include "detours\titan_hook.h"
 #include <iostream>
@@ -315,6 +315,9 @@ static bool detour_wgl_swap_buffers(HDC hdc)
 	{
 		InfGuiLogLimited("swap_buffers", "未知异常");
 	}
+	// 关键：异常路径也必须把游戏原本的 GL 上下文切回去，
+	// 否则游戏会在我们的上下文里用自己的 VAO/VBO 绘制 -> 驱动崩溃(nvoglv64)
+	wglMakeCurrent(hdc, opengl_hook::o_gl_ctx);
 	opengl_hook::rendering = false;
 	return wgl_swap_buffers_hook.GetOrignalFunc()(hdc);
 }
