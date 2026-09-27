@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <chrono>
 #include <vector>
 #include "imgui/imgui.h"
@@ -33,7 +33,7 @@ public:
 	bool done = false;
 	void init();
 	void clean();
-	static void render();
+	void render();
 	ImFont* font;
 	ImFont* iconFont;
 	Texture logoTexture;

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 #include <mutex>
@@ -88,7 +88,7 @@ private:
 	float displayMaxHealth = 20.0f;
 
 	// ---- 设置 ----
-	int dataMode = Mode_Auto;
+	int dataMode = Mode_Manual;
 	std::string manualName = u8"Target";
 	float manualHealth = 20.0f;
 	bool showHpText = true;

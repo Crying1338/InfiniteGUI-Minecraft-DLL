@@ -1,12 +1,24 @@
-﻿#include "MinecraftJniReader.h"
+#include "MinecraftJniReader.h"
 
 #include <Windows.h>
+#include <cstdarg>
 
 // ============================================================
 // MinecraftJniReader 实现
-// 所有 JNI 调用都做了异常检查（ExceptionCheck/ExceptionClear），
-// 任何失败路径都会安全返回 false，不会向 JVM 抛出未处理异常。
+//
+// 安全约定（每一处都必须遵守，否则会导致 JVM 原生崩溃）:
+//   1. 任何 jmethodID / jfieldID 在使用前必须判空；
+//      把无效 ID 传给 JNI 会让 JVM 直接访问违例（EXCEPTION_ACCESS_VIOLATION）
+//   2. 每次可能抛异常的 JNI 调用后都要 ExceptionCheck/ExceptionClear，
+//      带未处理异常继续调用 JNI 属于未定义行为
+//   3. 局部引用必须用 PushLocalFrame/PopLocalFrame 成对管理，
+//      循环内每轮独立成帧，避免局部引用表膨胀
+//   4. 解析失败要整体回退（全局引用与字段 ID 一起清掉），不能留下半初始化状态
+//   5. 失败重试有上限，超过后永久放弃，不再做任何 JNI 调用
 // ============================================================
+
+static const int kMaxThreadScan = 64;   // 最多扫描的线程数
+static const int kMaxClassAttempts = 3; // 类解析最大尝试次数
 
 MinecraftJniReader::~MinecraftJniReader()
 {
@@ -88,117 +100,160 @@ bool MinecraftJniReader::EnsureJvm()
 	return true;
 }
 
+// 解析游戏类；成功时 mcClass 为全局引用，mGetInstance / fHitResult 均有效
 bool MinecraftJniReader::EnsureClass()
 {
-	if (mcClass)
+	if (mcClass && mGetInstance && fHitResult)
 	{
 		status = Status_Ready;
 		return true;
 	}
 
+	// 半初始化状态：整体回退，避免用到无效 ID
+	if (mcClass && (!mGetInstance || !fHitResult))
+	{
+		env->DeleteGlobalRef(mcClass);
+		mcClass = nullptr;
+		mGetInstance = nullptr;
+		fHitResult = nullptr;
+	}
+
 	JNIEnv* e = env;
-	if (e->PushLocalFrame(64) != JNI_OK)
+	if (e->PushLocalFrame(128) != JNI_OK)
 	{
 		status = Status_InitFailed;
 		return false;
 	}
 
-	jclass found = nullptr;
+	jclass foundGlobal = nullptr;   // 成功后是全局引用
 
-	// 1) 直接查找（系统类加载器可见时）
-	found = e->FindClass("net/minecraft/client/Minecraft");
-	if (!found && e->ExceptionCheck())
-		e->ExceptionClear();
-
-	// 2) 遍历线程的 ContextClassLoader 后 Class.forName（兼容 Forge/NeoForge 分层类加载器）
-	if (!found)
+	// ---------------- 1) 直接用系统类加载器查找 ----------------
 	{
-		jclass clsThread = e->FindClass("java/lang/Thread");
-		if (!clsThread)
+		jclass direct = e->FindClass("net/minecraft/client/Minecraft");
+		if (!direct)
 		{
 			if (e->ExceptionCheck()) e->ExceptionClear();
 		}
 		else
 		{
+			foundGlobal = reinterpret_cast<jclass>(e->NewGlobalRef(direct));
+		}
+	}
+
+	// ---------------- 2) 遍历线程 ContextClassLoader（Forge/NeoForge 分层类加载器）----------------
+	if (!foundGlobal)
+	{
+		jclass clsThread = e->FindClass("java/lang/Thread");
+		if (!clsThread && e->ExceptionCheck()) e->ExceptionClear();
+
+		if (clsThread)
+		{
 			jmethodID mAllStackTraces = e->GetStaticMethodID(clsThread, "getAllStackTraces", "()Ljava/util/Map;");
 			jmethodID mCtxLoader = e->GetMethodID(clsThread, "getContextClassLoader", "()Ljava/lang/ClassLoader;");
-			jobject map = mAllStackTraces ? e->CallStaticObjectMethod(clsThread, mAllStackTraces) : nullptr;
-			if (e->ExceptionCheck()) { e->ExceptionClear(); map = nullptr; }
+			if (e->ExceptionCheck()) e->ExceptionClear();
 
-			if (map)
+			// 关键：两个 ID 都必须有效，否则绝不调用（历史上这里少判空导致 JVM 崩溃）
+			if (mAllStackTraces && mCtxLoader)
 			{
-				jclass clsMap = e->GetObjectClass(map);
-				jmethodID mValues = e->GetMethodID(clsMap, "values", "()Ljava/util/Collection;");
-				jobject collection = mValues ? e->CallObjectMethod(map, mValues) : nullptr;
-				if (e->ExceptionCheck()) { e->ExceptionClear(); collection = nullptr; }
+				jobject map = e->CallStaticObjectMethod(clsThread, mAllStackTraces);
+				if (e->ExceptionCheck()) { e->ExceptionClear(); map = nullptr; }
+
+				jobject collection = nullptr;
+				jobjectArray arr = nullptr;
+				jclass clsClass = nullptr;
+				jmethodID mForName = nullptr;
+
+				if (map)
+				{
+					jclass clsMap = e->GetObjectClass(map);
+					jmethodID mValues = clsMap ? e->GetMethodID(clsMap, "values", "()Ljava/util/Collection;") : nullptr;
+					if (e->ExceptionCheck()) { e->ExceptionClear(); mValues = nullptr; }
+					if (mValues) collection = e->CallObjectMethod(map, mValues);
+					if (e->ExceptionCheck()) { e->ExceptionClear(); collection = nullptr; }
+				}
 
 				if (collection)
 				{
 					jclass clsCol = e->GetObjectClass(collection);
-					jmethodID mToArray = e->GetMethodID(clsCol, "toArray", "()[Ljava/lang/Object;");
-					jobjectArray arr = mToArray
-						? reinterpret_cast<jobjectArray>(e->CallObjectMethod(collection, mToArray))
-						: nullptr;
+					jmethodID mToArray = clsCol ? e->GetMethodID(clsCol, "toArray", "()[Ljava/lang/Object;") : nullptr;
+					if (e->ExceptionCheck()) { e->ExceptionClear(); mToArray = nullptr; }
+					if (mToArray)
+						arr = reinterpret_cast<jobjectArray>(e->CallObjectMethod(collection, mToArray));
 					if (e->ExceptionCheck()) { e->ExceptionClear(); arr = nullptr; }
+				}
 
-					if (arr)
+				if (arr)
+				{
+					clsClass = e->FindClass("java/lang/Class");
+					if (!clsClass && e->ExceptionCheck()) e->ExceptionClear();
+					if (clsClass)
+						mForName = e->GetStaticMethodID(clsClass, "forName",
+							"(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;");
+					if (e->ExceptionCheck()) { e->ExceptionClear(); mForName = nullptr; }
+				}
+
+				if (arr && clsClass && mForName)
+				{
+					jsize count = e->GetArrayLength(arr);
+					if (count > kMaxThreadScan) count = kMaxThreadScan;
+
+					for (jsize i = 0; i < count && !foundGlobal; i++)
 					{
-						jsize count = e->GetArrayLength(arr);
-						jclass clsClass = e->FindClass("java/lang/Class");
-						if (!clsClass && e->ExceptionCheck()) e->ExceptionClear();
-						jmethodID mForName = clsClass
-							? e->GetStaticMethodID(clsClass, "forName",
-								"(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;")
-							: nullptr;
+						// 每轮独立局部帧：局部引用不会堆积
+						if (e->PushLocalFrame(16) != JNI_OK)
+							break;
 
-						if (mForName)
+						jobject thread = e->GetObjectArrayElement(arr, i);
+						if (thread && e->IsInstanceOf(thread, clsThread))
 						{
-							for (jsize i = 0; i < count && !found; i++)
+							jobject loader = e->CallObjectMethod(thread, mCtxLoader);
+							if (e->ExceptionCheck()) { e->ExceptionClear(); loader = nullptr; }
+
+							if (loader)
 							{
-								jobject thread = e->GetObjectArrayElement(arr, i);
-								if (!thread) continue;
-
-								jobject loader = e->CallObjectMethod(thread, mCtxLoader);
-								if (e->ExceptionCheck()) { e->ExceptionClear(); loader = nullptr; }
-								if (!loader) continue;
-
-								jstring className = e->NewStringUTF("net.minecraft.client.Minecraft");
-								jclass cls = reinterpret_cast<jclass>(
-									e->CallStaticObjectMethod(clsClass, mForName, className, JNI_TRUE, loader));
-								if (e->ExceptionCheck()) { e->ExceptionClear(); cls = nullptr; }
-								if (cls)
-									found = cls;
+								jstring className = e->NewStringUTF("net/minecraft/client/Minecraft");
+								if (className)
+								{
+									jclass cls = reinterpret_cast<jclass>(
+										e->CallStaticObjectMethod(clsClass, mForName, className,
+											static_cast<jboolean>(JNI_TRUE), loader));
+									if (e->ExceptionCheck()) { e->ExceptionClear(); cls = nullptr; }
+									if (cls)
+										foundGlobal = reinterpret_cast<jclass>(e->NewGlobalRef(cls));
+								}
 							}
 						}
+
+						e->PopLocalFrame(nullptr);
 					}
 				}
 			}
 		}
 	}
 
-	if (found)
-	{
-		mcClass = reinterpret_cast<jclass>(e->NewGlobalRef(found));
-		mGetInstance = e->GetStaticMethodID(mcClass, "getInstance", "()Lnet/minecraft/client/Minecraft;");
-		if (e->ExceptionCheck()) { e->ExceptionClear(); mGetInstance = nullptr; }
-		fHitResult = e->GetFieldID(mcClass, "hitResult", "Lnet/minecraft/world/phys/HitResult;");
-		if (e->ExceptionCheck()) { e->ExceptionClear(); fHitResult = nullptr; }
-
-		if (!mGetInstance || !fHitResult)
-		{
-			env->DeleteGlobalRef(mcClass);
-			mcClass = nullptr;
-			e->PopLocalFrame(nullptr);
-			status = Status_InitFailed;
-			return false;
-		}
-	}
-
 	e->PopLocalFrame(nullptr);
 
-	if (!mcClass)
+	if (!foundGlobal)
 	{
 		status = Status_ClassNotFound;
+		return false;
+	}
+
+	// ---------------- 3) 解析入口方法与字段（全部判空，任一失败即整体回退）----------------
+	mcClass = foundGlobal;
+	mGetInstance = env->GetStaticMethodID(mcClass, "getInstance", "()Lnet/minecraft/client/Minecraft;");
+	if (env->ExceptionCheck()) { env->ExceptionClear(); mGetInstance = nullptr; }
+
+	fHitResult = env->GetFieldID(mcClass, "hitResult", "Lnet/minecraft/world/phys/HitResult;");
+	if (env->ExceptionCheck()) { env->ExceptionClear(); fHitResult = nullptr; }
+
+	if (!mGetInstance || !fHitResult)
+	{
+		env->DeleteGlobalRef(mcClass);
+		mcClass = nullptr;
+		mGetInstance = nullptr;
+		fHitResult = nullptr;
+		status = Status_InitFailed;
 		return false;
 	}
 
@@ -211,6 +266,9 @@ bool MinecraftJniReader::ReadTargetLocked(JniTargetSnapshot& out)
 	auto now = std::chrono::steady_clock::now();
 	JNIEnv* e = env;
 
+	if (!mcClass || !mGetInstance || !fHitResult)
+		return false;
+
 	jobject instance = e->CallStaticObjectMethod(mcClass, mGetInstance);
 	if (e->ExceptionCheck()) { e->ExceptionClear(); return false; }
 	if (!instance) return false; // 不在世界中
@@ -220,27 +278,44 @@ bool MinecraftJniReader::ReadTargetLocked(JniTargetSnapshot& out)
 	if (!hit) return false;
 
 	jclass clsHit = e->GetObjectClass(hit);
+	if (!clsHit) return false;
 
 	if (!mGetType)
 	{
 		mGetType = e->GetMethodID(clsHit, "getType", "()Lnet/minecraft/world/phys/HitResult$Type;");
 		if (e->ExceptionCheck()) { e->ExceptionClear(); mGetType = nullptr; }
-		if (!mGetType) return false;
 	}
+	if (!mGetType) return false;
 
 	jobject type = e->CallObjectMethod(hit, mGetType);
 	if (e->ExceptionCheck()) { e->ExceptionClear(); return false; }
 	if (!type) return false;
 
+	// hitTypeClass 与 fEntityEnum 必须同时有效，否则整体回退（不能留下半初始化状态）
+	if (hitTypeClass && !fEntityEnum)
+	{
+		e->DeleteGlobalRef(hitTypeClass);
+		hitTypeClass = nullptr;
+	}
 	if (!hitTypeClass)
 	{
-		hitTypeClass = reinterpret_cast<jclass>(e->NewGlobalRef(e->GetObjectClass(type)));
+		jclass t = e->GetObjectClass(type);
+		if (!t) return false;
+		hitTypeClass = reinterpret_cast<jclass>(e->NewGlobalRef(t));
+		if (!hitTypeClass) return false;
+
 		fEntityEnum = e->GetStaticFieldID(hitTypeClass, "ENTITY", "Lnet/minecraft/world/phys/HitResult$Type;");
 		if (e->ExceptionCheck()) { e->ExceptionClear(); fEntityEnum = nullptr; }
-		if (!fEntityEnum) return false;
+		if (!fEntityEnum)
+		{
+			e->DeleteGlobalRef(hitTypeClass);
+			hitTypeClass = nullptr;
+			return false;
+		}
 	}
 
 	jobject entityEnum = e->GetStaticObjectField(hitTypeClass, fEntityEnum);
+	if (e->ExceptionCheck()) { e->ExceptionClear(); return false; }
 	if (!entityEnum) return false;
 	if (!e->IsSameObject(type, entityEnum))
 		return false; // 准星指向方块或未命中
@@ -249,21 +324,23 @@ bool MinecraftJniReader::ReadTargetLocked(JniTargetSnapshot& out)
 	{
 		mGetEntity = e->GetMethodID(clsHit, "getEntity", "()Lnet/minecraft/world/entity/Entity;");
 		if (e->ExceptionCheck()) { e->ExceptionClear(); mGetEntity = nullptr; }
-		if (!mGetEntity) return false;
 	}
+	if (!mGetEntity) return false;
 
 	jobject entity = e->CallObjectMethod(hit, mGetEntity);
 	if (e->ExceptionCheck()) { e->ExceptionClear(); return false; }
 	if (!entity) return false;
 
 	jclass clsEntity = e->GetObjectClass(entity);
+	if (!clsEntity) return false;
 
 	if (!mGetId)
 	{
 		mGetId = e->GetMethodID(clsEntity, "getId", "()I");
 		if (e->ExceptionCheck()) { e->ExceptionClear(); mGetId = nullptr; }
-		if (!mGetId) return false;
 	}
+	if (!mGetId) return false;
+
 	jint entityId = e->CallIntMethod(entity, mGetId);
 	if (e->ExceptionCheck()) { e->ExceptionClear(); return false; }
 
@@ -271,17 +348,18 @@ bool MinecraftJniReader::ReadTargetLocked(JniTargetSnapshot& out)
 	{
 		mGetHealth = e->GetMethodID(clsEntity, "getHealth", "()F");
 		if (e->ExceptionCheck()) { e->ExceptionClear(); mGetHealth = nullptr; }
-		if (!mGetHealth) return false; // 非生物实体（如箭、物品实体）
 	}
+	if (!mGetHealth) return false; // 非生物实体（箭、掉落物等）
+
 	jfloat health = e->CallFloatMethod(entity, mGetHealth);
 	if (e->ExceptionCheck()) { e->ExceptionClear(); return false; }
 
+	jfloat maxHealth = 20.0f;
 	if (!mGetMaxHealth)
 	{
 		mGetMaxHealth = e->GetMethodID(clsEntity, "getMaxHealth", "()F");
 		if (e->ExceptionCheck()) { e->ExceptionClear(); mGetMaxHealth = nullptr; }
 	}
-	jfloat maxHealth = 20.0f;
 	if (mGetMaxHealth)
 	{
 		maxHealth = e->CallFloatMethod(entity, mGetMaxHealth);
@@ -300,36 +378,39 @@ bool MinecraftJniReader::ReadTargetLocked(JniTargetSnapshot& out)
 	if (component)
 	{
 		jclass clsComponent = e->GetObjectClass(component);
-		if (!mGetString)
+		if (clsComponent)
 		{
-			mGetString = e->GetMethodID(clsComponent, "getString", "()Ljava/lang/String;");
-			if (e->ExceptionCheck()) { e->ExceptionClear(); mGetString = nullptr; }
-		}
-		if (!mGetText)
-		{
-			mGetText = e->GetMethodID(clsComponent, "getText", "()Ljava/lang/String;");
-			if (e->ExceptionCheck()) { e->ExceptionClear(); mGetText = nullptr; }
-		}
-
-		jstring jname = nullptr;
-		if (mGetString)
-		{
-			jname = reinterpret_cast<jstring>(e->CallObjectMethod(component, mGetString));
-			if (e->ExceptionCheck()) { e->ExceptionClear(); jname = nullptr; }
-		}
-		if (!jname && mGetText)
-		{
-			jname = reinterpret_cast<jstring>(e->CallObjectMethod(component, mGetText));
-			if (e->ExceptionCheck()) { e->ExceptionClear(); jname = nullptr; }
-		}
-
-		if (jname)
-		{
-			const char* chars = e->GetStringUTFChars(jname, nullptr);
-			if (chars)
+			if (!mGetString)
 			{
-				name = chars;
-				e->ReleaseStringUTFChars(jname, chars);
+				mGetString = e->GetMethodID(clsComponent, "getString", "()Ljava/lang/String;");
+				if (e->ExceptionCheck()) { e->ExceptionClear(); mGetString = nullptr; }
+			}
+			if (!mGetText)
+			{
+				mGetText = e->GetMethodID(clsComponent, "getText", "()Ljava/lang/String;");
+				if (e->ExceptionCheck()) { e->ExceptionClear(); mGetText = nullptr; }
+			}
+
+			jstring jname = nullptr;
+			if (mGetString)
+			{
+				jname = reinterpret_cast<jstring>(e->CallObjectMethod(component, mGetString));
+				if (e->ExceptionCheck()) { e->ExceptionClear(); jname = nullptr; }
+			}
+			if (!jname && mGetText)
+			{
+				jname = reinterpret_cast<jstring>(e->CallObjectMethod(component, mGetText));
+				if (e->ExceptionCheck()) { e->ExceptionClear(); jname = nullptr; }
+			}
+
+			if (jname)
+			{
+				const char* chars = e->GetStringUTFChars(jname, nullptr);
+				if (chars)
+				{
+					name = chars;
+					e->ReleaseStringUTFChars(jname, chars);
+				}
 			}
 		}
 	}
@@ -347,15 +428,28 @@ bool MinecraftJniReader::GetTarget(JniTargetSnapshot& out)
 {
 	std::lock_guard<std::mutex> lock(mutex);
 
-	if (status != Status_Ready)
+	if (status == Status_Ready)
 	{
+		if (!env) return false;
+	}
+	else
+	{
+		// 失败次数达上限后永久放弃（不再做任何 JNI 调用）
+		if (classAttempts >= kMaxClassAttempts)
+			return false;
+
 		auto now = std::chrono::steady_clock::now();
 		if (now < nextRetry)
 			return false;
 		nextRetry = now + std::chrono::milliseconds(3000);
 
 		if (!EnsureJvm()) return false;
-		if (!EnsureClass()) return false;
+		if (!EnsureClass())
+		{
+			classAttempts++;
+			return false;
+		}
+		classAttempts = 0;
 	}
 
 	if (!env) return false;

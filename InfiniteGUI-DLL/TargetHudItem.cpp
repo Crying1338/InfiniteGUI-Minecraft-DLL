@@ -20,7 +20,9 @@ void TargetHudItem::Reset()
 	ResetWindow();
 	isEnabled = false;
 
-	dataMode = Mode_Auto;
+	// 默认点击跟踪：JNI 实时读取在新版 JVM + 模组加载器组合下仍属实验性，
+	// 需要真实目标数据时可在设置里切到「仅 JNI 实时数据」
+	dataMode = Mode_Manual;
 	manualName = u8"Target";
 	manualHealth = 20.0f;
 	showHpText = true;

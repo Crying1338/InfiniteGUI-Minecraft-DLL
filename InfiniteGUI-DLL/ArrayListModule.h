@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 #include <vector>
@@ -12,8 +12,9 @@
 
 // ============================================================
 // ArrayListModule
-// Drip Lite 风格模块列表：在屏幕边缘显示所有已开启的模块
-// 深色半透明条 + 彩色强调边，按宽度/字母排序，开关时有滑动淡入淡出动画
+// Drip 风格模块列表：在屏幕边缘显示所有已开启的模块
+//   渐变底条 + 白色文字，按宽度或名称排序，开关有滑动淡入淡出动画
+//   默认配色为紫色渐变（可改成任意两色渐变 / 纯色 / 彩虹）
 // ============================================================
 
 class ArrayListModule : public Item, public WindowModule, public UpdateModule
@@ -27,7 +28,7 @@ public:
 
 	enum SortMode
 	{
-		Sort_Width = 0, // 按文字宽度排序（Drip 风格，长在上）
+		Sort_Width = 0,    // 按文字宽度排序（Drip 风格：长在上）
 		Sort_Alphabet = 1, // 按名称排序
 	};
 
@@ -74,10 +75,15 @@ private:
 
 	int listSide = Side_Right;
 	int sortMode = Sort_Width;
-	ImVec4 accentColor = ImVec4(0.92f, 0.20f, 0.32f, 1.0f); // Drip 红
-	bool gradientAccent = true;
-	bool rainbowAccent = false;
-	float barWidth = 220.0f;
 
+	// ---- 配色（默认紫色渐变）----
+	ImVec4 gradientStart = ImVec4(0.36f, 0.09f, 0.92f, 0.90f); // 深紫
+	ImVec4 gradientEnd = ImVec4(0.78f, 0.38f, 1.00f, 0.90f);   // 亮紫
+	bool useGradient = true;
+	bool gradientAcrossList = false; // true = 整列共用一段渐变（每根条取一段）
+	bool rainbowAccent = false;
+
+	float barWidth = 220.0f;
+	float barRounding = 0.0f;
 	bool positionInitialized = false;
 };

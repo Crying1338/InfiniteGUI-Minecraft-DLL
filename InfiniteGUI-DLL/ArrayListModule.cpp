@@ -10,7 +10,7 @@
 #include <algorithm>
 
 // ============================================================
-// ArrayListModule · Drip Lite 风格模块列表
+// ArrayListModule · Drip 风格模块列表（默认紫色渐变）
 // ============================================================
 
 void ArrayListModule::Toggle()
@@ -24,10 +24,16 @@ void ArrayListModule::Reset()
 
 	listSide = Side_Right;
 	sortMode = Sort_Width;
-	accentColor = ImVec4(0.92f, 0.20f, 0.32f, 1.0f); // Drip 红
-	gradientAccent = true;
+
+	// 默认紫色渐变
+	gradientStart = ImVec4(0.36f, 0.09f, 0.92f, 0.90f);
+	gradientEnd = ImVec4(0.78f, 0.38f, 1.00f, 0.90f);
+	useGradient = true;
+	gradientAcrossList = false;
 	rainbowAccent = false;
+
 	barWidth = 220.0f;
+	barRounding = 0.0f;
 
 	{
 		std::lock_guard<std::mutex> lock(entriesMutex);
@@ -36,17 +42,16 @@ void ArrayListModule::Reset()
 	lastSignature.clear();
 	positionInitialized = false;
 
-	itemStyle.bgColor = ImVec4(0.02f, 0.02f, 0.04f, 0.55f);
 	itemStyle.fontSize = 20.0f;
 
 	dirtyState.contentDirty = true;
 	dirtyState.animating = true;
 }
 
-bool IsArrayListSkippable(const Item* item)
+static bool IsArrayListSkippable(const Item* item, const Item* self)
 {
 	if (item->type == Hidden) return true;
-	if (item == static_cast<const Item*>(&ArrayListModule::Instance())) return true;
+	if (item == self) return true;
 	if (item == static_cast<const Item*>(&Menu::Instance())) return true;             // 菜单本身
 	if (item == static_cast<const Item*>(&NotificationItem::Instance())) return true; // 提示弹窗容器
 	return false;
@@ -62,7 +67,7 @@ void ArrayListModule::RebuildEntries()
 
 	for (Item* item : ItemManager::Instance().GetItems())
 	{
-		if (IsArrayListSkippable(item)) continue;
+		if (IsArrayListSkippable(item, this)) continue;
 		if (!item->isEnabled) continue;
 
 		bool found = false;
@@ -97,14 +102,14 @@ ImVec4 ArrayListModule::GetAccentColor() const
 {
 	if (rainbowAccent)
 		return ImColor::HSV(fmodf((float)ImGui::GetTime() * 0.2f, 1.0f), 1.0f, 1.0f, 1.0f);
-	return accentColor;
+	return gradientStart;
 }
 
 void ArrayListModule::Update()
 {
 	RebuildEntries();
 
-	// 生成签名，检测变化（与排序无关，排序变化不触发脏标记）
+	// 生成签名，检测可见集合变化（与排序无关）
 	std::string signature;
 	{
 		std::lock_guard<std::mutex> lock(entriesMutex);
@@ -165,9 +170,9 @@ void ArrayListModule::DrawContent()
 	float dt = std::clamp(io.DeltaTime, 0.0f, 0.05f);
 
 	float fontSize = ImGui::GetFontSize();
-	float barPaddingX = 8.0f;
-	float barHeight = fontSize + 6.0f;
-	float barGap = 2.0f;
+	float barPaddingX = 10.0f;
+	float barHeight = fontSize + 8.0f;
+	float barGap = 3.0f;
 
 	struct LayoutEntry
 	{
@@ -188,7 +193,7 @@ void ArrayListModule::DrawContent()
 		for (const auto& entry : entries)
 			layout.push_back({ &entry, ImGui::CalcTextSize(entry.name.c_str()).x });
 
-		// 排序：Drip 风格按宽度（长的在上），或按字母
+		// 排序：Drip 风格按宽度（长的在上），或按名称
 		if (sortMode == Sort_Width)
 		{
 			std::stable_sort(layout.begin(), layout.end(),
@@ -229,6 +234,8 @@ void ArrayListModule::DrawContent()
 	bool alignRight = (listSide == Side_Right);
 	ImVec4 accent = GetAccentColor();
 
+	const int rowCount = (int)layout.size();
+	int row = 0;
 	float y = origin.y;
 	for (const auto& l : layout)
 	{
@@ -245,44 +252,62 @@ void ArrayListModule::DrawContent()
 			ImVec2 barMin(x0, y);
 			ImVec2 barMax(x1, y + barHeight);
 
-			// 深色半透明背景
-			ImU32 bgColor = ImGui::GetColorU32(ImVec4(0.02f, 0.02f, 0.04f, 0.62f * anim));
-			drawList->AddRectFilled(barMin, barMax, bgColor, 0.0f);
-
-			// 彩色强调条（贴外侧边缘）
-			ImU32 accentU32 = ImGui::GetColorU32(ImVec4(accent.x, accent.y, accent.z, accent.w * anim));
-			float stripW = 3.0f;
-			if (gradientAccent)
+			// ---- 底条配色 ----
+			ImVec4 colA, colB;
+			if (rainbowAccent)
 			{
-				ImVec4 accentDark(accent.x * 0.45f, accent.y * 0.45f, accent.z * 0.45f, accent.w);
-				ImU32 accentDarkU32 = ImGui::GetColorU32(ImVec4(accentDark.x, accentDark.y, accentDark.z, accent.w * anim));
-				ImVec2 sMin = alignRight ? ImVec2(x1 - stripW, y) : ImVec2(x0, y);
-				ImVec2 sMax = alignRight ? ImVec2(x1, y + barHeight) : ImVec2(x0 + stripW, y + barHeight);
-				if (alignRight)
-					drawList->AddRectFilledMultiColor(sMin, sMax, accentU32, accentU32, accentDarkU32, accentDarkU32);
+				colA = colB = accent;
+			}
+			else if (useGradient)
+			{
+				if (gradientAcrossList && rowCount > 0)
+				{
+					float t0 = (float)row / (float)rowCount;
+					float t1 = (float)(row + 1) / (float)rowCount;
+					colA = ImLerp(gradientStart, gradientEnd, t0);
+					colB = ImLerp(gradientStart, gradientEnd, t1);
+				}
 				else
-					drawList->AddRectFilledMultiColor(sMin, sMax, accentDarkU32, accentDarkU32, accentU32, accentU32);
+				{
+					colA = gradientStart;
+					colB = gradientEnd;
+				}
 			}
 			else
 			{
-				ImVec2 sMin = alignRight ? ImVec2(x1 - stripW, y) : ImVec2(x0, y);
-				ImVec2 sMax = alignRight ? ImVec2(x1, y + barHeight) : ImVec2(x0 + stripW, y + barHeight);
-				drawList->AddRectFilled(sMin, sMax, accentU32, 0.0f);
+				colA = gradientStart;
+				colB = gradientEnd;
 			}
 
-			// 文字（带阴影）
-			float textX = alignRight ? (x1 - stripW - barPaddingX - l.width) : (x0 + stripW + barPaddingX);
+			ImVec4 ca(colA.x, colA.y, colA.z, colA.w * anim);
+			ImVec4 cb(colB.x, colB.y, colB.z, colB.w * anim);
+
+			if (ca.x == cb.x && ca.y == cb.y && ca.z == cb.z)
+			{
+				// 纯色条
+				drawList->AddRectFilled(barMin, barMax, ImGui::GetColorU32(ca), barRounding);
+			}
+			else
+			{
+				// 水平渐变条（左上 -> 右上 -> 右下 -> 左下）
+				drawList->AddRectFilledMultiColor(barMin, barMax,
+					ImGui::GetColorU32(ca), ImGui::GetColorU32(cb),
+					ImGui::GetColorU32(cb), ImGui::GetColorU32(ca));
+			}
+
+			// ---- 文字（白色 + 阴影）----
+			float textX = alignRight ? (x1 - barPaddingX - l.width) : (x0 + barPaddingX);
 			float textY = y + (barHeight - fontSize) * 0.5f;
-			ImVec2 textPos(textX, textY);
-			drawList->AddText(ImVec2(textPos.x + 1.0f, textPos.y + 1.0f),
-				ImGui::GetColorU32(ImVec4(0.0f, 0.0f, 0.0f, 0.85f * anim)),
+			drawList->AddText(ImVec2(textX + 1.0f, textY + 1.0f),
+				ImGui::GetColorU32(ImVec4(0.0f, 0.0f, 0.0f, 0.55f * anim)),
 				l.entry->name.c_str());
-			drawList->AddText(textPos,
+			drawList->AddText(ImVec2(textX, textY),
 				ImGui::GetColorU32(ImVec4(1.0f, 1.0f, 1.0f, anim)),
 				l.entry->name.c_str());
 		}
 
 		y += barHeight + barGap;
+		row++;
 	}
 }
 
@@ -306,26 +331,52 @@ void ArrayListModule::DrawSettings(const float& bigPadding, const float& centerX
 	const char* sortNames[] = { u8"按宽度排序", u8"按名称排序" };
 	ImGui::Combo(u8"排序方式", &sortMode, sortNames, IM_ARRAYSIZE(sortNames));
 
+	// ---- 配色 ----
+	ImGui::SetCursorPosX(bigPadding);
+	ImGui::SetNextItemWidth(itemWidth);
+	if (ImGui::Checkbox(u8"渐变底条", &useGradient)) dirtyState.contentDirty = true;
+	ImGui::SameLine();
+	ImGui::SetCursorPosX(bigPadding + centerX);
+	ImGui::SetNextItemWidth(itemWidth);
+	if (ImGui::Checkbox(u8"彩虹", &rainbowAccent)) dirtyState.contentDirty = true;
+
+	if (useGradient && !rainbowAccent)
+	{
+		ImGui::SetCursorPosX(bigPadding);
+		ImGui::SetNextItemWidth(itemWidth);
+		if (ImGuiStd::EditColor(u8"渐变起色", gradientStart)) dirtyState.contentDirty = true;
+		ImGui::SameLine();
+		ImGui::SetCursorPosX(bigPadding + centerX);
+		ImGui::SetNextItemWidth(itemWidth);
+		if (ImGuiStd::EditColor(u8"渐变止色", gradientEnd)) dirtyState.contentDirty = true;
+
+		ImGui::SetCursorPosX(bigPadding);
+		ImGui::SetNextItemWidth(bigItemWidth);
+		if (ImGui::Checkbox(u8"整列渐变（每根条取整段渐变的一段）", &gradientAcrossList))
+			dirtyState.contentDirty = true;
+	}
+	else if (!rainbowAccent)
+	{
+		ImGui::SetCursorPosX(bigPadding);
+		ImGui::SetNextItemWidth(itemWidth);
+		if (ImGuiStd::EditColor(u8"底条颜色", gradientStart)) dirtyState.contentDirty = true;
+	}
+
 	ImGui::SetCursorPosX(bigPadding);
 	ImGui::SetNextItemWidth(bigItemWidth);
 	if (ImGui::SliderFloat(u8"条形宽度", &barWidth, 100.0f, 400.0f, "%.0f"))
 		dirtyState.contentDirty = true;
 
 	ImGui::SetCursorPosX(bigPadding);
-	ImGui::SetNextItemWidth(itemWidth);
-	if (ImGuiStd::EditColor(u8"强调颜色", accentColor))
-		dirtyState.contentDirty = true;
-	ImGui::SameLine();
-	if (ImGui::Checkbox(u8"彩虹", &rainbowAccent))
-		dirtyState.contentDirty = true;
-	ImGui::SameLine();
-	ImGui::SetCursorPosX(bigPadding + centerX);
-	ImGui::SetNextItemWidth(itemWidth);
-	if (ImGui::Checkbox(u8"渐变强调条", &gradientAccent))
+	ImGui::SetNextItemWidth(bigItemWidth);
+	if (ImGui::SliderFloat(u8"圆角", &barRounding, 0.0f, 8.0f, "%.1f"))
 		dirtyState.contentDirty = true;
 
-	ImGui::PushFont(opengl_hook::gui.iconFont);
-	ImGuiStd::HelpMarker(u8"ArrayList 会显示所有已开启的模块（拖动窗口可以调整位置，按住 Ctrl/Shift 拖动可吸附到屏幕边缘）");
+	ImGui::PushFont(NULL, ImGui::GetFontSize() * 0.8f);
+	ImGui::SetCursorPosX(bigPadding);
+	ImGuiStd::TextShadow(u8"提示：拖动窗口移动位置，按住 Ctrl/Shift 拖动可吸附屏幕边缘；");
+	ImGui::SetCursorPosX(bigPadding);
+	ImGuiStd::TextShadow(u8"字体大小与颜色可在下方“窗口设置”里调整。");
 	ImGui::PopFont();
 
 	DrawWindowSettings(bigPadding, centerX, itemWidth);
@@ -337,10 +388,21 @@ void ArrayListModule::Load(const nlohmann::json& j)
 	LoadWindow(j);
 	if (j.contains("listSide")) listSide = j["listSide"];
 	if (j.contains("sortMode")) sortMode = j["sortMode"];
-	if (j.contains("gradientAccent")) gradientAccent = j["gradientAccent"];
+	if (j.contains("useGradient")) useGradient = j["useGradient"];
+	if (j.contains("gradientAcrossList")) gradientAcrossList = j["gradientAcrossList"];
 	if (j.contains("rainbowAccent")) rainbowAccent = j["rainbowAccent"];
 	if (j.contains("barWidth")) barWidth = j["barWidth"];
-	ImGuiStd::LoadImVec4(j, "accentColor", accentColor);
+	if (j.contains("barRounding")) barRounding = j["barRounding"];
+	ImGuiStd::LoadImVec4(j, "gradientStart", gradientStart);
+	ImGuiStd::LoadImVec4(j, "gradientEnd", gradientEnd);
+
+	// 兼容旧配置：只有 accentColor 时迁移到渐变色
+	if (!j.contains("gradientStart") && j.contains("accentColor"))
+	{
+		ImGuiStd::LoadImVec4(j, "accentColor", gradientStart);
+		gradientEnd = gradientStart;
+	}
+	dirtyState.contentDirty = true;
 }
 
 void ArrayListModule::Save(nlohmann::json& j) const
@@ -349,8 +411,11 @@ void ArrayListModule::Save(nlohmann::json& j) const
 	SaveWindow(j);
 	j["listSide"] = listSide;
 	j["sortMode"] = sortMode;
-	j["gradientAccent"] = gradientAccent;
+	j["useGradient"] = useGradient;
+	j["gradientAcrossList"] = gradientAcrossList;
 	j["rainbowAccent"] = rainbowAccent;
 	j["barWidth"] = barWidth;
-	ImGuiStd::SaveImVec4(j, "accentColor", accentColor);
+	j["barRounding"] = barRounding;
+	ImGuiStd::SaveImVec4(j, "gradientStart", gradientStart);
+	ImGuiStd::SaveImVec4(j, "gradientEnd", gradientEnd);
 }

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <string>
 #include <mutex>
@@ -67,6 +67,7 @@ private:
 	std::mutex mutex;
 	Status status = Status_NotTried;
 	std::chrono::steady_clock::time_point nextRetry{};
+	int classAttempts = 0;   // 类解析失败次数；达上限后永久放弃，不再调用 JNI
 
 	JavaVM* vm = nullptr;
 	JNIEnv* env = nullptr;
