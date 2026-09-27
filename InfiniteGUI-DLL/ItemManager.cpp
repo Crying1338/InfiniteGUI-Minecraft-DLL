@@ -1,4 +1,4 @@
-#include <Windows.h>
+ï»¿#include <Windows.h>
 #include "ItemManager.h"
 #include "TimeItem.h"
 #include "FpsItem.h"
@@ -28,6 +28,9 @@
 #include "AutoText.h"
 #include "MusicInfoItem.h"
 
+#include "ArrayListModule.h"
+#include "TargetHudItem.h"
+
 // ------------------------------------------------
 ItemManager::ItemManager()
 {
@@ -36,7 +39,7 @@ ItemManager::ItemManager()
 
 void ItemManager::Init()
 {
-    // ×¢²áÄ¬ÈÏ Singleton
+    // æ³¨å†Œé»˜è®¤ Singleton
     AddItem(&Menu::Instance());
 
     AddItem(&Sprint::Instance());
@@ -55,6 +58,9 @@ void ItemManager::Init()
     AddItem(&FileCountItem::Instance());
     AddItem(&CounterItem::Instance());
     AddItem(&MusicInfoItem::Instance());
+
+    AddItem(&ArrayListModule::Instance());
+    AddItem(&TargetHudItem::Instance());
 
     AddItem(&NotificationItem::Instance());
 
@@ -92,7 +98,7 @@ void ItemManager::RenderAllGui() const
 {
     bool isWindowNeedHide = false;
     if (GameStateDetector::Instance().IsNeedHide())
-        isWindowNeedHide = true; // Òş²ØËùÓĞ´°¿Ú
+        isWindowNeedHide = true; // éšè—æ‰€æœ‰çª—å£
     for (auto item : Items)
     {
         if (!item->isEnabled) continue;
@@ -143,12 +149,12 @@ bool ItemManager::IsDirty() const
             if (!item->isEnabled) continue;
             if (auto ren = dynamic_cast<RenderModule*>(item))
             {
-                if (ren->IsAnimating()) //¶¯»­ÖĞ
+                if (ren->IsAnimating()) //åŠ¨ç”»ä¸­
                 {
                     isDirty = true;
                     break;
                 }
-                if (ren->IsContentDirty()) //ÄÚÈİ±ä»¯
+                if (ren->IsContentDirty()) //å†…å®¹å˜åŒ–
                 {
                     ren->SetContentDirty(false);
                     isDirty = true;
@@ -180,7 +186,7 @@ void ItemManager::ProcessKeyEvents(bool state, bool isRepeat, WPARAM key) const
 // ------------------------------------------------
 void ItemManager::Load(const nlohmann::json& j) const
 {
-    // ---- ¼ÓÔØItem ----
+    // ---- åŠ è½½Item ----
     if (j.contains("Items"))
     {
         for (auto& node : j["Items"])
@@ -213,12 +219,12 @@ void ItemManager::Save(nlohmann::json& j) const
 
 void ItemManager::Clear(bool resetSingletons) const
 {
-    // ---- ÖØÖÃËùÓĞ Items ----
+    // ---- é‡ç½®æ‰€æœ‰ Items ----
     if (resetSingletons)
     {
         for (auto* item : Items)
         {
-            item->Reset();   //  ÒªÇó Item Ìá¹© Reset() »òÄ¬ÈÏ×´Ì¬
+            item->Reset();   //  è¦æ±‚ Item æä¾› Reset() æˆ–é»˜è®¤çŠ¶æ€
         }
     }
 }

@@ -67,6 +67,7 @@
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Import Project="dependencies.props" Condition="Exists('dependencies.props')" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
@@ -148,6 +149,7 @@
     <ClInclude Include="AffixModule.h" />
     <ClInclude Include="Anim.h" />
     <ClInclude Include="AnimButtonBase.h" />
+    <ClInclude Include="ArrayListModule.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="AutoText.h" />
@@ -177,6 +179,8 @@
     <ClInclude Include="fonts\IconFont.h" />
     <ClInclude Include="FpsItem.h" />
     <ClInclude Include="GameKeyBind.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="nlohmann\json.hpp" />
     <ClInclude Include="GameStateDetector.h" />
     <ClInclude Include="GameWindowTool.h" />
     <ClInclude Include="GlobalConfig.h" />
@@ -192,6 +196,8 @@
     <ClInclude Include="Images.h" />
     <ClInclude Include="ImGuiStd.h" />
     <ClInclude Include="ImGuiSty.h" />
+    <ClInclude Include="jni\jni.h" />
+    <ClInclude Include="jni\jni_md.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_opengl2.h" />
@@ -213,6 +219,7 @@
     <ClInclude Include="MainPanel.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="menuRule.h" />
+    <ClInclude Include="MinecraftJniReader.h" />
     <ClInclude Include="miniaudio\miniaudio.h" />
     <ClInclude Include="ModuleButton.hpp" />
     <ClInclude Include="ModuleCard.h" />
@@ -238,6 +245,7 @@
     <ClInclude Include="StringConverter.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextItem.h" />
+    <ClInclude Include="TargetHudItem.h" />
     <ClInclude Include="TimeItem.h" />
     <ClInclude Include="ChangeLog.h" />
     <ClInclude Include="UpdateModule.h" />
@@ -247,6 +255,7 @@
     <ClInclude Include="WindowStyleModule.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ArrayListModule.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="AutoText.cpp" />
@@ -263,6 +272,7 @@
     <ClCompile Include="fonts.cpp" />
     <ClCompile Include="FpsItem.cpp" />
     <ClCompile Include="GameKeyBind.cpp" />
+    <ClCompile Include="glew.c" />
     <ClCompile Include="GameStateDetector.cpp" />
     <ClCompile Include="GameWindowTool.cpp" />
     <ClCompile Include="GlobalConfig.cpp" />
@@ -283,6 +293,7 @@
     <ClCompile Include="KeyState.cpp" />
     <ClCompile Include="KeystrokesItem.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="MinecraftJniReader.cpp" />
     <ClCompile Include="MoresPanel.h" />
     <ClCompile Include="Motionblur.cpp" />
     <ClCompile Include="MusicInfoItem.cpp" />
@@ -293,6 +304,7 @@
     <ClCompile Include="StringConverter.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextItem.cpp" />
+    <ClCompile Include="TargetHudItem.cpp" />
     <ClCompile Include="TimeItem.cpp" />
     <ClCompile Include="ChangeLog.cpp" />
     <ClCompile Include="WindowSnapper.cpp" />

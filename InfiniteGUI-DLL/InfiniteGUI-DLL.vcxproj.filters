@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="资源文件">
@@ -442,10 +442,43 @@
     <ClInclude Include="GameKeyBind.h">
       <Filter>src\utils\gameKeybind</Filter>
     </ClInclude>
+    <ClInclude Include="ArrayListModule.h">
+      <Filter>src\core\items\visual</Filter>
+    </ClInclude>
+    <ClInclude Include="TargetHudItem.h">
+      <Filter>src\core\items\visual</Filter>
+    </ClInclude>
+    <ClInclude Include="MinecraftJniReader.h">
+      <Filter>ext</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>ext</Filter>
+    </ClInclude>
+    <ClInclude Include="nlohmann\json.hpp">
+      <Filter>ext</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\jni.h">
+      <Filter>ext</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\jni_md.h">
+      <Filter>ext</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrayListModule.cpp">
+      <Filter>src\core\items\visual</Filter>
+    </ClCompile>
+    <ClCompile Include="TargetHudItem.cpp">
+      <Filter>src\core\items\visual</Filter>
+    </ClCompile>
+    <ClCompile Include="MinecraftJniReader.cpp">
+      <Filter>ext</Filter>
+    </ClCompile>
+    <ClCompile Include="glew.c">
+      <Filter>ext\gl</Filter>
     </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>ext\imgui</Filter>

@@ -1,4 +1,4 @@
-# InfiniteGUI-DLL 项目架构总结
+﻿# InfiniteGUI-DLL 项目架构总结
 
 更新日期：2026-06-15
 

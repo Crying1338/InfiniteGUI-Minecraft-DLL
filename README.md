@@ -52,6 +52,16 @@ InfiniteGui 仅用于绘制独立的叠加界面（Overlay），与游戏逻辑�
 - 计数器
 - 动态模糊
 
+### ✔ Drip 风格模块（本 Fork 新增）
+- **ArrayList 模块列表**：在屏幕边缘显示所有已开启的模块，深色半透明条 + 彩色渐变强调边，
+  按文字宽度/名称排序，开关模块时有滑动淡入淡出动画；位置、颜色、彩虹、渐变均可在设置中自定义  
+- **TargetHUD 目标面板**：Drip 风格深色圆角面板，显示目标名称、平滑血量条（受击闪白）、HP 数字与连击数。
+  数据来源三选一：
+  - *自动*：JNI 实时读取优先，失败自动回退点击跟踪（默认）  
+  - *JNI 实时数据*：通过注入的 JVM 读取准星指向目标的名字与血量，
+    需要 **Forge 1.17+ / NeoForge** 等运行时使用 Mojang 官方映射的版本；其他环境自动不可用  
+  - *点击跟踪*：纯叠加层实现，左键攻击时显示面板，目标名称与血量由设置提供（全版本可用，零风险）
+
 ### ✔ 直播相关功能
 - B 站粉丝数显示  
 - B 站直播间弹幕实时显示（需要配合第三方弹幕姬使用：https://www.danmuji.org )
@@ -80,70 +90,25 @@ InfiniteGui 仅用于绘制独立的叠加界面（Overlay），与游戏逻辑�
 ---
 
 ## 🛠 Build | 构建教程（源码编译）
-> 本代码仓库未包含 OpenGL (GLEW)、stb 和 nlohmann/json 依赖库 需要用户自行引入。
+> 本 Fork 已将全部第三方依赖内置到仓库，**无需 vcpkg / 手动安装**：
+> - GLEW 2.2.0（静态编译，`glew.c` + `GL/` 头文件，无需再放 `glew32.dll`）
+> - stb_image.h
+> - nlohmann/json（single header）
+> - jni.h / jni_md.h（来自 OpenJDK，供 TargetHUD 的 JNI 数据源使用）
 
-### 📦 依赖库说明
+### ⚠️ 编码说明
+本 Fork 已将全部源码统一为 **UTF-8 (BOM)** 编码，`dependencies.props` 已添加 `/utf-8`，
+在系统区域设置开启 "Beta: UTF-8" (ACP=65001) 或传统 GBK (ACP=936) 的机器上均可直接编译。
 
-本项目依赖以下第三方库：  
-
-- OpenGL / GLEW  
-- nlohmann/json（仅头文件库）
-- stb
-
-### ✅ 依赖安装方式一（推荐）：使用 vcpkg  
-
-#### 1️⃣ 安装 vcpkg（如果你还没装）
-- git clone https://github.com/microsoft/vcpkg  
-cd vcpkg  
-./bootstrap-vcpkg.bat  
-
-#### 2️⃣ 使用 vcpkg 安装依赖
-- ./vcpkg install glew:x64-windows  
-./vcpkg install nlohmann-json  
-./vcpkg install stb
-
-#### 3️⃣ 将 vcpkg 集成到 Visual Studio
-- ./vcpkg integrate install
-
-### ✅ 依赖安装方式二：手动下载并加入项目
-#### 🔹 nlohmann/json（头文件库）  
-
-前往官方仓库下载源码  
-- https://github.com/nlohmann/json  
-
-将 single_include/nlohmann/json.hpp  
-放入项目的 include/ 或任意你设置的包含目录中  
-
-#### 🔹 GLEW（OpenGL 扩展库）
-
-前往官网下载 GLEW  
-- http://glew.sourceforge.net/  
-
-解压后：  
-
-- 将 include/GL/glew.h 放入包含目录  
-将 lib 目录加入 链接器 → 附加库目录  
-
-在链接器中添加：  
-
-- glew32.lib  
-opengl32.lib
-
-#### 🔹 stb
-- https://github.com/nothings/stb
-
-### 🧩 编译环境建议
-- Visual Studio 2022  
-平台工具集：MSVC v143  
-编译模式：Release | x64  
-C++ 标准：C++17 或更高  
+### ✅ 编译步骤
+1. 安装 Visual Studio 2022（需 “C++ 桌面开发” 组件）  
+   平台工具集：MSVC v143，C++ 标准：C++17 或更高
+2. 打开 `InfiniteGUI-DLL.sln`，选择 **Release | x64**，直接生成即可
 
 ### ⚠️ 注入教程
-编译后会生成以下文件：
+编译后生成：
 - InfiniteGUI-DLL.dll
-- glew32.dll  
 
-请将生成**glew32.dll**放入**C:\Windows\System32**中。
 使用注入程序，如[CheatEngine](https://www.cheatengine.org/ "CheatEngine官方网站")，将**InfiniteGUI-DLL.dll**注入到Minecraft中即可使用。
 
 
