@@ -1,4 +1,4 @@
-#include "TextItem.h"
+ï»¿#include "TextItem.h"
 
 #include "GameStateDetector.h"
 
@@ -31,10 +31,10 @@ void TextItem::DrawSettings(const float& bigPadding, const float& centerX, const
         if (ImGui::CollapsingHeader(text.GetText().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
         {
             text.DrawSettings(bigPadding, centerX, itemWidth);
-            //¾ÓÖÐÏÔÊ¾
+            //å±…ä¸­æ˜¾ç¤º
             ImGui::SetCursorPosX(bigPadding);
-            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.1f, 0.1f, 1.0f)); //ºìÉ«¾¯Ê¾
-            if (ImGui::Button(u8"É¾³ý",ImVec2(centerX * 2 - bigPadding, 0)))
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.1f, 0.1f, 1.0f)); //çº¢è‰²è­¦ç¤º
+            if (ImGui::Button(u8"åˆ é™¤",ImVec2(centerX * 2 - bigPadding, 0)))
             {
                 texts.erase(texts.begin() + i);
             }

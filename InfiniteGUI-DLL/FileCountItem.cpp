@@ -1,4 +1,4 @@
-#include "FileCountItem.h"
+ï»¿#include "FileCountItem.h"
 #include <filesystem>
 
 #include "Anim.h"
@@ -18,9 +18,9 @@ void FileCountItem::Update()
     std::wstring acp_folderPath = StringConverter::Utf8ToWstring(folderPath);
     std::wstring acp_extensionFilter = StringConverter::Utf8ToWstring(extensionFilter);
 
-    // Èç¹ûÂ·¾¶²»´æÔÚ
+    // å¦‚æœè·¯å¾„ä¸å­˜åœ¨
     if (!fs::exists(acp_folderPath) || !fs::is_directory(acp_folderPath)) {
-        fileCount = -1; // ±íÊ¾´íÎó
+        fileCount = -1; // è¡¨ç¤ºé”™è¯¯
         return;
     }
 
@@ -53,35 +53,35 @@ void FileCountItem::Update()
         fileCount = count;
     }
     catch (const fs::filesystem_error& e) {
-        // ²¶»ñÎÄ¼şÏµÍ³Ïà¹ØµÄÒì³££¬²¢Êä³ö´íÎóĞÅÏ¢
+        // æ•è·æ–‡ä»¶ç³»ç»Ÿç›¸å…³çš„å¼‚å¸¸ï¼Œå¹¶è¾“å‡ºé”™è¯¯ä¿¡æ¯
         errorMessage = e.what();
-        fileCount = -2;  // ´íÎóÂë
+        fileCount = -2;  // é”™è¯¯ç 
     }
     catch (const std::exception& e) {
-        // ²¶»ñÆäËû±ê×¼Òì³£
+        // æ•è·å…¶ä»–æ ‡å‡†å¼‚å¸¸
         errorMessage = e.what();
         fileCount = -3;
     }
     catch (...) {
-        // ²¶»ñËùÓĞÆäËûÒì³£
-        errorMessage = "Î´Öª´íÎó";
+        // æ•è·æ‰€æœ‰å…¶ä»–å¼‚å¸¸
+        errorMessage = "æœªçŸ¥é”™è¯¯";
         fileCount = -4;
     }
 
     if (fileCount < 0) {
-        ImGuiStd::TextShadow(u8"Â·¾¶ÎŞĞ§»ò²»¿É·ÃÎÊ");
+        ImGuiStd::TextShadow(u8"è·¯å¾„æ— æ•ˆæˆ–ä¸å¯è®¿é—®");
         return;
     }
 
     if (fileCount > lastFileCount)
     {
-        color.color = ImVec4(0.1f, 1.0f, 0.1f, 1.0f); //ÂÌÉ«
+        color.color = ImVec4(0.1f, 1.0f, 0.1f, 1.0f); //ç»¿è‰²
         lastFileCount = fileCount;
         if (isPlaySound) AudioManager::Instance().playSound("filecount\\filecount_up.wav", soundVolume);
     }
     else if (fileCount < lastFileCount)
     {
-        color.color = ImVec4(1.0f, 0.1f, 0.1f, 1.0f); //ºìÉ«
+        color.color = ImVec4(1.0f, 0.1f, 0.1f, 1.0f); //çº¢è‰²
         lastFileCount = fileCount;
         if (isPlaySound) AudioManager::Instance().playSound("filecount\\filecount_down.wav", soundVolume);
     }
@@ -105,13 +105,13 @@ void FileCountItem::DrawContent()
     }
     ImVec4 targetTextColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
 
-    //»ñÈ¡io
+    //è·å–io
     ImGuiIO& io = ImGui::GetIO();
 
-    //¼ÆËãËÙ¶È
+    //è®¡ç®—é€Ÿåº¦
     float speed = 3.0f * std::clamp(io.DeltaTime, 0.0f, 0.05f);
     color.color = ImLerp(color.color, targetTextColor, speed);
-    // ÅĞ¶Ï¶¯»­ÊÇ·ñ½áÊø
+    // åˆ¤æ–­åŠ¨ç”»æ˜¯å¦ç»“æŸ
     if (Anim::AlmostEqual(color.color, targetTextColor))
     {
         color.color = targetTextColor;
@@ -129,16 +129,16 @@ void FileCountItem::DrawSettings(const float& bigPadding, const float& centerX, 
 
     ImGui::SetCursorPosX(bigPadding);
     ImGui::SetNextItemWidth(bigItemWidth);
-    ImGuiStd::InputTextStd(u8"ÎÄ¼ş¼ĞÂ·¾¶", folderPath);
+    ImGuiStd::InputTextStd(u8"æ–‡ä»¶å¤¹è·¯å¾„", folderPath);
     ImGui::SetCursorPosX(bigPadding);
     ImGui::SetNextItemWidth(itemWidth);
-    ImGui::Checkbox(u8"µİ¹éÉ¨Ãè(°üÀ¨×ÓÎÄ¼ş¼Ğ)", &recursive);
+    ImGui::Checkbox(u8"é€’å½’æ‰«æ(åŒ…æ‹¬å­æ–‡ä»¶å¤¹)", &recursive);
     if(recursive)
     {
         ImGui::SameLine();
         ImGui::SetCursorPosX(bigPadding + centerX);
         ImGui::SetNextItemWidth(itemWidth);
-        ImGuiStd::InputTextStd(u8"À©Õ¹Ãû¹ıÂË (.txt)", extensionFilter);
+        ImGuiStd::InputTextStd(u8"æ‰©å±•åè¿‡æ»¤ (.txt)", extensionFilter);
     }
 
     DrawAffixSettings(bigPadding, centerX, itemWidth);

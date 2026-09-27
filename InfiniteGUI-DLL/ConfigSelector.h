@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "ConfigManager.h"
 #include "ImGuiStd.h"
 #include "StringConverter.h"
@@ -8,53 +8,53 @@ class ConfigSelector
 {
 public:
     static void Draw(){
-        // µ±Ç° profile Ãû³Æ£¨utf8£©
+        // å½“å‰ profile åç§°ï¼ˆutf8ï¼‰
         std::string curProfile = ConfigManager::Instance().GetCurrentProfile();
         ImVec2 btnSize = ImVec2(196.0f, 0.0f);
 
-        // °´Å¥Ë÷ÒıÓÃÀ´Éú³ÉÎ¨Ò» id
+        // æŒ‰é’®ç´¢å¼•ç”¨æ¥ç”Ÿæˆå”¯ä¸€ id
         static int uniqueId = 0;
 
-        // ÁÙÊ± UI ×´Ì¬£¨¾²Ì¬ÒÔ±ã¿çÖ¡±£´æÊäÈë£©
-        static std::string inputName;           // ÓÃÓÚĞÂÔö/ÖØÃüÃûµÄÊäÈë
-        static std::string renameOldName;       // ÖØÃüÃûÊ±ÒªÌæ»»µÄ¾ÉÃû×Ö
-        static std::string deleteTargetName;    // ´ıÉ¾³ıµÄÃû×Ö£¨ÔÚÈ·ÈÏµ¯´°ÖĞÊ¹ÓÃ£©
-        static std::string lastErrorMsg;        // Ğ£Ñé/²Ù×÷Ê§°ÜÌáÊ¾
+        // ä¸´æ—¶ UI çŠ¶æ€ï¼ˆé™æ€ä»¥ä¾¿è·¨å¸§ä¿å­˜è¾“å…¥ï¼‰
+        static std::string inputName;           // ç”¨äºæ–°å¢/é‡å‘½åçš„è¾“å…¥
+        static std::string renameOldName;       // é‡å‘½åæ—¶è¦æ›¿æ¢çš„æ—§åå­—
+        static std::string deleteTargetName;    // å¾…åˆ é™¤çš„åå­—ï¼ˆåœ¨ç¡®è®¤å¼¹çª—ä¸­ä½¿ç”¨ï¼‰
+        static std::string lastErrorMsg;        // æ ¡éªŒ/æ“ä½œå¤±è´¥æç¤º
 
-        // µ¯´°±êÊ¶
-        const char* addPopupName = u8"´´½¨";
-        const char* renamePopupName = u8"ÖØÃüÃû";
-        const char* deletePopupName = u8"É¾³ı";
+        // å¼¹çª—æ ‡è¯†
+        const char* addPopupName = u8"åˆ›å»º";
+        const char* renamePopupName = u8"é‡å‘½å";
+        const char* deletePopupName = u8"åˆ é™¤";
 
         std::vector<std::string> profiles = ConfigManager::Instance().GetProfiles();
 
         for (size_t i = 0; i < profiles.size(); ++i) {
             std::string profileName = profiles[i];
 
-            // Ö÷°´Å¥£ºÇĞ»»ÅäÖÃ
+            // ä¸»æŒ‰é’®ï¼šåˆ‡æ¢é…ç½®
             if (ImGui::Button(profileName.c_str(), btnSize)) {
-                // Load the selected config (±£´æµ±Ç° -> ÇĞ»»)
+                // Load the selected config (ä¿å­˜å½“å‰ -> åˆ‡æ¢)
                 ConfigManager::Instance().SwitchProfile(profileName, true);
             }
 
             ImGui::SameLine();
 
-            // Í¼±ê°´Å¥£¨Õ¼Î»/Î´À´ÓÃ£©
+            // å›¾æ ‡æŒ‰é’®ï¼ˆå ä½/æœªæ¥ç”¨ï¼‰
             ImGui::PushFont(opengl_hook::gui.iconFont);
-            // ÖØÃüÃû°´Å¥£¨½ô¸úÔÚ icon ºóÃæ£»ÓÃĞ¡×ÖÌå»òÍ¼±êÒ²ĞĞ£©
+            // é‡å‘½åæŒ‰é’®ï¼ˆç´§è·Ÿåœ¨ icon åé¢ï¼›ç”¨å°å­—ä½“æˆ–å›¾æ ‡ä¹Ÿè¡Œï¼‰
             if (ImGui::Button(("*##rename" + std::to_string(i)).c_str())) {
                 renameOldName = profileName;
-                inputName = profileName; // Ô¤Ìî¾ÉÃû×Ö
+                inputName = profileName; // é¢„å¡«æ—§åå­—
                 lastErrorMsg.clear();
                 ImGui::OpenPopup(renamePopupName);
             }
 
-            // É¾³ı°´Å¥£¨Ö»ÓĞ profiles > 1 ÇÒ ²»ÊÇµ±Ç°ÅäÖÃÊ±ÏÔÊ¾£©
+            // åˆ é™¤æŒ‰é’®ï¼ˆåªæœ‰ profiles > 1 ä¸” ä¸æ˜¯å½“å‰é…ç½®æ—¶æ˜¾ç¤ºï¼‰
             if (profiles.size() > 1 && profileName != curProfile)
             {
                 ImGui::SameLine();
                 if (ImGui::Button((u8"\uE053##del" + std::to_string(i)).c_str())) {
-                    // ´ò¿ªÉ¾³ıÈ·ÈÏµ¯´°
+                    // æ‰“å¼€åˆ é™¤ç¡®è®¤å¼¹çª—
                     deleteTargetName = profileName;
                     lastErrorMsg.clear();
                     ImGui::OpenPopup(deletePopupName);
@@ -62,21 +62,21 @@ public:
             }
             else
             {
-                //±£´æ°´¼ü
+                //ä¿å­˜æŒ‰é”®
                 ImGui::SameLine();
                 if (ImGui::Button((":##del" + std::to_string(i)).c_str())) {
                     ConfigManager::Instance().Save();
                     ClickSound::Instance().PlaySaveSound();
-                    NotificationItem::Instance().AddNotification(NotificationType_Success, u8"ÅäÖÃÎÄ¼şÒÑ±£´æ");
+                    NotificationItem::Instance().AddNotification(NotificationType_Success, u8"é…ç½®æ–‡ä»¶å·²ä¿å­˜");
                 }
             }
             ImGui::PopFont();
         }
 
-        // ĞÂ½¨ÅäÖÃ°´Å¥
+        // æ–°å»ºé…ç½®æŒ‰é’®
         if (ImGui::Button("+", btnSize))
         {
-            // Éú³ÉÒ»¸öÄ¬ÈÏÎ¨Ò»Ãû£¨profile_1, profile_2...£©
+            // ç”Ÿæˆä¸€ä¸ªé»˜è®¤å”¯ä¸€åï¼ˆprofile_1, profile_2...ï¼‰
             std::vector<std::string> profilesNow = ConfigManager::Instance().GetProfiles();
             std::string base = "profile";
             int idx = 1;
@@ -90,7 +90,7 @@ public:
         }
         ImGui::SameLine();
         ImGui::PushFont(opengl_hook::gui.iconFont);
-        if (ImGui::Button("{")) //´ò¿ªÅäÖÃÎÄ¼ş¼Ğ
+        if (ImGui::Button("{")) //æ‰“å¼€é…ç½®æ–‡ä»¶å¤¹
         {
             std::wstring path = StringConverter::Utf8ToWstring(FileUtils::configPath + "\\profiles");
             ShellExecute(NULL, NULL, path.c_str(), NULL, NULL, SW_SHOWNORMAL);
@@ -103,9 +103,9 @@ public:
         if (ImGui::BeginPopupModal(addPopupName, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
         {
 
-            ImGuiStd::TextShadow(u8"ÊäÈëĞÂÅäÖÃÃû³Æ£º");
+            ImGuiStd::TextShadow(u8"è¾“å…¥æ–°é…ç½®åç§°ï¼š");
             ImGui::SetNextItemWidth(300.0f);
-            // Ê¹ÓÃ InputText µÄ std::string °æ±¾
+            // ä½¿ç”¨ InputText çš„ std::string ç‰ˆæœ¬
             char bufCreate[256];
             std::strncpy(bufCreate, inputName.c_str(), sizeof(bufCreate));
             if (ImGui::InputText("##newProfile", bufCreate, sizeof(bufCreate))) {
@@ -116,35 +116,35 @@ public:
                 ImGui::TextColored(ImVec4(1, 0.5f, 0.5f, 1.0f), "%s", lastErrorMsg.c_str());
             }
 
-            if (ImGui::Button(u8"´´½¨")) {
-                // Ğ£Ñé
+            if (ImGui::Button(u8"åˆ›å»º")) {
+                // æ ¡éªŒ
                 if (inputName.empty()) {
-                    lastErrorMsg = u8"Ãû³Æ²»ÄÜÎª¿Õ¡£";
+                    lastErrorMsg = u8"åç§°ä¸èƒ½ä¸ºç©ºã€‚";
                 }
                 else if (!CheckNameValid(inputName)) {
-                    lastErrorMsg = u8"Ãû³ÆÖ»ÄÜ°üº¬Ó¢ÎÄÊı×ÖÏÂ»®Ïß¡£";
+                    lastErrorMsg = u8"åç§°åªèƒ½åŒ…å«è‹±æ–‡æ•°å­—ä¸‹åˆ’çº¿ã€‚";
                 }
                 else {
                     auto profilesNow = ConfigManager::Instance().GetProfiles();
                     if (std::find(profilesNow.begin(), profilesNow.end(), inputName) != profilesNow.end()) {
-                        lastErrorMsg = u8"¸ÃÃû³ÆÒÑ´æÔÚ¡£";
+                        lastErrorMsg = u8"è¯¥åç§°å·²å­˜åœ¨ã€‚";
                     }
                     else {
                         bool ok = ConfigManager::Instance().CreateProfile(inputName);
                         if (!ok) {
-                            lastErrorMsg = u8"´´½¨ÅäÖÃÎÄ¼şÊ§°Ü(¿ÉÄÜÊÇ IO ´íÎó£¿)¡£";
+                            lastErrorMsg = u8"åˆ›å»ºé…ç½®æ–‡ä»¶å¤±è´¥(å¯èƒ½æ˜¯ IO é”™è¯¯ï¼Ÿ)ã€‚";
                         }
                         else {
                             ImGui::CloseCurrentPopup();
                             lastErrorMsg.clear();
-                            // ¿ÉÑ¡£º×Ô¶¯ÇĞ»»µ½ĞÂÅäÖÃ
+                            // å¯é€‰ï¼šè‡ªåŠ¨åˆ‡æ¢åˆ°æ–°é…ç½®
                             // ConfigManager::Instance().SwitchProfile(inputName, true);
                         }
                     }
                 }
             }
             ImGui::SameLine();
-            if (ImGui::Button(u8"È¡Ïû")) {
+            if (ImGui::Button(u8"å–æ¶ˆ")) {
                 ImGui::CloseCurrentPopup();
                 lastErrorMsg.clear();
             }
@@ -157,7 +157,7 @@ public:
         // ----------------------
         if (ImGui::BeginPopupModal(renamePopupName, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
         {
-            ImGuiStd::TextShadow(u8"ÖØÃüÃû£º");
+            ImGuiStd::TextShadow(u8"é‡å‘½åï¼š");
             ImGui::SetNextItemWidth(300.0f);
             char bufRename[256];
             std::strncpy(bufRename, inputName.c_str(), sizeof(bufRename));
@@ -169,30 +169,30 @@ public:
                 ImGui::TextColored(ImVec4(1, 0.5f, 0.5f, 1.0f), "%s", lastErrorMsg.c_str());
             }
 
-            if (ImGui::Button(u8"È·ÈÏ")) {
+            if (ImGui::Button(u8"ç¡®è®¤")) {
                 if (inputName.empty()) {
-                    lastErrorMsg = u8"Ãû³Æ²»ÄÜÎª¿Õ¡£";
+                    lastErrorMsg = u8"åç§°ä¸èƒ½ä¸ºç©ºã€‚";
                 }
                 else if (!CheckNameValid(inputName)) {
-                    lastErrorMsg = u8"Ãû³ÆÖ»ÄÜ°üº¬Ó¢ÎÄÊı×ÖÏÂ»®Ïß¡£";
+                    lastErrorMsg = u8"åç§°åªèƒ½åŒ…å«è‹±æ–‡æ•°å­—ä¸‹åˆ’çº¿ã€‚";
                 }
                 else if (inputName == renameOldName) {
-                    // Ã»¸ÄÃû£¬Ö±½Ó¹Ø±Õ
+                    // æ²¡æ”¹åï¼Œç›´æ¥å…³é—­
                     ImGui::CloseCurrentPopup();
                     lastErrorMsg.clear();
                 }
                 else {
                     auto profilesNow = ConfigManager::Instance().GetProfiles();
                     if (std::find(profilesNow.begin(), profilesNow.end(), inputName) != profilesNow.end()) {
-                        lastErrorMsg = u8"¸ÃÃû³ÆÒÑ´æÔÚ¡£";
+                        lastErrorMsg = u8"è¯¥åç§°å·²å­˜åœ¨ã€‚";
                     }
                     else {
                         bool ok = ConfigManager::Instance().RenameProfile(renameOldName, inputName);
                         if (!ok) {
-                            lastErrorMsg = u8"´´½¨ÅäÖÃÎÄ¼şÊ§°Ü(¿ÉÄÜÊÇ IO ´íÎó£¿)¡£";
+                            lastErrorMsg = u8"åˆ›å»ºé…ç½®æ–‡ä»¶å¤±è´¥(å¯èƒ½æ˜¯ IO é”™è¯¯ï¼Ÿ)ã€‚";
                         }
                         else {
-                            // ÈôÖØÃüÃûµÄÊÇµ±Ç° profile£¬ĞèÒª¸üĞÂ currentProfile UI ÎÄ±¾£¨ConfigManager ÊµÏÖÒ»°ã»á´¦Àí£©
+                            // è‹¥é‡å‘½åçš„æ˜¯å½“å‰ profileï¼Œéœ€è¦æ›´æ–° currentProfile UI æ–‡æœ¬ï¼ˆConfigManager å®ç°ä¸€èˆ¬ä¼šå¤„ç†ï¼‰
                             ImGui::CloseCurrentPopup();
                             lastErrorMsg.clear();
                         }
@@ -200,7 +200,7 @@ public:
                 }
             }
             ImGui::SameLine();
-            if (ImGui::Button(u8"È¡Ïû")) {
+            if (ImGui::Button(u8"å–æ¶ˆ")) {
                 ImGui::CloseCurrentPopup();
                 lastErrorMsg.clear();
             }
@@ -213,26 +213,26 @@ public:
         if (ImGui::BeginPopupModal(deletePopupName, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
         {
             std::string deleteTargetNameUtf8 = StringConverter::AcpToUtf8(deleteTargetName);
-            std::string deleteTargetNameUtf8Confirm = u8"È·ÈÏÉ¾³ı\"" + deleteTargetNameUtf8 + u8"\"?";
+            std::string deleteTargetNameUtf8Confirm = u8"ç¡®è®¤åˆ é™¤\"" + deleteTargetNameUtf8 + u8"\"?";
             ImGuiStd::TextShadow(deleteTargetNameUtf8Confirm.c_str());
             if (!lastErrorMsg.empty()) {
                 ImGui::TextColored(ImVec4(1, 0.5f, 0.5f, 1.0f), "%s", lastErrorMsg.c_str());
             }
 
-            if (ImGui::Button(u8"É¾³ı")) {
-                // µ÷ÓÃÉ¾³ı£¨ConfigManager »á×èÖ¹É¾³ıµ±Ç° profile »ò±£ÁôÖÁÉÙÒ»¸ö£©
+            if (ImGui::Button(u8"åˆ é™¤")) {
+                // è°ƒç”¨åˆ é™¤ï¼ˆConfigManager ä¼šé˜»æ­¢åˆ é™¤å½“å‰ profile æˆ–ä¿ç•™è‡³å°‘ä¸€ä¸ªï¼‰
                 bool ok = ConfigManager::Instance().DeleteProfile(deleteTargetName);
                 if (!ok) {
-                    lastErrorMsg = u8"É¾³ıÊ§°Ü£¬¿ÉÄÜÊÇÒòÎªËüÊÇµ±Ç°ÅäÖÃ»òÖ»ÓĞÒ»¸öÅäÖÃ¡£";
+                    lastErrorMsg = u8"åˆ é™¤å¤±è´¥ï¼Œå¯èƒ½æ˜¯å› ä¸ºå®ƒæ˜¯å½“å‰é…ç½®æˆ–åªæœ‰ä¸€ä¸ªé…ç½®ã€‚";
                 }
                 else {
                     ImGui::CloseCurrentPopup();
                     lastErrorMsg.clear();
-                    // Èç¹ûÓÃ»§¸ÕÉ¾ÁËµ±Ç°Ö®ÍâµÄ profile£¬Í¨³£²»Ğè¶îÍâ²Ù×÷
+                    // å¦‚æœç”¨æˆ·åˆšåˆ äº†å½“å‰ä¹‹å¤–çš„ profileï¼Œé€šå¸¸ä¸éœ€é¢å¤–æ“ä½œ
                 }
             }
             ImGui::SameLine();
-            if (ImGui::Button(u8"È¡Ïû")) {
+            if (ImGui::Button(u8"å–æ¶ˆ")) {
                 ImGui::CloseCurrentPopup();
                 lastErrorMsg.clear();
             }

@@ -1,4 +1,4 @@
-#include "GameStateDetector.h"
+ï»¿#include "GameStateDetector.h"
 #include "App.h"
 #include "GameWindowTool.h"
 #include "KeyState.h"
@@ -19,14 +19,14 @@ static bool IsClipCursorSmallerThanScreen(int margin = 8)
 	const int clipW = clip.right - clip.left;
 	const int clipH = clip.bottom - clip.top;
 
-	// 1. ³ß´çÃ÷ÏÔĞ¡ÓÚÆÁÄ»
+	// 1. å°ºå¯¸æ˜æ˜¾å°äºå±å¹•
 	if (clipW < screenW - margin * 2 ||
 		clipH < screenH - margin * 2)
 	{
 		return true;
 	}
 
-	// 2. ±ß½çÓĞÃ÷ÏÔÄÚËõ
+	// 2. è¾¹ç•Œæœ‰æ˜æ˜¾å†…ç¼©
 	if (clip.left > margin ||
 		clip.top > margin ||
 		clip.right < screenW - margin ||
@@ -96,13 +96,13 @@ void GameStateDetector::DrawSettings(const float& bigPadding, const float& cente
 {
 	ImGui::PushFont(NULL, ImGui::GetFontSize() * 0.8f);
 	ImGui::BeginDisabled();
-	ImGuiStd::TextShadow(u8"ÓÎÏ·×´Ì¬¼ì²âÉèÖÃ");
+	ImGuiStd::TextShadow(u8"æ¸¸æˆçŠ¶æ€æ£€æµ‹è®¾ç½®");
 	ImGui::EndDisabled();
 	ImGui::PopFont();
 	ImGui::SetCursorPosX(bigPadding);
 	ImGui::PushItemWidth(itemWidth);
-	ImGui::Checkbox(u8"½öÔÚÓÎÏ·Ê±ÏÔÊ¾Gui", &hideItemInGui);
-	ImGui::SameLine(); ImGuiStd::HelpMarker(u8"´ò¿ª±³°ü¡¢ÔİÍ£¡¢´ò×ÖµÈ·ÇÓÎÏ·Ê±GuiµÄÏÔÊ¾¡£");
+	ImGui::Checkbox(u8"ä»…åœ¨æ¸¸æˆæ—¶æ˜¾ç¤ºGui", &hideItemInGui);
+	ImGui::SameLine(); ImGuiStd::HelpMarker(u8"æ‰“å¼€èƒŒåŒ…ã€æš‚åœã€æ‰“å­—ç­‰éæ¸¸æˆæ—¶Guiçš„æ˜¾ç¤ºã€‚");
 }
 
 bool GameStateDetector::IsNeedHide() const 
@@ -140,7 +140,7 @@ static bool IsCursorHidden(const CURSORINFO& ci)
 			   IDC_SIZENESW, IDC_SIZENS, IDC_SIZEWE,
 			   IDC_HAND, IDC_NO, IDC_APPSTARTING
 			};
-			// staticÀ´»º´æ¼ÓÔØºóµÄÎ»Í¼£¬²»ĞèÒªÖØ¸´¼ÓÔØ£¬ÕâÀïÓÃµ½ÁËlambda±í´ïÊ½
+			// staticæ¥ç¼“å­˜åŠ è½½åçš„ä½å›¾ï¼Œä¸éœ€è¦é‡å¤åŠ è½½ï¼Œè¿™é‡Œç”¨åˆ°äº†lambdaè¡¨è¾¾å¼
 			static const std::array<HCURSOR, 13> SysCursorList = {
 				[]() {
 					std::array<HCURSOR, 13> cursors{};
@@ -162,7 +162,7 @@ static bool IsCursorHidden(const CURSORINFO& ci)
 				}
 			);
 		};
-	// 0 ±íÊ¾¹â±êÒş²Ø£¬CURSOR_SHOWING (0x00000001) ±íÊ¾¹â±ê¿É¼û
+	// 0 è¡¨ç¤ºå…‰æ ‡éšè—ï¼ŒCURSOR_SHOWING (0x00000001) è¡¨ç¤ºå…‰æ ‡å¯è§
 	if ((ci.flags & CURSOR_SHOWING) != 0)
 		return !func();
 	return false;
@@ -182,10 +182,10 @@ bool GameStateDetector::IsMouseCursorVisible()
 
 void GameStateDetector::ProcessMouseMovement(int dx, int dy)
 {
-	// Êó±êÒÆ¶¯ËÙ¶È = Ä£³¤
+	// é¼ æ ‡ç§»åŠ¨é€Ÿåº¦ = æ¨¡é•¿
 	cameraSpeed = sqrtf((float)dx * (float)dx + (float)dy * (float)dy);
 
-	// ÊÓ½ÇÊÇ·ñÒÆ¶¯£¨ÎªÁË¸øÄãÂß¼­ÅĞ¶Ï£©
+	// è§†è§’æ˜¯å¦ç§»åŠ¨ï¼ˆä¸ºäº†ç»™ä½ é€»è¾‘åˆ¤æ–­ï¼‰
 	if (cameraSpeed > movementThreshold)
 		cameraMoving = true;
 	else

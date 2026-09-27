@@ -1,4 +1,4 @@
-#include "FpsItem.h"
+ï»¿#include "FpsItem.h"
 
 #include "Anim.h"
 #include "ImGuiStd.h"
@@ -31,7 +31,7 @@ void FpsItem::DrawContent()
 		isEnabled = false;
 		closed = false;
 	}
-	guiFrameCount++; //guiÖ¡ÂÊ
+	guiFrameCount++; //guiå¸§ç‡
 	int FPS = int(this->FPS);
 	std::string fpsText;
 	if (showGuiFPS)
@@ -43,12 +43,12 @@ void FpsItem::DrawContent()
 		fpsText = prefix + std::to_string(FPS) + suffix;
 
 	ImVec4 targetTextColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
-	//»ñÈ¡io
+	//è·å–io
 	ImGuiIO& io = ImGui::GetIO();
-	//¼ÆËãËÙ¶È
+	//è®¡ç®—é€Ÿåº¦
 	float speed = 3.0f * std::clamp(io.DeltaTime, 0.0f, 0.05f);
 	color.color = ImLerp(color.color, targetTextColor, speed);
-	// ÅĞ¶Ï¶¯»­ÊÇ·ñ½áÊø
+	// åˆ¤æ–­åŠ¨ç”»æ˜¯å¦ç»“æŸ
 	if (Anim::AlmostEqual(color.color, targetTextColor))
 	{
 		color.color = targetTextColor;
@@ -59,7 +59,7 @@ void FpsItem::DrawContent()
 
 void FpsItem::RenderBeforeGui()
 {
-	frameCount++; //ÓÎÏ·Ö¡ÂÊ
+	frameCount++; //æ¸¸æˆå¸§ç‡
 	auto now = Clock::now();
 	deltaTime = std::chrono::duration_cast<std::chrono::duration<float>>(now - lastFrameTime).count();
 	lastFrameTime = now;
@@ -70,9 +70,9 @@ void FpsItem::DrawSettings(const float& bigPadding, const float& centerX, const 
 	//DrawItemSettings();
 	ImGui::SetCursorPosX(bigPadding);
 	ImGui::SetNextItemWidth(itemWidth);
-	ImGui::Checkbox(u8"ÏÔÊ¾ÎŞÏŞGuiµÄFPS", &showGuiFPS);
+	ImGui::Checkbox(u8"æ˜¾ç¤ºæ— é™Guiçš„FPS", &showGuiFPS);
 	ImGui::SameLine(); ImGuiStd::HelpMarker(
-		u8"¿ªÆôÏŞÖ¡ÓÅ»¯ºóÊÊÓÃ£¬ÏÔÊ¾ÎŞÏŞGuiµÄui¼ÆËãÆµÂÊ¡£");
+		u8"å¼€å¯é™å¸§ä¼˜åŒ–åé€‚ç”¨ï¼Œæ˜¾ç¤ºæ— é™Guiçš„uiè®¡ç®—é¢‘ç‡ã€‚");
 	DrawAffixSettings(bigPadding, centerX, itemWidth);
 	DrawWindowSettings(bigPadding, centerX, itemWidth);
 }

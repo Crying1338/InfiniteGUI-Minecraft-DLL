@@ -1,4 +1,4 @@
-#include "TimeItem.h"
+ï»¿#include "TimeItem.h"
 #include <iomanip>
 #include <sstream>
 
@@ -11,7 +11,7 @@ void TimeItem::Toggle()
 
 void TimeItem::Update()
 {
-    // »ñÈ¡ÏµÍ³µ±Ç°Ê±¼ä
+    // è·å–ç³»ç»Ÿå½“å‰æ—¶é—´
     auto now = std::chrono::system_clock::now();
     std::time_t t = std::chrono::system_clock::to_time_t(now);
 
@@ -22,7 +22,7 @@ void TimeItem::Update()
     localtime_r(&t, &localTime);
 #endif
 
-    // ×ª»»³É×Ö·û´®
+    // è½¬æ¢æˆå­—ç¬¦ä¸²
     std::stringstream ss;
     if (showDate)
         ss << std::put_time(&localTime, "%Y-%m-%d | %H:%M:%S");
@@ -44,12 +44,12 @@ void TimeItem::DrawContent()
         closed = false;
     }
     ImVec4 targetTextColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
-    //»ñÈ¡io
+    //è·å–io
     ImGuiIO& io = ImGui::GetIO();
-    //¼ÆËãËÙ¶È
+    //è®¡ç®—é€Ÿåº¦
     float speed = 3.0f * std::clamp(io.DeltaTime, 0.0f, 0.05f);
     color.color = ImLerp(color.color, targetTextColor, speed);
-    // ÅĞ¶Ï¶¯»­ÊÇ·ñ½áÊø
+    // åˆ¤æ–­åŠ¨ç”»æ˜¯å¦ç»“æŸ
     if (Anim::AlmostEqual(color.color, targetTextColor))
     {
         color.color = targetTextColor;
@@ -65,7 +65,7 @@ void TimeItem::DrawSettings(const float& bigPadding, const float& centerX, const
 
     ImGui::SetCursorPosX(bigPadding);
     ImGui::SetNextItemWidth(itemWidth);
-    ImGui::Checkbox(u8"ÏÔÊ¾ÈÕÆÚ", &showDate);
+    ImGui::Checkbox(u8"æ˜¾ç¤ºæ—¥æœŸ", &showDate);
     DrawAffixSettings(bigPadding, centerX, itemWidth);
     DrawWindowSettings(bigPadding, centerX, itemWidth);
 }

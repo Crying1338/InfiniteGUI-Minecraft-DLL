@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Item.h"
 #include "AffixModule.h"
 #include "UpdateModule.h"
@@ -16,9 +16,9 @@ struct time_element {
 class TimeItem : public Item, public AffixModule , public UpdateModule, public WindowModule {
 public:
     TimeItem() {
-        type = Hud; // ĞÅÏ¢ÏîÀàĞÍ
-        name = u8"Ê±¼äÏÔÊ¾";
-        description = u8"ÏÔÊ¾µ±Ç°Ê±¼äºÍÈÕÆÚ";
+        type = Hud; // ä¿¡æ¯é¡¹ç±»å‹
+        name = u8"æ—¶é—´æ˜¾ç¤º";
+        description = u8"æ˜¾ç¤ºå½“å‰æ—¶é—´å’Œæ—¥æœŸ";
         icon = "a";
         updateIntervalMs = 1000;
         lastUpdateTime = std::chrono::steady_clock::now();
@@ -35,7 +35,7 @@ public:
     {
         ResetWindow();
         ResetAffix();
-        currentTimeStr = u8"ÕıÔÚ»ñÈ¡ÏµÍ³Ê±¼ä...";
+        currentTimeStr = u8"æ­£åœ¨è·å–ç³»ç»Ÿæ—¶é—´...";
         isEnabled = false;
         dirtyState.contentDirty = true;
         dirtyState.animating = true;

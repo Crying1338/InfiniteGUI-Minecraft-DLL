@@ -1,4 +1,4 @@
-/* F:\Files\Downloads\网易云音乐_爱给网_aigei_com-small.png (2026/1/24 13:55:57)
+﻿/* F:\Files\Downloads\网易云音乐_爱给网_aigei_com-small.png (2026/1/24 13:55:57)
    起始位置(h): 00000000, 结束位置(h): 0000695D, 长度(h): 0000695E */
 
 inline unsigned char NeteaseMusicLogo[26974] = {

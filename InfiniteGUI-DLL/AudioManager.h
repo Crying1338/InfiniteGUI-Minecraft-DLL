@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include "miniaudio/miniaudio.h"
 #include <string>
 #include <map>
@@ -14,8 +14,8 @@ public:
     bool Init();
     void Shutdown();
 
-    bool LoadSound(const std::string& path); // º”‘ÿ“Ù∆µ
-    void Play();                              // ≤•∑≈
+    bool LoadSound(const std::string& path); // Âä†ËΩΩÈü≥È¢ë
+    void Play();                              // Êí≠Êîæ
     void SetVolume(float volume);             // 0.0 ~ 1.0
     float GetVolume();
     void playSound(std::string soundName, float soundVolume);

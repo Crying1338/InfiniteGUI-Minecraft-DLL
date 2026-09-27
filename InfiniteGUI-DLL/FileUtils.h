@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <string>
 #include <shlobj.h>
@@ -40,13 +40,13 @@ namespace FileUtils {
         if (!DirectoryExists(p))
         {
             return "";
-        } //ËµÃ÷Õâ¸öAppDataPathÓĞÎÊÌâ
+        } //è¯´æ˜è¿™ä¸ªAppDataPathæœ‰é—®é¢˜
 
         if (p == "C:\\Users\\")
-            return ""; //C:UsersÎÄ¼ş¼ĞĞèÒª¹ÜÀíÔ±È¨ÏŞ²ÅÄÜ¶¯£¬²»ÄÜ×÷ÎªAppDataPath
+            return ""; //C:Usersæ–‡ä»¶å¤¹éœ€è¦ç®¡ç†å‘˜æƒé™æ‰èƒ½åŠ¨ï¼Œä¸èƒ½ä½œä¸ºAppDataPath
 
         if (!p.empty() && p.back() == '\\')
-            p.pop_back(); //Èç¹ûpÖĞ×îºóÒ»¸ö×Ö·ûÊÇ\£¬ÔòÈ¥µô£¬·ñÔò¼ÓÉÏ\InfiniteGUI
+            p.pop_back(); //å¦‚æœpä¸­æœ€åä¸€ä¸ªå­—ç¬¦æ˜¯\ï¼Œåˆ™å»æ‰ï¼Œå¦åˆ™åŠ ä¸Š\InfiniteGUI
 
         p += "\\InfiniteGUI";
 
@@ -85,7 +85,7 @@ namespace FileUtils {
         char path[MAX_PATH];
         GetModuleFileNameA(hMod, path, MAX_PATH);
 
-        // ½« DLL Ãû×ÖÈ¥µô£¬Ö»±£ÁôÂ·¾¶
+        // å°† DLL åå­—å»æ‰ï¼Œåªä¿ç•™è·¯å¾„
         std::string fullPath(path);
         size_t pos = fullPath.find_last_of("\\/");
         if (pos != std::string::npos)
@@ -106,7 +106,7 @@ namespace FileUtils {
         optionsPath = gamePath + "\\options.txt";
         soundPath = GetSoundPath();
         appDataPath = GetAppDataPath();
-        if(appDataPath.empty()) // Èç¹û»ñÈ¡Ê§°Ü£¬ÔòÊ¹ÓÃÄ¬ÈÏÂ·¾¶£¨¿ÉÄÜÊÇ¶àÓÃ»§²Ù×÷ÏµÍ³£©
+        if(appDataPath.empty()) // å¦‚æœè·å–å¤±è´¥ï¼Œåˆ™ä½¿ç”¨é»˜è®¤è·¯å¾„ï¼ˆå¯èƒ½æ˜¯å¤šç”¨æˆ·æ“ä½œç³»ç»Ÿï¼‰
             appDataPath = "C:\\InfiniteGUI";
 
         configPath = GetConfigPath();

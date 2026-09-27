@@ -1,14 +1,14 @@
-#pragma once
+ï»¿#pragma once
 #include <nlohmann/json.hpp>
 #include <Windows.h>
 
 class GlobalConfig {
 public:
-    std::string fontPath = "default";  // È«¾ÖÓïÑÔ
+    std::string fontPath = "default";  // å…¨å±€è¯­è¨€
 
-    std::string currentProfile = "profile";  // È«¾ÖÓïÑÔ
+    std::string currentProfile = "profile";  // å…¨å±€è¯­è¨€
 
-    // ÔÚÕâÀï¼Ó¸ü¶àÈ«¾Ö²ÎÊı¡­
+    // åœ¨è¿™é‡ŒåŠ æ›´å¤šå…¨å±€å‚æ•°â€¦
     bool enableOptimization = true;
 
     bool autoSave = true;

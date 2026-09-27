@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Sprint.h"
 
 #include "Anim.h"
@@ -13,22 +13,22 @@ void Sprint::Toggle()
 void Sprint::OnKeyEvent(bool state, bool isRepeat, WPARAM key)
 {
     //if (key == NULL) return;
-    //if (state && !isRepeat) //°´¼ü°´ÏÂ
+    //if (state && !isRepeat) //æŒ‰é”®æŒ‰ä¸‹
     //{
-    //    if (key == keybinds.at(u8"¼¤»î¼ü£º"))
+    //    if (key == keybinds.at(u8"æ¿€æ´»é”®ï¼š"))
     //    {
     //        isActivated = !isActivated;
     //        if (isActivated)
     //        {
-    //            color.color = ImVec4(0.1f, 1.0f, 0.1f, 1.0f); //ÂÌÉ«
+    //            color.color = ImVec4(0.1f, 1.0f, 0.1f, 1.0f); //ç»¿è‰²
     //            if (isPlaySound) AudioManager::Instance().playSound("counter\\counter_up.wav", soundVolume);
-    //            NotificationItem::Instance().AddNotification(NotificationType_Info, u8"Ç¿ÖÆ¼²ÅÜ£ºÒÑ¼¤»î¡£");
+    //            NotificationItem::Instance().AddNotification(NotificationType_Info, u8"å¼ºåˆ¶ç–¾è·‘ï¼šå·²æ¿€æ´»ã€‚");
     //        }
     //        else
     //        {
-    //            color.color = ImVec4(1.0f, 0.1f, 0.1f, 1.0f); //ºìÉ«
+    //            color.color = ImVec4(1.0f, 0.1f, 0.1f, 1.0f); //çº¢è‰²
     //            if (isPlaySound) AudioManager::Instance().playSound("counter\\counter_down.wav", soundVolume);
-    //            NotificationItem::Instance().AddNotification(NotificationType_Info, u8"Ç¿ÖÆ¼²ÅÜ£ºÒÑ¹Ø±Õ¡£");
+    //            NotificationItem::Instance().AddNotification(NotificationType_Info, u8"å¼ºåˆ¶ç–¾è·‘ï¼šå·²å…³é—­ã€‚");
     //        }
     //        dirtyState.contentDirty = true;
     //        dirtyState.animating = true;
@@ -40,7 +40,7 @@ void Sprint::OnKeyEvent(bool state, bool isRepeat, WPARAM key)
 
 void Sprint::GetSneaking()
 {
-    if (KeyState::GetKeyDown(customGameKeybinds ? gameKeybinds.at(u8"Ç±ĞĞ¼ü£º") : GameKeyBind::Instance().GetVK(GameAction::Sneak)) && GameStateDetector::Instance().IsInGame())
+    if (KeyState::GetKeyDown(customGameKeybinds ? gameKeybinds.at(u8"æ½œè¡Œé”®ï¼š") : GameKeyBind::Instance().GetVK(GameAction::Sneak)) && GameStateDetector::Instance().IsInGame())
     {
         state = Sneaking;
     }
@@ -48,7 +48,7 @@ void Sprint::GetSneaking()
 
 void Sprint::GetWalking()
 {
-    if (KeyState::GetKeyDown(customGameKeybinds ? gameKeybinds.at(u8"Ç°½ø¼ü£º") : GameKeyBind::Instance().GetVK(GameAction::Forward)) && GameStateDetector::Instance().IsInGame())
+    if (KeyState::GetKeyDown(customGameKeybinds ? gameKeybinds.at(u8"å‰è¿›é”®ï¼š") : GameKeyBind::Instance().GetVK(GameAction::Forward)) && GameStateDetector::Instance().IsInGame())
     {
         state = isActivated ? Sprinting : Walking;
     }
@@ -58,11 +58,11 @@ void Sprint::SetSprinting() const
 {
     if (state == Sprinting)
     {
-	    KeyState::SetKeyDown(customGameKeybinds ? gameKeybinds.at(u8"¼²ÅÜ¼ü£º") : GameKeyBind::Instance().GetVK(GameAction::Sprint), inputMode);
+	    KeyState::SetKeyDown(customGameKeybinds ? gameKeybinds.at(u8"ç–¾è·‘é”®ï¼š") : GameKeyBind::Instance().GetVK(GameAction::Sprint), inputMode);
     }
     if (state != Sprinting && lastState == Sprinting)
     {
-	    KeyState::SetKeyUp(customGameKeybinds ? gameKeybinds.at(u8"¼²ÅÜ¼ü£º") : GameKeyBind::Instance().GetVK(GameAction::Sprint), inputMode);
+	    KeyState::SetKeyUp(customGameKeybinds ? gameKeybinds.at(u8"ç–¾è·‘é”®ï¼š") : GameKeyBind::Instance().GetVK(GameAction::Sprint), inputMode);
     }
 }
 
@@ -72,22 +72,22 @@ void Sprint::Update()
     if(!GameStateDetector::Instance().IsInGameWindow()) state = OutOfWindow;
     else
     {
-        if (GameStateDetector::Instance().IsInGame() && keyStateHelper.GetKeyClick(keybinds.at(u8"¼¤»î¼ü£º")))
+        if (GameStateDetector::Instance().IsInGame() && keyStateHelper.GetKeyClick(keybinds.at(u8"æ¿€æ´»é”®ï¼š")))
         {
             isActivated = !isActivated;
             if (isActivated)
             {
-                color.color = ImVec4(0.1f, 1.0f, 0.1f, 1.0f); //ÂÌÉ«
+                color.color = ImVec4(0.1f, 1.0f, 0.1f, 1.0f); //ç»¿è‰²
                 if (isPlaySound) AudioManager::Instance().playSound("counter\\counter_up.wav", soundVolume);
-                NotificationItem::Instance().AddNotification(NotificationType_Info, u8"Ç¿ÖÆ¼²ÅÜ£ºÒÑ¼¤»î¡£");
+                NotificationItem::Instance().AddNotification(NotificationType_Info, u8"å¼ºåˆ¶ç–¾è·‘ï¼šå·²æ¿€æ´»ã€‚");
             }
             else
             {
                 GetWalking();
                 SetSprinting();
-                color.color = ImVec4(1.0f, 0.1f, 0.1f, 1.0f); //ºìÉ«
+                color.color = ImVec4(1.0f, 0.1f, 0.1f, 1.0f); //çº¢è‰²
                 if (isPlaySound) AudioManager::Instance().playSound("counter\\counter_down.wav", soundVolume);
-                NotificationItem::Instance().AddNotification(NotificationType_Info, u8"Ç¿ÖÆ¼²ÅÜ£ºÒÑ¹Ø±Õ¡£");
+                NotificationItem::Instance().AddNotification(NotificationType_Info, u8"å¼ºåˆ¶ç–¾è·‘ï¼šå·²å…³é—­ã€‚");
             }
             dirtyState.contentDirty = true;
             dirtyState.animating = true;
@@ -129,29 +129,29 @@ void Sprint::DrawContent()
     {
     case Idle:
     case OutOfWindow:
-        text = u8"¿ÕÏĞÖĞ";
+        text = u8"ç©ºé—²ä¸­";
         color.targetTextColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
         break;
     case Sprinting:
-        text = u8"¼²ÅÜÖĞ";
-        color.targetTextColor = ImVec4(0.1f, 1.0f, 0.1f, 1.0f); //ÂÌÉ«
+        text = u8"ç–¾è·‘ä¸­";
+        color.targetTextColor = ImVec4(0.1f, 1.0f, 0.1f, 1.0f); //ç»¿è‰²
         break;
     case Sneaking:
         color.targetTextColor = ImVec4(0.5f, 0.5f, 0.5f, 1.0f);
-        text = u8"Ç±ĞĞÖĞ";
+        text = u8"æ½œè¡Œä¸­";
         break;
     case Walking:
-        text = u8"ĞĞ×ßÖĞ";
+        text = u8"è¡Œèµ°ä¸­";
         color.targetTextColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
         break;
     default:
         break;
     }
 
-    //»ñÈ¡io
+    //è·å–io
     ImGuiIO& io = ImGui::GetIO();
 
-    //¼ÆËãËÙ¶È
+    //è®¡ç®—é€Ÿåº¦
     float speed = 3.0f * std::clamp(io.DeltaTime, 0.0f, 0.05f);
     color.color = ImLerp(color.color, color.targetTextColor, speed);
     if (Anim::AlmostEqual(color.color, color.targetTextColor))
@@ -170,23 +170,23 @@ void Sprint::DrawSettings(const float& bigPadding, const float& centerX, const f
     ImGui::SetCursorPosX(bigPadding);
     ImGui::SetNextItemWidth(itemWidth);
     //DrawItemSettings();
-    ImGui::Checkbox(u8"¼¤»î", &isActivated);
+    ImGui::Checkbox(u8"æ¿€æ´»", &isActivated);
     ImGui::SameLine();
     ImGui::SetCursorPosX(bigPadding + centerX);
     ImGui::SetNextItemWidth(itemWidth);
-    ImGui::Checkbox(u8"ÏÔÊ¾´°¿Ú", &isWindowShow);
+    ImGui::Checkbox(u8"æ˜¾ç¤ºçª—å£", &isWindowShow);
 
     ImGui::SetCursorPosX(bigPadding);
     ImGui::SetNextItemWidth(itemWidth);
 
     const char* inputModeNames[] = {
-    u8"°´¼üÊÂ¼ş(MouseEvent)",
-    u8"Ä£ÄâÊäÈë(SendInput)",
-    u8"·¢ËÍÏûÏ¢(PostMessage)"
+    u8"æŒ‰é”®äº‹ä»¶(MouseEvent)",
+    u8"æ¨¡æ‹Ÿè¾“å…¥(SendInput)",
+    u8"å‘é€æ¶ˆæ¯(PostMessage)"
     };
 
-    ImGui::Combo(u8"ÊäÈëÄ£Ê½", &inputMode, inputModeNames, IM_ARRAYSIZE(inputModeNames));
-    ImGui::SameLine(); ImGuiStd::HelpMarker(u8"Ä¬ÈÏÎªÄ£ÄâÊäÈë¡£Èç¹ûÇ¿ÖÆ¼²ÅÜÃ»ÓĞĞ§¹û£¬¿ÉÒÔ³¢ÊÔÇĞ»»²»Í¬µÄÊäÈë·½Ê½¡£");
+    ImGui::Combo(u8"è¾“å…¥æ¨¡å¼", &inputMode, inputModeNames, IM_ARRAYSIZE(inputModeNames));
+    ImGui::SameLine(); ImGuiStd::HelpMarker(u8"é»˜è®¤ä¸ºæ¨¡æ‹Ÿè¾“å…¥ã€‚å¦‚æœå¼ºåˆ¶ç–¾è·‘æ²¡æœ‰æ•ˆæœï¼Œå¯ä»¥å°è¯•åˆ‡æ¢ä¸åŒçš„è¾“å…¥æ–¹å¼ã€‚");
     DrawKeybindSettings(bigPadding, centerX, itemWidth);
     DrawAffixSettings(bigPadding, centerX, itemWidth);
     DrawSoundSettings(bigPadding, centerX, itemWidth);

@@ -1,5 +1,5 @@
-#include "HttpUpdateWorker.h"
-#include "HttpClient.h"  // Äã×Ô¼ºµÄ HttpClient
+ï»¿#include "HttpUpdateWorker.h"
+#include "HttpClient.h"  // ä½ è‡ªå·±çš„ HttpClient
 
 int HttpUpdateWorker::AddTask(
     const std::wstring& url,

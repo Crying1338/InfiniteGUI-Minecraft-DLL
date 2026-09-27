@@ -1,4 +1,4 @@
-#include "Text.h"
+ï»¿#include "Text.h"
 
 #include "Anim.h"
 #include "ImGuiStd.h"
@@ -19,12 +19,12 @@ void Text::DrawContent()
         closed = false;
     }
     ImVec4 targetTextColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
-    //»ñÈ¡io
+    //è·å–io
     ImGuiIO& io = ImGui::GetIO();
-    //¼ÆËãËÙ¶È
+    //è®¡ç®—é€Ÿåº¦
     float speed = 3.0f * std::clamp(io.DeltaTime, 0.0f, 0.05f);
     color.color = ImLerp(color.color, targetTextColor, speed);
-    // ÅĞ¶Ï¶¯»­ÊÇ·ñ½áÊø
+    // åˆ¤æ–­åŠ¨ç”»æ˜¯å¦ç»“æŸ
     if (Anim::AlmostEqual(color.color, targetTextColor))
     {
         color.color = targetTextColor;
@@ -38,11 +38,11 @@ void Text::DrawSettings(const float& bigPadding, const float& centerX, const flo
     float bigItemWidth = centerX * 2.0f - bigPadding * 4.0f;
     ImGui::SetCursorPosX(bigPadding);
     ImGui::SetNextItemWidth(itemWidth);
-    ImGui::Checkbox(u8"ÆôÓÃ", &isEnabled);
+    ImGui::Checkbox(u8"å¯ç”¨", &isEnabled);
 
     ImGui::SetCursorPosX(bigPadding);
     ImGui::SetNextItemWidth(bigItemWidth);
-    ImGuiStd::InputTextStd(u8"ÎÄ±¾ÄÚÈİ", text);
+    ImGuiStd::InputTextStd(u8"æ–‡æœ¬å†…å®¹", text);
     DrawAffixSettings(bigPadding, centerX, itemWidth);
     DrawWindowSettings(bigPadding, centerX, itemWidth);
 }

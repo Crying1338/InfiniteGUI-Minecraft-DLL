@@ -1,4 +1,4 @@
-/* F:\Files\Downloads\酷狗音乐-就是歌多_爱给网_aigei_com-small.png (2026/1/24 15:43:27)
+﻿/* F:\Files\Downloads\酷狗音乐-就是歌多_爱给网_aigei_com-small.png (2026/1/24 15:43:27)
    起始位置(h): 00000000, 结束位置(h): 00006509, 长度(h): 0000650A */
 
 inline unsigned char KuGouMusicLogo[25866] = {

@@ -1,4 +1,4 @@
-#include "Menu.h"
+ï»¿#include "Menu.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
 #include "ImGuiStd.h"
@@ -23,24 +23,24 @@ void Menu::RenderGui()
     {
         return;
     }
-    //Ê¹´°¿ÚÏÔÊ¾ÔÚÆÁÄ»ÖĞ¼ä
+    //ä½¿çª—å£æ˜¾ç¤ºåœ¨å±å¹•ä¸­é—´
     ImGui::SetNextWindowPos(ImVec2((ImGui::GetIO().DisplaySize.x - ImGui::GetIO().DisplaySize.x / 2), (ImGui::GetIO().DisplaySize.y - ImGui::GetIO().DisplaySize.y / 2)), ImGuiCond_Once, ImVec2(0.5f, 0.5f));
     ImGui::SetNextWindowSize(ImVec2((float)opengl_hook::screen_size.x + 10, (float)opengl_hook::screen_size.y + 10), ImGuiCond_Always);
 
 
-    //»ñÈ¡io
+    //è·å–io
     ImGuiIO& io = ImGui::GetIO();
-    //¼ÆËãËÙ¶È
+    //è®¡ç®—é€Ÿåº¦
     float speed = 5.0f * std::clamp(io.DeltaTime, 0.0f, 0.05f);
     myWindowBgColor = ImLerp(myWindowBgColor, tarWindowBgColor, speed);
     ImGui::PushStyleColor(ImGuiCol_WindowBg, myWindowBgColor);
-    ImGui::Begin(u8"²Ëµ¥±³¾°", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNav);
+    ImGui::Begin(u8"èœå•èƒŒæ™¯", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNav);
     ImGui::PopStyleColor();
     ImGui::PushFont(NULL, itemStyle.fontSize);
     if (itemStyle.rainbowFont)
         processRainbowFont();
     else
-        ImGui::PushStyleColor(ImGuiCol_Text, itemStyle.fontColor); // ×ÖÌåÑÕÉ«
+        ImGui::PushStyleColor(ImGuiCol_Text, itemStyle.fontColor); // å­—ä½“é¢œè‰²
     switch (state)
     {
     case MENU_STATE_MAIN:
@@ -77,7 +77,7 @@ void Menu::RenderAfterGui()
 void Menu::OnKeyEvent(bool state, bool isRepeat, WPARAM key)
 {
     if (key == NULL || isRepeat) return;
-    if (state) //°´¼ü°´ÏÂ
+    if (state) //æŒ‰é”®æŒ‰ä¸‹
     {
         if (key == VK_ESCAPE && isEnabled)
         {
@@ -89,7 +89,7 @@ void Menu::OnKeyEvent(bool state, bool isRepeat, WPARAM key)
 
 int Menu::GetKeyBind()
 {
-    return keybinds.at(u8"²Ëµ¥¿ì½İ¼ü£º");
+    return keybinds.at(u8"èœå•å¿«æ·é”®ï¼š");
 }
 
 MainMenuButton* myButton;
@@ -97,10 +97,10 @@ void Menu::ShowMain()
 {
     if (myButton == nullptr)
     {
-        myButton = new MainMenuButton(u8"ÉèÖÃ", ImVec2(200.0f, 60.0f));
+        myButton = new MainMenuButton(u8"è®¾ç½®", ImVec2(200.0f, 60.0f));
     }
     bool isBtnHovered = false;
-    ////Ê¹´°¿ÚÏÔÊ¾ÔÚÆÁÄ»ÖĞ¼ä
+    ////ä½¿çª—å£æ˜¾ç¤ºåœ¨å±å¹•ä¸­é—´
     ImGuiStyle& style = ImGui::GetStyle();
     ImVec4* colors = style.Colors;
 
@@ -155,32 +155,32 @@ void Menu::ShowSidePanels() const
     ImGuiIO& io = ImGui::GetIO();
     ImGuiStyle& style = ImGui::GetStyle();
 
-    // ¶¯»­Öµ£¨0~1£©
+    // åŠ¨ç”»å€¼ï¼ˆ0~1ï¼‰
     float t = panelAnim.state;
 
     if (t <= 0.001f)
-        return;   // ÍêÈ«Ëõ»ØµÄÊ±ºò²»»­£¬Ìá¸ßĞÔÄÜ
+        return;   // å®Œå…¨ç¼©å›çš„æ—¶å€™ä¸ç”»ï¼Œæé«˜æ€§èƒ½
 
-    // Ãæ°å´óĞ¡
+    // é¢æ¿å¤§å°
     ImVec2 panelSize = ImVec2(350, 500);
-    // °´Å¥ÆÁÄ»×ø±ê£¨ÊÀ½ç×ø±ê£©
+    // æŒ‰é’®å±å¹•åæ ‡ï¼ˆä¸–ç•Œåæ ‡ï¼‰
     ImVec2 Center; 
     Center.x = io.DisplaySize.x / 2;
     Center.y = io.DisplaySize.y / 2;
 
 
-    // ²åÖµËõ·Å
+    // æ’å€¼ç¼©æ”¾
     float scale = ImLerp(0.0f, 1.0f, t);
 
-    // ×îÖÕÃæ°åËõ·Å³ß´ç
+    // æœ€ç»ˆé¢æ¿ç¼©æ”¾å°ºå¯¸
     ImVec2 finalSize = ImVec2(panelSize.x * scale, panelSize.y * scale);
 
-    // ×óÓÒ»¬¶¯¾àÀë
+    // å·¦å³æ»‘åŠ¨è·ç¦»
     float slideOffset = 400.0f;
     ImGui::PushStyleVar(ImGuiStyleVar_Alpha, scale - 0.2f * (1.0f - scale));
-    ImGui::PushTextWrapPos(0.0f); // ÉèÖÃ×Ô¶¯»»ĞĞ
+    ImGui::PushTextWrapPos(0.0f); // è®¾ç½®è‡ªåŠ¨æ¢è¡Œ
     //======================
-    // ×ó²à ABOUT Ãæ°å¶¯»­
+    // å·¦ä¾§ ABOUT é¢æ¿åŠ¨ç”»
     //======================
     {
         ImVec2 targetPos = ImVec2(Center.x  -slideOffset, Center.y);
@@ -191,7 +191,7 @@ void Menu::ShowSidePanels() const
 
         //ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 12.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
-        ImGui::SetNextWindowBgAlpha(0.7f); // °ëÍ¸Ã÷
+        ImGui::SetNextWindowBgAlpha(0.7f); // åŠé€æ˜
         ImGui::Begin("##AboutPanel", nullptr,
             ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
             ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
@@ -202,14 +202,14 @@ void Menu::ShowSidePanels() const
         ImGui::PushFont(io.FontDefault, style.FontSizeBase * 1.5f);
         float right = ImGui::GetContentRegionAvail().x;
         float textWidth =
-            ImGui::CalcTextSize(u8"¹«¸æ").x +
+            ImGui::CalcTextSize(u8"å…¬å‘Š").x +
             ImGui::GetStyle().ItemSpacing.x;
 
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + right - textWidth);
-        ImGuiStd::TextShadow(u8"¹«¸æ");
+        ImGuiStd::TextShadow(u8"å…¬å‘Š");
         ImGui::PopFont();
         ImGui::Separator();
-        ImGui::SetNextWindowBgAlpha(0.3f); // °ëÍ¸Ã÷
+        ImGui::SetNextWindowBgAlpha(0.3f); // åŠé€æ˜
         ImGui::BeginChild("AnnounceChild", ImVec2(0, 0), true, ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoScrollbar);
         ImGuiStd::TextShadow(App::Instance().announcement.c_str());
         ImGui::EndChild();
@@ -219,7 +219,7 @@ void Menu::ShowSidePanels() const
     }
 
     //====================== 
-    // ÓÒ²à ¸üĞÂÈÕÖ¾ Ãæ°å¶¯»­
+    // å³ä¾§ æ›´æ–°æ—¥å¿— é¢æ¿åŠ¨ç”»
     //======================
     {
         ImVec2 targetPos = ImVec2(Center.x + slideOffset, Center.y);
@@ -230,12 +230,12 @@ void Menu::ShowSidePanels() const
 
         //ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 12.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(10, 10));
-        ImGui::SetNextWindowBgAlpha(0.7f); // °ëÍ¸Ã÷
+        ImGui::SetNextWindowBgAlpha(0.7f); // åŠé€æ˜
         ImGui::Begin("##UpdateLogPanel", nullptr,
             ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
             ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
         ImGui::PushFont(io.FontDefault, style.FontSizeBase * 1.5f);
-        ImGuiStd::TextShadow(u8"ÈÕÖ¾");
+        ImGuiStd::TextShadow(u8"æ—¥å¿—");
         ImVec2 separatorPos = ImGui::GetCursorPos();
         ImGui::SameLine();
         ImGui::PopFont();
@@ -247,9 +247,9 @@ void Menu::ShowSidePanels() const
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + right - textWidth);
         ImGuiStd::TextShadow(u8"\uE034"); //"&#xe034"
         ImGui::PopFont();
-        ImGui::SetCursorPos(separatorPos); //separatorµÄÎ»ÖÃÓÉ×ÖÌå´óĞ¡¾ö¶¨£¬ĞèÒªÖØĞÂÉèÖÃ
+        ImGui::SetCursorPos(separatorPos); //separatorçš„ä½ç½®ç”±å­—ä½“å¤§å°å†³å®šï¼Œéœ€è¦é‡æ–°è®¾ç½®
         ImGui::Separator();
-        ImGui::SetNextWindowBgAlpha(0.3f); // °ëÍ¸Ã÷
+        ImGui::SetNextWindowBgAlpha(0.3f); // åŠé€æ˜
         ImGui::BeginChild("UpdateLogChild", ImVec2(0, 0), true, ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoScrollbar);
         ChangeLog::Instance().Draw();
         ImGui::EndChild();
@@ -260,36 +260,36 @@ void Menu::ShowSidePanels() const
     ImGui::PopStyleVar();
     ImGui::PopTextWrapPos();
     //======================
-// LOGO ¶¥²¿¶¯»­Ãæ°å
+// LOGO é¡¶éƒ¨åŠ¨ç”»é¢æ¿
 //======================
     {
-        // °´Å¥ÖĞĞÄ
+        // æŒ‰é’®ä¸­å¿ƒ
         ImVec2 startPos = Center;
 
-        // Ä¿±êÎ»ÖÃ£ºÏòÉÏÆ«ÒÆ 100 ÏñËØ
+        // ç›®æ ‡ä½ç½®ï¼šå‘ä¸Šåç§» 100 åƒç´ 
         ImVec2 targetPos = ImVec2(Center.x, Center.y - 150);
 
-        // ²åÖµµ±Ç°×ø±ê
+        // æ’å€¼å½“å‰åæ ‡
         ImVec2 currentPos = targetPos;
             //ImLerp(currentPos, targetPos, t);
 
 
-        // logo Ô­Ê¼´óĞ¡
+        // logo åŸå§‹å¤§å°
         ImVec2 logoSize = ImVec2(
             (float)opengl_hook::gui.logoTexture.width,
             (float)opengl_hook::gui.logoTexture.height
         );
 
-        // ¶¯»­Ëõ·Å£¬0~1
+        // åŠ¨ç”»ç¼©æ”¾ï¼Œ0~1
         float scale = t;
 
-        // ×îÖÕËõ·Å´óĞ¡
+        // æœ€ç»ˆç¼©æ”¾å¤§å°
         ImVec2 finalSize = ImVec2(
             logoSize.x * scale,
             logoSize.y * scale
         );
 
-        // logo ´°¿ÚÍ¸Ã÷¶È£¨¸ú×Åscaleµ­Èë£©
+        // logo çª—å£é€æ˜åº¦ï¼ˆè·Ÿç€scaleæ·¡å…¥ï¼‰
         float logoAlpha = scale;
 
         if (finalSize.x > 1 && finalSize.y > 1)
@@ -302,7 +302,7 @@ void Menu::ShowSidePanels() const
             );
 
             ImGui::SetNextWindowSize(finalSize);
-            ImGui::SetNextWindowBgAlpha(0.0f); // ÍêÈ«ÎŞ±³¾°£¨Ïàµ±ÓÚ´¿ Image£©
+            ImGui::SetNextWindowBgAlpha(0.0f); // å®Œå…¨æ— èƒŒæ™¯ï¼ˆç›¸å½“äºçº¯ Imageï¼‰
 
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
             ImGui::PushStyleVar(ImGuiStyleVar_Alpha, logoAlpha);
@@ -317,7 +317,7 @@ void Menu::ShowSidePanels() const
                 ImGuiWindowFlags_NoBackground
             );
 
-            // ¾ÓÖĞ»æÖÆÍ¼Æ¬
+            // å±…ä¸­ç»˜åˆ¶å›¾ç‰‡
             ImGui::SetCursorPos(ImVec2(0, 0));
             ImGui::Image(opengl_hook::gui.logoTexture.id,
                 finalSize
@@ -334,7 +334,7 @@ ImVec2 menuInnerSize = ImVec2(900, 556);
 ImVec2 menuSize = ImVec2(menuInnerSize.x + 6.0f, menuInnerSize.y + 6.0f);
 void Menu::ShowSettings(bool* done)
 {
-    //Ê¹´°¿ÚÏÔÊ¾ÔÚÆÁÄ»ÖĞ¼ä
+    //ä½¿çª—å£æ˜¾ç¤ºåœ¨å±å¹•ä¸­é—´
     if (needRepos)
     {
         ImGui::SetNextWindowPos(
@@ -345,10 +345,10 @@ void Menu::ShowSettings(bool* done)
     }
     ImGui::SetNextWindowSize(menuSize, ImGuiCond_Once);
     ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-    ImGui::Begin(u8"Ö÷¿ØÖÆÃæ°å", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+    ImGui::Begin(u8"ä¸»æ§åˆ¶é¢æ¿", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
     ImGui::PopStyleColor();
     ImGui::SetCursorPos(ImVec2(3, 3));
-    //ÉèÖÃ¿Ø¼şÓë×ó±ßµÄ¼ä¸ô
+    //è®¾ç½®æ§ä»¶ä¸å·¦è¾¹çš„é—´éš”
     if (!initialized)
     {
         settingMenu->Init();
@@ -369,16 +369,16 @@ void Menu::Toggle()
     {
         if (GlobalConfig::Instance().autoSave) {
             ConfigManager::Instance().Save();
-            NotificationItem::Instance().AddNotification(NotificationType_Success, u8"×Ô¶¯±£´æ£ºÅäÖÃÎÄ¼şÒÑ±£´æ¡£");
+            NotificationItem::Instance().AddNotification(NotificationType_Success, u8"è‡ªåŠ¨ä¿å­˜ï¼šé…ç½®æ–‡ä»¶å·²ä¿å­˜ã€‚");
         }
         RECT rect;
-        // »ñÈ¡´°¿ÚµÄ¾ØĞÎÎ»ÖÃºÍ´óĞ¡
+        // è·å–çª—å£çš„çŸ©å½¢ä½ç½®å’Œå¤§å°
         if (GetWindowRect(opengl_hook::handle_window, &rect)) {
-            // ¼ÆËã´°¿ÚÖĞĞÄµÄÎ»ÖÃ
+            // è®¡ç®—çª—å£ä¸­å¿ƒçš„ä½ç½®
             int centerX = (rect.left + rect.right) / 2;
             int centerY = (rect.top + rect.bottom) / 2;
 
-            // ÉèÖÃÊó±êÎ»ÖÃ
+            // è®¾ç½®é¼ æ ‡ä½ç½®
             SetCursorPos(centerX, centerY);
         }
         ClipCursor(&gameWindowRect);
@@ -386,13 +386,13 @@ void Menu::Toggle()
         panelAnim.state = 0.0f;
         panelAnim.blurriness = 0.0f;
         dirtyState.animating = false;
-        dirtyState.contentDirty = true; //ÏÂÒ»´Î¸üĞÂ
+        dirtyState.contentDirty = true; //ä¸‹ä¸€æ¬¡æ›´æ–°
     }
     else
     {
         needRepos = true;
-        GetClipCursor(&gameWindowRect); //±£´æµ±Ç°²Ã¼ô¾ØĞÎ
-        ClipCursor(NULL); // ÒÆ³ıµ±Ç°µÄÊó±ê²Ã¼ô¾ØĞÎ£¬ÈÃÊó±ê»Ö¸´ÎªÈ«ÆÁ×ÔÓÉÒÆ¶¯
+        GetClipCursor(&gameWindowRect); //ä¿å­˜å½“å‰è£å‰ªçŸ©å½¢
+        ClipCursor(NULL); // ç§»é™¤å½“å‰çš„é¼ æ ‡è£å‰ªçŸ©å½¢ï¼Œè®©é¼ æ ‡æ¢å¤ä¸ºå…¨å±è‡ªç”±ç§»åŠ¨
         dirtyState.animating = true;
         state = MENU_STATE_MAIN;
     }
@@ -404,10 +404,10 @@ void Menu::DrawSettings(const float& bigPadding, const float& centerX, const flo
 
     ImGui::SetCursorPosX(bigPadding);
     ImGui::PushItemWidth(itemWidth);
-    ImGui::Checkbox(u8"±³¾°Ä£ºı", &blur->menu_blur);
+    ImGui::Checkbox(u8"èƒŒæ™¯æ¨¡ç³Š", &blur->menu_blur);
     ImGui::SetCursorPosX(bigPadding);
     ImGui::PushItemWidth(bigItemWidth);
-    ImGui::SliderInt(u8"Ä£ºıÇ¿¶È", &blur->blurriness_value, 0, 10);
+    ImGui::SliderInt(u8"æ¨¡ç³Šå¼ºåº¦", &blur->blurriness_value, 0, 10);
     DrawKeybindSettings(bigPadding, centerX, itemWidth);
     DrawSoundSettings(bigPadding, centerX, itemWidth);
     DrawStyleSettings(bigPadding, centerX, itemWidth);

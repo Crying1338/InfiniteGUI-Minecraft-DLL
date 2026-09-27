@@ -1,4 +1,4 @@
-#include "ConfigManager.h"
+ï»¿#include "ConfigManager.h"
 #include <fstream>
 #include <filesystem>
 #include <nlohmann/json.hpp>
@@ -59,7 +59,7 @@ void ConfigManager::NotifyProfileLoad()
 {
     int key = Menu::Instance().GetKeyBind();
     std::string hotkeyStr = keys[key];
-    std::string notify = u8"ÎŞÏŞGuiÆô¶¯³É¹¦£¡\n°´\"" + hotkeyStr + u8"\"¼ü´ò¿ª²Ëµ¥¡£";
+    std::string notify = u8"æ— é™Guiå¯åŠ¨æˆåŠŸï¼\næŒ‰\"" + hotkeyStr + u8"\"é”®æ‰“å¼€èœå•ã€‚";
     NotificationItem::Instance().AddNotification(NotificationType_Info, notify, 8000);
     ClickSound::PlayIntroSound();
 }

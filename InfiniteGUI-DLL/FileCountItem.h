@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Item.h"
 #include "AffixModule.h"
 #include "SoundModule.h"
@@ -13,9 +13,9 @@ struct file_count_element {
 class FileCountItem : public Item, public AffixModule, public SoundModule, public UpdateModule, public WindowModule {
 public:
     FileCountItem() {
-        type = Hud; // ĞÅÏ¢ÏîÀàĞÍ
-        name = u8"ÎÄ¼şÊıÁ¿ÏÔÊ¾";
-        description = u8"ÏÔÊ¾ÎÄ¼ş¼ĞÄÚÎÄ¼şÊıÁ¿";
+        type = Hud; // ä¿¡æ¯é¡¹ç±»å‹
+        name = u8"æ–‡ä»¶æ•°é‡æ˜¾ç¤º";
+        description = u8"æ˜¾ç¤ºæ–‡ä»¶å¤¹å†…æ–‡ä»¶æ•°é‡";
         icon = u8"\uE02A";
         updateIntervalMs = 1000;
         lastUpdateTime = std::chrono::steady_clock::now();
@@ -35,7 +35,7 @@ public:
         ResetWindow();
         isEnabled = false;
         prefix = "[";
-        suffix = u8"¸öÎÄ¼ş]";
+        suffix = u8"ä¸ªæ–‡ä»¶]";
         fileCount = 0;
         lastFileCount = 0;
         folderPath = "C:\\Users";
@@ -56,11 +56,11 @@ private:
     size_t fileCount = 0;
     size_t lastFileCount = 0;
 
-    // ÅäÖÃÏî
-    std::string folderPath = "C:\\Users";   // Ä¬ÈÏÂ·¾¶
+    // é…ç½®é¡¹
+    std::string folderPath = "C:\\Users";   // é»˜è®¤è·¯å¾„
     std::string errorMessage = "";
-    bool recursive = false;           // ÊÇ·ñµİ¹éÉ¨Ãè
-    std::string extensionFilter = ""; // ÀıÈç ".txt" Îª¿ÕÔòÈ«²¿ÎÄ¼ş
+    bool recursive = false;           // æ˜¯å¦é€’å½’æ‰«æ
+    std::string extensionFilter = ""; // ä¾‹å¦‚ ".txt" ä¸ºç©ºåˆ™å…¨éƒ¨æ–‡ä»¶
 
     file_count_element color = { ImGui::ColorConvertU32ToFloat4(ImGui::GetColorU32(ImGuiCol_Text)) };
 };

@@ -1,13 +1,13 @@
-#pragma once
+ï»¿#pragma once
 #include "Item.h"
 #include "WindowStyleModule.h"
 
 class GlobalWindowStyle : public WindowStyleModule, public Item {
 public:
     GlobalWindowStyle() {
-        type = Hidden; // ĞÅÏ¢ÏîÀàĞÍ
-        name = u8"È«¾Ö´°¿ÚÑùÊ½";
-        description = u8"ÉèÖÃÈ«¾Ö´°¿ÚÑùÊ½";
+        type = Hidden; // ä¿¡æ¯é¡¹ç±»å‹
+        name = u8"å…¨å±€çª—å£æ ·å¼";
+        description = u8"è®¾ç½®å…¨å±€çª—å£æ ·å¼";
         icon = "L";
         GlobalWindowStyle::Reset();
     }

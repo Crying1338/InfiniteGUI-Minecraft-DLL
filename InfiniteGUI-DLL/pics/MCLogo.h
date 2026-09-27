@@ -1,4 +1,4 @@
-/* F:\Files\Downloads\Bedrock_Edition_icon_2.png (2026/1/24 14:56:12)
+﻿/* F:\Files\Downloads\Bedrock_Edition_icon_2.png (2026/1/24 14:56:12)
    起始位置(h): 00000000, 结束位置(h): 0000035A, 长度(h): 0000035B */
 
 inline unsigned char MCLogo[859] = {

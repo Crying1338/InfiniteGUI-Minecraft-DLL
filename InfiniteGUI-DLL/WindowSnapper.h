@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "imgui/imgui.h"
 #include <intrin.h>
 #include <Windows.h>
@@ -8,23 +8,23 @@
 enum SnapState : uint32_t {
     SNAP_NONE = 0,
 
-    // ±ß
+    // è¾¹
     SNAP_LEFT = 1 << 0,
     SNAP_RIGHT = 1 << 1,
     SNAP_TOP = 1 << 2,
     SNAP_BOTTOM = 1 << 3,
 
-    // ÖÐÐÄ
+    // ä¸­å¿ƒ
     SNAP_CENTER_X = 1 << 4,
     SNAP_CENTER_Y = 1 << 5,
 
-    // ±ß
+    // è¾¹
     SNAP_OTHER_LEFT = 1 << 6,
     SNAP_OTHER_RIGHT = 1 << 7,
     SNAP_OTHER_TOP = 1 << 8,
     SNAP_OTHER_BOTTOM = 1 << 9,
 
-    // ÖÐÐÄ
+    // ä¸­å¿ƒ
     SNAP_OTHER_CENTER_X = 1 << 10,
     SNAP_OTHER_CENTER_Y = 1 << 11,
 };

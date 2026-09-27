@@ -1,4 +1,4 @@
-#include "BilibiliFansItem.h"
+Ôªø#include "BilibiliFansItem.h"
 #include "HttpClient.h"
 #include "ImGuiStd.h"
 #include "ImGui\imgui_internal.h"
@@ -15,7 +15,7 @@ void BilibiliFansItem::Toggle()
 void BilibiliFansItem::Update()
 {
 
-    // ø™∫ÛÃ®œﬂ≥ÃªÒ»°
+    // ÂºÄÂêéÂè∞Á∫øÁ®ãËé∑Âèñ
     std::thread([this]()
         {
             std::wstring url = L"https://api.bilibili.com/x/relation/stat?vmid=" + std::to_wstring(uid);
@@ -41,26 +41,26 @@ void BilibiliFansItem::Update()
 
     fansCount = newFans;
 
-    // ƒ⁄»›∑¢…˙±‰ªØ
+    // ÂÜÖÂÆπÂèëÁîüÂèòÂåñ
     dirtyState.contentDirty = false;
 
     if(!firstLoad)
     {
         if (fansCount > lastFansCount)
         {
-            color.color = ImVec4(0.1f, 1.0f, 0.1f, 1.0f); //¬Ã…´
+            color.color = ImVec4(0.1f, 1.0f, 0.1f, 1.0f); //ÁªøËâ≤
             if (isPlaySound)
                 AudioManager::Instance().playSound("bilibilifans\\bilibilifans_up.wav", soundVolume);
             int count = fansCount - lastFansCount;
-            std::string msg = u8"’«∑€ " + std::to_string(count) + u8" Œª°£";
+            std::string msg = u8"Ê∂®Á≤â " + std::to_string(count) + u8" ‰Ωç„ÄÇ";
             NotificationItem::Instance().AddNotification(NotificationType_Info, msg);
         }
         else if (fansCount < lastFansCount)
         {
-            color.color = ImVec4(1.0f, 0.1f, 0.1f, 1.0f); //∫Ï…´
+            color.color = ImVec4(1.0f, 0.1f, 0.1f, 1.0f); //Á∫¢Ëâ≤
             if (isPlaySound) AudioManager::Instance().playSound("bilibilifans\\bilibilifans_down.wav", soundVolume);
             int count = lastFansCount - fansCount;
-            std::string msg = u8"µÙ∑€ " + std::to_string(count) + u8" Œª°£";
+            std::string msg = u8"ÊéâÁ≤â " + std::to_string(count) + u8" ‰Ωç„ÄÇ";
             NotificationItem::Instance().AddNotification(NotificationType_Info, msg);
         }
         else return;
@@ -86,13 +86,13 @@ void BilibiliFansItem::DrawContent()
     }
     ImVec4 targetTextColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
 
-    //ªÒ»°io
+    //Ëé∑Âèñio
     ImGuiIO& io = ImGui::GetIO();
 
     float speed = 3.0f * std::clamp(io.DeltaTime, 0.0f, 0.05f);
     color.color = ImLerp(color.color, targetTextColor, speed);
 
-    // ≈–∂œ∂Øª≠ «∑ÒΩ· ¯
+    // Âà§Êñ≠Âä®ÁîªÊòØÂê¶ÁªìÊùü
     if (Anim::AlmostEqual(color.color, targetTextColor))
     {
         color.color = targetTextColor;
@@ -111,21 +111,21 @@ void BilibiliFansItem::DrawSettings(const float& bigPadding, const float& center
     ImGui::SetNextItemWidth(bigItemWidth);
 
     static std::string uidStr = std::to_string(uid);
-    ImGuiStd::InputTextStd(u8"B’æ UID", uidStr);
+    ImGuiStd::InputTextStd(u8"BÁ´ô UID", uidStr);
     ImGui::SameLine();
-    if (ImGui::Button(u8"»∑∂®"))
+    if (ImGui::Button(u8"Á°ÆÂÆö"))
     {
         if (uidStr.empty())
         {
-            uidStr = u8"≤ªƒ‹ ‰»Îø’÷µ"; // ƒ¨»œ…Ë÷√Œ™ƒ„µƒ UID
+            uidStr = u8"‰∏çËÉΩËæìÂÖ•Á©∫ÂÄº"; // ÈªòËÆ§ËÆæÁΩÆ‰∏∫‰Ω†ÁöÑ UID
         }
         else if (uidStr.find_first_not_of("0123456789") != std::string::npos)
         {
-            uidStr = u8"÷ªƒ‹ ‰»Î ˝◊÷"; //  ‰»Î∑« ˝◊÷
+            uidStr = u8"Âè™ËÉΩËæìÂÖ•Êï∞Â≠ó"; // ËæìÂÖ•ÈùûÊï∞Â≠ó
         }
-        else if (std::stoll(uidStr) <= 0)  // ˝◊÷–°”⁄µ»”⁄0
+        else if (std::stoll(uidStr) <= 0)  //Êï∞Â≠óÂ∞è‰∫éÁ≠â‰∫é0
         {
-            uidStr = u8"÷ªƒ‹ ‰»Î’˝’˚ ˝"; //  ‰»Î∏∫ ˝
+            uidStr = u8"Âè™ËÉΩËæìÂÖ•Ê≠£Êï¥Êï∞"; // ËæìÂÖ•Ë¥üÊï∞
         }
         else
         {

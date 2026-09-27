@@ -1,4 +1,4 @@
-#include "HttpClient.h"
+ï»¿#include "HttpClient.h"
 #include <windows.h>
 #include <winhttp.h>
 #pragma comment(lib, "winhttp.lib")
@@ -8,7 +8,7 @@ bool HttpClient::HttpGet(const std::wstring& url, std::string& outResponse)
     std::wstring server, path;
     INTERNET_PORT port = INTERNET_DEFAULT_HTTPS_PORT;
 
-    // ½âÎöURL£¨Ö»Ö§³Ö https://domain/path£©
+    // è§£æURLï¼ˆåªæ”¯æŒ https://domain/pathï¼‰
     if (url.rfind(L"https://", 0) != 0)
         return false;
 

@@ -1,16 +1,16 @@
-#include "CPSDetector.h"
+ï»¿#include "CPSDetector.h"
 #include "App.h"
 #include "GameStateDetector.h"
 
 
-//// ¼ì²éÊÇ·ñµ½ÁË¸üĞÂµÄÊ±¼ä
+//// æ£€æŸ¥æ˜¯å¦åˆ°äº†æ›´æ–°çš„æ—¶é—´
 //bool CPSDetector::ShouldCpsUpdate() {
 //    auto now = std::chrono::steady_clock::now();
 //    auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastCpsTime).count();
 //    return elapsedTime >= cpsIntervalMs;
 //}
 //
-//// ¸üĞÂ²Ù×÷
+//// æ›´æ–°æ“ä½œ
 //void CPSDetector::MarkUpCPSdated() {
 //    lastCpsTime = std::chrono::steady_clock::now();
 //}

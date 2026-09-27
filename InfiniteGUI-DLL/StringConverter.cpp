@@ -1,10 +1,10 @@
-#include "StringConverter.h"
+ï»¿#include "StringConverter.h"
 #include <windows.h>
 
 namespace StringConverter
 {
     // =============================
-    // UTF-8 ¡ú UTF-16 (wstring)
+    // UTF-8 â†’ UTF-16 (wstring)
     // =============================
     std::wstring Utf8ToWstring(const std::string& utf8)
     {
@@ -25,7 +25,7 @@ namespace StringConverter
     }
 
     // =============================
-    // UTF-16 ¡ú UTF-8
+    // UTF-16 â†’ UTF-8
     // =============================
     std::string WstringToUtf8(const std::wstring& wstr)
     {
@@ -45,7 +45,7 @@ namespace StringConverter
     }
 
     // =============================
-    // ACP ¡ú UTF-16
+    // ACP â†’ UTF-16
     // =============================
     std::wstring AcpToWstring(const std::string& acp)
     {
@@ -58,7 +58,7 @@ namespace StringConverter
     }
 
     // =============================
-    // UTF-16 ¡ú ACP
+    // UTF-16 â†’ ACP
     // =============================
     std::string WstringToAcp(const std::wstring& wstr)
     {
@@ -71,7 +71,7 @@ namespace StringConverter
     }
 
     // =============================
-    // UTF-8 ¡ú ACP
+    // UTF-8 â†’ ACP
     // =============================
     std::string Utf8ToAcp(const std::string& utf8)
     {
@@ -79,7 +79,7 @@ namespace StringConverter
     }
 
     // =============================
-    // ACP ¡ú UTF-8
+    // ACP â†’ UTF-8
     // =============================
     std::string AcpToUtf8(const std::string& acp)
     {

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "ConfigSelector.h"
 #include "FontSelector.h"
 #include "GameKeyBind.h"
@@ -25,22 +25,22 @@ public:
 		ImGui::BeginChild("GlobalSettings", ImVec2(-padding + ImGui::GetStyle().WindowPadding.x, -padding + ImGui::GetStyle().WindowPadding.y), true, flags);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12.0f, 8.0f));
 
-		// ===== ²¼¾Ö²ÎÊı =====
+		// ===== å¸ƒå±€å‚æ•° =====
 		ImGuiStyle& style = ImGui::GetStyle();
 		float basePadding = style.WindowPadding.x;
 		float bigPadding = basePadding * 3.0f;
 
-		// »ñÈ¡´°¿Ú¿ÉÓÃ¿í¶È
+		// è·å–çª—å£å¯ç”¨å®½åº¦
 		float contentWidth = ImGui::GetContentRegionAvail().x;
 		float centerX = contentWidth * 0.5f;
 
-		// Ã¿¸öÊäÈë¿ò¿í¶È£¨ÁôµãÓàÁ¿£¬±ÜÃâ¶¥µ½±ß£©
+		// æ¯ä¸ªè¾“å…¥æ¡†å®½åº¦ï¼ˆç•™ç‚¹ä½™é‡ï¼Œé¿å…é¡¶åˆ°è¾¹ï¼‰
 		float itemWidth = centerX - bigPadding * 4.0f;
 
 
 		ImGui::PushFont(NULL, ImGui::GetFontSize() * 0.8f);
 		ImGui::BeginDisabled();
-		ImGuiStd::TextShadow(u8"È«¾Ö»ù´¡ÉèÖÃ");
+		ImGuiStd::TextShadow(u8"å…¨å±€åŸºç¡€è®¾ç½®");
 		ImGui::EndDisabled();
 		ImGui::PopFont();
 
@@ -48,7 +48,7 @@ public:
 
 		ImGui::PushFont(NULL, ImGui::GetFontSize() * 0.8f);
 		ImGui::BeginDisabled();
-		ImGuiStd::TextShadow(u8"ÅäÖÃÑ¡Ôñ£º");
+		ImGuiStd::TextShadow(u8"é…ç½®é€‰æ‹©ï¼š");
 		ImGui::EndDisabled();
 		ImGui::PopFont();
 
@@ -61,7 +61,7 @@ public:
 
 		ImGui::PushFont(NULL, ImGui::GetFontSize() * 0.8f);
 		ImGui::BeginDisabled();
-		ImGuiStd::TextShadow(u8"×ÖÌåÑ¡Ôñ£º");
+		ImGuiStd::TextShadow(u8"å­—ä½“é€‰æ‹©ï¼š");
 		ImGui::EndDisabled();
 		ImGui::PopFont();
 
@@ -72,21 +72,21 @@ public:
 
 		ImGui::SetCursorPosX(bigPadding);
 		ImGui::PushItemWidth(itemWidth);
-		ImGui::Checkbox(u8"¿ªÆôÏŞÖ¡ÓÅ»¯", &GlobalConfig::Instance().enableOptimization);
+		ImGui::Checkbox(u8"å¼€å¯é™å¸§ä¼˜åŒ–", &GlobalConfig::Instance().enableOptimization);
 		ImGui::SameLine();
-		ImGuiStd::HelpMarker(u8"Ö÷¶¯½µµÍ×ÔÉíµÄäÖÈ¾¼ÆËãÆµÂÊÒÔÓÅ»¯ĞÔÄÜ¡£\nGUIÊÇ·ñË¢ĞÂÈ¡¾öÓÚ´°¿ÚÄÚÈİÊÇ·ñ·¢Éú±ä»¯ÒÔ¼°ÊÇ·ñ´¦ÓÚ¶¯»­×´Ì¬¡£\n    ÔÚ½çÃæ¾²Ö¹Ê±£¬ÎŞÏŞGUI »á¸´ÓÃÒÑÓĞäÖÈ¾½á¹û£»\n    ÔÚ¶¯»­¹ı³ÌÖĞ£¬Ë¢ĞÂÆµÂÊ×î¸ßÏŞÖÆÎªÏÔÊ¾Æ÷µÄË¢ĞÂÂÊ£¬ÒÔ±£Ö¤ÊÓ¾õÁ÷³©²¢±ÜÃâÎŞÒâÒåµÄ¸ßÆµ¼ÆËã¡£\nÕâÖÖ°´ĞèË¢ĞÂ»úÖÆÔÚĞÔÄÜÓëÌåÑéÖ®¼äÈ¡µÃÁË×î¼ÑÆ½ºâ¡£");
+		ImGuiStd::HelpMarker(u8"ä¸»åŠ¨é™ä½è‡ªèº«çš„æ¸²æŸ“è®¡ç®—é¢‘ç‡ä»¥ä¼˜åŒ–æ€§èƒ½ã€‚\nGUIæ˜¯å¦åˆ·æ–°å–å†³äºçª—å£å†…å®¹æ˜¯å¦å‘ç”Ÿå˜åŒ–ä»¥åŠæ˜¯å¦å¤„äºåŠ¨ç”»çŠ¶æ€ã€‚\n    åœ¨ç•Œé¢é™æ­¢æ—¶ï¼Œæ— é™GUI ä¼šå¤ç”¨å·²æœ‰æ¸²æŸ“ç»“æœï¼›\n    åœ¨åŠ¨ç”»è¿‡ç¨‹ä¸­ï¼Œåˆ·æ–°é¢‘ç‡æœ€é«˜é™åˆ¶ä¸ºæ˜¾ç¤ºå™¨çš„åˆ·æ–°ç‡ï¼Œä»¥ä¿è¯è§†è§‰æµç•…å¹¶é¿å…æ— æ„ä¹‰çš„é«˜é¢‘è®¡ç®—ã€‚\nè¿™ç§æŒ‰éœ€åˆ·æ–°æœºåˆ¶åœ¨æ€§èƒ½ä¸ä½“éªŒä¹‹é—´å–å¾—äº†æœ€ä½³å¹³è¡¡ã€‚");
 		ImGui::SameLine();
 		ImGui::SetCursorPosX(bigPadding + centerX);
 		ImGui::PushItemWidth(itemWidth);
 
-		ImGui::Checkbox(u8"×Ô¶¯±£´æ", &GlobalConfig::Instance().autoSave);
+		ImGui::Checkbox(u8"è‡ªåŠ¨ä¿å­˜", &GlobalConfig::Instance().autoSave);
 
 
 		ImGui::SetCursorPosX(bigPadding);
 		ImGui::PushItemWidth(itemWidth);
-		ImGui::Checkbox(u8"ÏÔÊ¾ÓÎÏ·¼üÎ»°ó¶¨½çÃæ", &m_showKeyBindUI);
+		ImGui::Checkbox(u8"æ˜¾ç¤ºæ¸¸æˆé”®ä½ç»‘å®šç•Œé¢", &m_showKeyBindUI);
 		ImGui::SameLine();
-		ImGuiStd::HelpMarker(u8"ÎŞÏŞGui»áÔÚ¼¤»îÊ±¶ÁÈ¡ÓÎÏ·ÅäÖÃÎÄ¼ş£¬´Ó¶ø»ñÈ¡°´¼ü°ó¶¨¡£\nÕâĞ©°ó¶¨°´¼üÖ»×÷ÓÃÓÚÎŞÏŞGui£¬²»»áÒòÎªĞŞ¸Ä¶øÓ°ÏìÓÎÏ·µÄÕı³£²Ù×÷¡£");
+		ImGuiStd::HelpMarker(u8"æ— é™Guiä¼šåœ¨æ¿€æ´»æ—¶è¯»å–æ¸¸æˆé…ç½®æ–‡ä»¶ï¼Œä»è€Œè·å–æŒ‰é”®ç»‘å®šã€‚\nè¿™äº›ç»‘å®šæŒ‰é”®åªä½œç”¨äºæ— é™Guiï¼Œä¸ä¼šå› ä¸ºä¿®æ”¹è€Œå½±å“æ¸¸æˆçš„æ­£å¸¸æ“ä½œã€‚");
 
 		for(auto& item : ItemManager::Instance().GetItems())
 		{

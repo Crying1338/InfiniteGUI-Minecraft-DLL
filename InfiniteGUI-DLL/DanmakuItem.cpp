@@ -1,4 +1,4 @@
-#include "DanmakuItem.h"
+ï»¿#include "DanmakuItem.h"
 #include "imgui\imgui.h"
 #include "imgui\imgui_internal.h"
 #include "StringConverter.h"
@@ -22,7 +22,7 @@ void DanmakuItem::AddDanmaku(const std::string& username, const std::string& mes
     danmaku.username = username;
     danmaku.message = message;
     danmaku.id = id++;
-    // Èç¹ûµ¯Ä»ÊıÁ¿³¬¹ı×î´óÖµ£¬É¾³ı×îÔçµÄÒ»Ìõ
+    // å¦‚æœå¼¹å¹•æ•°é‡è¶…è¿‡æœ€å¤§å€¼ï¼Œåˆ é™¤æœ€æ—©çš„ä¸€æ¡
     while (danmakuList.size() >= maxDanmakuCount) {
         pendingErase.insert(danmakuList.back().id);
         danmakuList.pop_back();
@@ -35,8 +35,8 @@ void DanmakuItem::AddDanmaku(const std::string& username, const std::string& mes
 void DanmakuItem::AddCaptain(const std::string& username, const std::string& captainName, const std::string& captainCount)
 {
     //std::lock_guard<std::mutex> lock(danmakuMutex);
-    std::string giftMessage = username + u8" ¿ªÍ¨ÁË " + captainName + " x " + captainCount;
-    std::string giftNotification = u8"¸ĞĞ» " + username + u8" ¿ªÍ¨µÄ\n " + captainName + " x " + captainCount;
+    std::string giftMessage = username + u8" å¼€é€šäº† " + captainName + " x " + captainCount;
+    std::string giftNotification = u8"æ„Ÿè°¢ " + username + u8" å¼€é€šçš„\n " + captainName + " x " + captainCount;
 
 
     bottomMessage = giftMessage;
@@ -48,8 +48,8 @@ void DanmakuItem::AddCaptain(const std::string& username, const std::string& cap
 void DanmakuItem::AddGift(const std::string& username, const std::string& giftName, const std::string& giftCount)
 {
     //std::lock_guard<std::mutex> lock(danmakuMutex);
-    std::string giftMessage = username + u8" ÔùËÍÁË " + giftName + " x " + giftCount;
-    std::string giftNotification = u8"¸ĞĞ» " + username + u8" ÔùËÍµÄ\n " + giftName + " x " + giftCount;
+    std::string giftMessage = username + u8" èµ é€äº† " + giftName + " x " + giftCount;
+    std::string giftNotification = u8"æ„Ÿè°¢ " + username + u8" èµ é€çš„\n " + giftName + " x " + giftCount;
 
     bottomMessage = giftMessage;
     bottomMessageType = BTM_GIFT;
@@ -60,7 +60,7 @@ void DanmakuItem::AddGift(const std::string& username, const std::string& giftNa
 void DanmakuItem::AddUserEntry(const std::string& username)
 {
     //std::lock_guard<std::mutex> lock(danmakuMutex);
-    bottomMessage = username + u8" ½øÈëÁËÖ±²¥¼ä";
+    bottomMessage = username + u8" è¿›å…¥äº†ç›´æ’­é—´";
     bottomMessageType = BTM_ENTRY;
     dirtyState.contentDirty = true;
 }
@@ -68,7 +68,7 @@ void DanmakuItem::AddUserEntry(const std::string& username)
 void DanmakuItem::AddUserLike(const std::string& username)
 {
     //std::lock_guard<std::mutex> lock(danmakuMutex);
-    bottomMessage = username + u8" µãÔŞÁË";
+    bottomMessage = username + u8" ç‚¹èµäº†";
     bottomMessageType = BTM_LIKE;
     dirtyState.contentDirty = true;
 }
@@ -77,21 +77,21 @@ namespace fs = std::filesystem;
 
 std::string ReadLastLine(std::wstring & filePath)
 {
-    std::ifstream file(filePath, std::ios::ate | std::ios::binary); // ´ÓÄ©Î²´ò¿ª
+    std::ifstream file(filePath, std::ios::ate | std::ios::binary); // ä»æœ«å°¾æ‰“å¼€
     if (!file.is_open())
-        return ""; // ´ò¿ªÊ§°Ü
+        return ""; // æ‰“å¼€å¤±è´¥
 
     std::streamoff fileSize = file.tellg();
     if (fileSize <= 0)
         return "";
 
     std::string line;
-    line.reserve(256); // Ô¤·ÖÅäÄÚ´æ£¬±ÜÃâÆµ·±À©Èİ
+    line.reserve(256); // é¢„åˆ†é…å†…å­˜ï¼Œé¿å…é¢‘ç¹æ‰©å®¹
 
     char ch;
     bool hasContent = false;
 
-    // ´ÓÎÄ¼şÄ©Î²ÍùÇ°ÕÒ '\n'
+    // ä»æ–‡ä»¶æœ«å°¾å¾€å‰æ‰¾ '\n'
     for (std::streamoff i = fileSize - 1; i >= 0; --i)
     {
         file.seekg(i);
@@ -99,13 +99,13 @@ std::string ReadLastLine(std::wstring & filePath)
 
         if (ch == '\n')
         {
-            if (hasContent) break; // ÒÑÕÒµ½×îºóÒ»ĞĞµÄÆğµã
-            else continue;         // Ìø¹ıÎÄ¼şÄ©Î²¶àÓàµÄ»»ĞĞ
+            if (hasContent) break; // å·²æ‰¾åˆ°æœ€åä¸€è¡Œçš„èµ·ç‚¹
+            else continue;         // è·³è¿‡æ–‡ä»¶æœ«å°¾å¤šä½™çš„æ¢è¡Œ
         }
 
         hasContent = true;
-        line.insert(line.begin(), ch); // ´ÓÍ·²åÈë×Ö·û
-        if (i == 0) break;             // µ½ÎÄ¼şÍ·ÁËÒ²ÒªÍ£
+        line.insert(line.begin(), ch); // ä»å¤´æ’å…¥å­—ç¬¦
+        if (i == 0) break;             // åˆ°æ–‡ä»¶å¤´äº†ä¹Ÿè¦åœ
     }
 
     return line;
@@ -116,20 +116,20 @@ bool HasFileChanged(const std::wstring& filePath, FILETIME& lastWriteTime)
 {
     HANDLE hFile = CreateFile(filePath.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
     if (hFile == INVALID_HANDLE_VALUE) {
-        return false; // ÎŞ·¨´ò¿ªÎÄ¼ş
+        return false; // æ— æ³•æ‰“å¼€æ–‡ä»¶
     }
 
     FILETIME fileTime;
     if (GetFileTime(hFile, NULL, NULL, &fileTime)) {
         if (CompareFileTime(&fileTime, &lastWriteTime) != 0) {
-            lastWriteTime = fileTime;  // ¸üĞÂĞŞ¸ÄÊ±¼ä
+            lastWriteTime = fileTime;  // æ›´æ–°ä¿®æ”¹æ—¶é—´
             CloseHandle(hFile);
-            return true;  // ÎÄ¼şÓĞ±ä»¯
+            return true;  // æ–‡ä»¶æœ‰å˜åŒ–
         }
     }
 
     CloseHandle(hFile);
-    return false; // ÎÄ¼şÃ»ÓĞ±ä»¯
+    return false; // æ–‡ä»¶æ²¡æœ‰å˜åŒ–
 }
 
 void DanmakuItem::Toggle()
@@ -146,88 +146,88 @@ void DanmakuItem::Update()
     std::string newLine = ReadLastLine(Wstr_logpath);
 
     if (!newLine.empty()) {
-        // ½âÎöÈÕÖ¾ÄÚÈİ
-        // 18:12:30 : ÊÕµ½—Ä»:YunXiao7ÔÏĞÇ Õf: ¸÷Î»µãµã¾Ù±¨
-        // Èç¹ûµÚ12~15¸ö×Ö·ûÊÇ ÊÕµ½—Ä»: ÔòÈÏÎªÊÇµ¯Ä»ĞÅÏ¢
+        // è§£ææ—¥å¿—å†…å®¹
+        // 18:12:30 : æ”¶åˆ°å½ˆå¹•:YunXiao7éŸµæ˜Ÿ èªª: å„ä½ç‚¹ç‚¹ä¸¾æŠ¥
+        // å¦‚æœç¬¬12~15ä¸ªå­—ç¬¦æ˜¯ æ”¶åˆ°å½ˆå¹•: åˆ™è®¤ä¸ºæ˜¯å¼¹å¹•ä¿¡æ¯
 
-        const static std::string gift_prefix = u8"ÊÕµ½µÀ¾ß:";
-        const static std::string danmaku_prefix = u8"ÊÕµ½—Ä»:";
-        const static std::string danmaku_middle = u8" Õf: ";
-        const static std::string captain_prefix = u8"ÉÏ´¬:";
-        const static std::string captain_middle = u8" ÙÙIÁË ";
+        const static std::string gift_prefix = u8"æ”¶åˆ°é“å…·:";
+        const static std::string danmaku_prefix = u8"æ”¶åˆ°å½ˆå¹•:";
+        const static std::string danmaku_middle = u8" èªª: ";
+        const static std::string captain_prefix = u8"ä¸Šèˆ¹:";
+        const static std::string captain_middle = u8" è³¼è²·äº† ";
         size_t pos = newLine.find(danmaku_prefix);
         if (pos != std::string::npos) {
-            std::string message = newLine.substr(pos + danmaku_prefix.length()); // ÌáÈ¡³ö "YunXiao7ÔÏĞÇ Õf: ¸÷Î»µãµã¾Ù±¨" ²¿·Ö
+            std::string message = newLine.substr(pos + danmaku_prefix.length()); // æå–å‡º "YunXiao7éŸµæ˜Ÿ èªª: å„ä½ç‚¹ç‚¹ä¸¾æŠ¥" éƒ¨åˆ†
 
-            // È»ºóÌáÈ¡ÓÃ»§Ãû
-            size_t username_end = message.find(danmaku_middle);  // ²éÕÒ " Õf:" ×÷ÎªÓÃ»§ÃûµÄ½áÊø±êÖ¾
-            if (username_end == std::string::npos) return; // »òÌø¹ı
+            // ç„¶åæå–ç”¨æˆ·å
+            size_t username_end = message.find(danmaku_middle);  // æŸ¥æ‰¾ " èªª:" ä½œä¸ºç”¨æˆ·åçš„ç»“æŸæ ‡å¿—
+            if (username_end == std::string::npos) return; // æˆ–è·³è¿‡
             std::string username = message.substr(0, username_end);
 
-            // ÌáÈ¡µ¯Ä»ÄÚÈİ
-            std::string content = message.substr(username_end + danmaku_middle.length()); // ´Ó " Õf:" ºóÃæµÄÄÚÈİ¿ªÊ¼
+            // æå–å¼¹å¹•å†…å®¹
+            std::string content = message.substr(username_end + danmaku_middle.length()); // ä» " èªª:" åé¢çš„å†…å®¹å¼€å§‹
 
             AddDanmaku(username, content);
             return;
         }
 
 
-        //18:31:45 : ÊÕµ½µÀ¾ß:lyoffical Ù›ËÍµÄ: ·ÛË¿ÍÅµÆÅÆ x 1
-        // Èç¹ûµÚ12~15¸ö×Ö·ûÊÇ ÊÕµ½µÀ¾ß: ÔòÈÏÎªÊÇÀñÎïĞÅÏ¢ ÇÒ²»ÄÜÕÒµ½ÊÕµ½—Ä»
+        //18:31:45 : æ”¶åˆ°é“å…·:lyoffical è´ˆé€çš„: ç²‰ä¸å›¢ç¯ç‰Œ x 1
+        // å¦‚æœç¬¬12~15ä¸ªå­—ç¬¦æ˜¯ æ”¶åˆ°é“å…·: åˆ™è®¤ä¸ºæ˜¯ç¤¼ç‰©ä¿¡æ¯ ä¸”ä¸èƒ½æ‰¾åˆ°æ”¶åˆ°å½ˆå¹•
         pos = newLine.find(gift_prefix);
         if (pos != std::string::npos) {
-            std::string message = newLine.substr(pos + gift_prefix.length()); // ÌáÈ¡³ö "lyoffical Ù›ËÍµÄ: ·ÛË¿ÍÅµÆÅÆ x 1" ²¿·Ö
+            std::string message = newLine.substr(pos + gift_prefix.length()); // æå–å‡º "lyoffical è´ˆé€çš„: ç²‰ä¸å›¢ç¯ç‰Œ x 1" éƒ¨åˆ†
 
-            // ÌáÈ¡ÓÃ»§Ãû
-            size_t username_end = message.find(u8" Ù›ËÍµÄ:");
-            if (username_end == std::string::npos) return; // »òÌø¹ı
+            // æå–ç”¨æˆ·å
+            size_t username_end = message.find(u8" è´ˆé€çš„:");
+            if (username_end == std::string::npos) return; // æˆ–è·³è¿‡
             std::string username = message.substr(0, username_end);
 
-            // ÌáÈ¡ÀñÎïÃû³Æ
-            size_t gift_start = message.find(u8"Ù›ËÍµÄ:") + 11; // ´Ó "Ù›ËÍµÄ:" Ö®ºó¿ªÊ¼
+            // æå–ç¤¼ç‰©åç§°
+            size_t gift_start = message.find(u8"è´ˆé€çš„:") + 11; // ä» "è´ˆé€çš„:" ä¹‹åå¼€å§‹
             if (gift_start == std::string::npos) return;
-            size_t gift_end = message.find(" x "); // ²éÕÒ " x" µÄÎ»ÖÃ
+            size_t gift_end = message.find(" x "); // æŸ¥æ‰¾ " x" çš„ä½ç½®
             std::string gift_name = message.substr(gift_start, gift_end - gift_start);
 
-            // ÌáÈ¡ÀñÎïÊıÁ¿
-            size_t quantity_start = gift_end + 3; // ´Ó " x " ºóÃæµÄÎ»ÖÃ¿ªÊ¼
+            // æå–ç¤¼ç‰©æ•°é‡
+            size_t quantity_start = gift_end + 3; // ä» " x " åé¢çš„ä½ç½®å¼€å§‹
             if (quantity_start >= message.size()) return;
             std::string quantity = message.substr(quantity_start);
 
-            AddGift(username, gift_name, quantity);  // ×ª»»ÎªÕûÊı
+            AddGift(username, gift_name, quantity);  // è½¬æ¢ä¸ºæ•´æ•°
             return;
         }
-        //18:36:45 : ÉÏ´¬:YunXiao7ÔÏĞÇ ÙÙIÁË ½¢³¤ x 1
+        //18:36:45 : ä¸Šèˆ¹:YunXiao7éŸµæ˜Ÿ è³¼è²·äº† èˆ°é•¿ x 1
         pos = newLine.find(captain_prefix);
         if (pos != std::string::npos) {
-            std::string message = newLine.substr(pos + captain_prefix.length()); // ÌáÈ¡³ö "YunXiao7ÔÏĞÇ ÙÙIÁË ½¢³¤ x 1" ²¿·Ö
+            std::string message = newLine.substr(pos + captain_prefix.length()); // æå–å‡º "YunXiao7éŸµæ˜Ÿ è³¼è²·äº† èˆ°é•¿ x 1" éƒ¨åˆ†
 
-            // È»ºóÌáÈ¡ÓÃ»§Ãû
-            size_t username_end = message.find(captain_middle);  // ²éÕÒ " ÙÙIÁË" ×÷ÎªÓÃ»§ÃûµÄ½áÊø±êÖ¾
-            if (username_end == std::string::npos) return; // »òÌø¹ı
+            // ç„¶åæå–ç”¨æˆ·å
+            size_t username_end = message.find(captain_middle);  // æŸ¥æ‰¾ " è³¼è²·äº†" ä½œä¸ºç”¨æˆ·åçš„ç»“æŸæ ‡å¿—
+            if (username_end == std::string::npos) return; // æˆ–è·³è¿‡
             std::string username = message.substr(0, username_end);
 
-            // ÌáÈ¡ÀñÎïÃû³Æ
-            size_t caption_start = message.find(captain_middle) + captain_middle.length(); // ´Ó "ÙÙIÁË" Ö®ºó¿ªÊ¼
+            // æå–ç¤¼ç‰©åç§°
+            size_t caption_start = message.find(captain_middle) + captain_middle.length(); // ä» "è³¼è²·äº†" ä¹‹åå¼€å§‹
             if (caption_start == std::string::npos) return;
-            size_t caption_end = message.find(" x "); // ²éÕÒ " x" µÄÎ»ÖÃ
+            size_t caption_end = message.find(" x "); // æŸ¥æ‰¾ " x" çš„ä½ç½®
             if (caption_end == std::string::npos) return;
             std::string caption_name = message.substr(caption_start, caption_end - caption_start);
 
-            // ÌáÈ¡ÀñÎïÊıÁ¿
-            size_t quantity_start = caption_end + 3; // ´Ó " x " ºóÃæµÄÎ»ÖÃ¿ªÊ¼
+            // æå–ç¤¼ç‰©æ•°é‡
+            size_t quantity_start = caption_end + 3; // ä» " x " åé¢çš„ä½ç½®å¼€å§‹
             std::string quantity = message.substr(quantity_start);
 
-            AddCaptain(username, caption_name, quantity);  // ×ª»»ÎªÕûÊı
+            AddCaptain(username, caption_name, quantity);  // è½¬æ¢ä¸ºæ•´æ•°
             return;
         }
-        //18:25:44 : Ã»ÓĞqiqi ßMÈëÁËÖ±²¥ég
-        //Èç¹ûµ¹Êı6¸ö×Ö·ûÊÇ ßMÈëÁËÖ±²¥ég ÔòÈÏÎªÊÇ½ø³¡ĞÅÏ¢
-        //µÚ12¸ö×Ö·ûÒÔºóµ½ " ßMÈëÁËÖ±²¥ég"Ö®Ç°ÊÇÓÃ»§Ãû
-        pos = newLine.find(u8"ßMÈëÁËÖ±²¥ég");
+        //18:25:44 : æ²¡æœ‰qiqi é€²å…¥äº†ç›´æ’­é–“
+        //å¦‚æœå€’æ•°6ä¸ªå­—ç¬¦æ˜¯ é€²å…¥äº†ç›´æ’­é–“ åˆ™è®¤ä¸ºæ˜¯è¿›åœºä¿¡æ¯
+        //ç¬¬12ä¸ªå­—ç¬¦ä»¥ååˆ° " é€²å…¥äº†ç›´æ’­é–“"ä¹‹å‰æ˜¯ç”¨æˆ·å
+        pos = newLine.find(u8"é€²å…¥äº†ç›´æ’­é–“");
         if (pos != std::string::npos) {
             size_t start = newLine.find(" : ") + 3;
-            size_t end = newLine.find(u8" ßMÈëÁËÖ±²¥ég");
+            size_t end = newLine.find(u8" é€²å…¥äº†ç›´æ’­é–“");
             if (start != std::string::npos && end != std::string::npos) {
                 std::string username = newLine.substr(start, end - start);
                 AddUserEntry(username);
@@ -235,13 +235,13 @@ void DanmakuItem::Update()
             return;
         }
 
-        //18:25:48 : ÂŞ×Ü°¡_a ücÁË×“
-        //Èç¹ûµ¹Êı3¸ö×Ö·ûÊÇ ücÁË×“ ÔòÈÏÎªÊÇµãÔŞĞÅÏ¢
-        //µÚ12¸ö×Ö·ûÒÔºóµ½ " ücÁË×“"Ö®Ç°ÊÇÓÃ»§Ãû
-        pos = newLine.find(u8"ücÁË×“");
+        //18:25:48 : ç½—æ€»å•Š_a é»äº†è®š
+        //å¦‚æœå€’æ•°3ä¸ªå­—ç¬¦æ˜¯ é»äº†è®š åˆ™è®¤ä¸ºæ˜¯ç‚¹èµä¿¡æ¯
+        //ç¬¬12ä¸ªå­—ç¬¦ä»¥ååˆ° " é»äº†è®š"ä¹‹å‰æ˜¯ç”¨æˆ·å
+        pos = newLine.find(u8"é»äº†è®š");
         if (pos != std::string::npos) {
             size_t start = newLine.find(" : ") + 3;
-            size_t end = newLine.find(u8" ücÁË×“");
+            size_t end = newLine.find(u8" é»äº†è®š");
             if (start != std::string::npos && end != std::string::npos) {
                 std::string username = newLine.substr(start, end - start);
                 AddUserLike(username);
@@ -262,23 +262,23 @@ void DanmakuItem::DrawContent()
         isEnabled = false;
         closed = false;
     }
-    ImGui::PopFont(); // °ÑÖ®Ç°µÄ×ÖÌåµ¯³öÕ»
+    ImGui::PopFont(); // æŠŠä¹‹å‰çš„å­—ä½“å¼¹å‡ºæ ˆ
     std::deque<Danmaku> copy_danmakuList;
     std::string copy_bottomMessage;
 
     {
         copy_danmakuList = danmakuList;
         copy_bottomMessage = bottomMessage;
-    } //¸´ÖÆÊı¾İ£¬±ÜÃâ±ÀÀ£
+    } //å¤åˆ¶æ•°æ®ï¼Œé¿å…å´©æºƒ
 
-    //äÖÈ¾²ãÖĞ¶¨ÆÚÇåÀí
+    //æ¸²æŸ“å±‚ä¸­å®šæœŸæ¸…ç†
     for (auto id : pendingErase) {
         anim.erase(id);
     }
     pendingErase.clear();
 
 
-    //ÉèÖÃ±³¾°Í¸Ã÷¶È
+    //è®¾ç½®èƒŒæ™¯é€æ˜åº¦
     ImGui::PushStyleColor(ImGuiCol_ChildBg, *itemStylePtr.bgColor);
 
     ImGuiChildFlags child_flags = 0;
@@ -287,7 +287,7 @@ void DanmakuItem::DrawContent()
         child_flags |= ImGuiWindowFlags_NoScrollWithMouse;
     }
 
-    // »æÖÆµ¯Ä»ĞÅÏ¢
+    // ç»˜åˆ¶å¼¹å¹•ä¿¡æ¯
     ImGui::BeginChild("DanmakuList", ImVec2(0, -*itemStylePtr.fontSize - 10), true, child_flags);
 
     if (ImGui::IsWindowFocused() && ImGui::IsWindowHovered())
@@ -297,20 +297,20 @@ void DanmakuItem::DrawContent()
     else
     {
         isScrollable = false;
-    } //¼ì²âÊÇ·ñ¹ö¶¯
-    ImGui::PushTextWrapPos(0.0f); // ÉèÖÃ×Ô¶¯»»ĞĞ
-    //»ñÈ¡io
+    } //æ£€æµ‹æ˜¯å¦æ»šåŠ¨
+    ImGui::PushTextWrapPos(0.0f); // è®¾ç½®è‡ªåŠ¨æ¢è¡Œ
+    //è·å–io
     ImGuiIO& io = ImGui::GetIO();
 
     float heightSum = 0.0f;
     for (auto& it_anim : anim) {
         heightSum += it_anim.second.curHeight;
     }
-    float curPosY = ImGui::GetWindowHeight() - heightSum; // ¼ÆËãµ¯Ä»Î»ÖÃ
+    float curPosY = ImGui::GetWindowHeight() - heightSum; // è®¡ç®—å¼¹å¹•ä½ç½®
 
     if (!isScrollable && !copy_danmakuList.empty())
     {
-        ImGui::SetCursorPosY(curPosY); //ÉèÖÃµ¯Ä»Î»ÖÃ
+        ImGui::SetCursorPosY(curPosY); //è®¾ç½®å¼¹å¹•ä½ç½®
     }
     bool animating = false;
     for (auto it = copy_danmakuList.rbegin(); it != copy_danmakuList.rend(); ++it) {
@@ -329,8 +329,8 @@ void DanmakuItem::DrawContent()
         float colorSpeed = std::clamp(io.DeltaTime, 0.0f, 0.05f) * 3.0f;
 
         ImVec4 endColor = ImGui::ColorConvertU32ToFloat4(ImGui::GetColorU32(ImGuiCol_Text));
-        it_anim->second.color = ImLerp(it_anim->second.color, endColor, colorSpeed);                  //ÑÕÉ«¶¯»­
-        // ÅĞ¶Ï¶¯»­ÊÇ·ñ½áÊø
+        it_anim->second.color = ImLerp(it_anim->second.color, endColor, colorSpeed);                  //é¢œè‰²åŠ¨ç”»
+        // åˆ¤æ–­åŠ¨ç”»æ˜¯å¦ç»“æŸ
         if (Anim::AlmostEqual(it_anim->second.color, endColor))
         {
             it_anim->second.color = endColor;
@@ -352,32 +352,32 @@ void DanmakuItem::DrawContent()
         ImGui::PopFont();
         it_anim->second.tarHeight = textHeight;
         if (it_anim->second.curHeight < it_anim->second.tarHeight)
-            it_anim->second.curHeight = ImLerp(it_anim->second.curHeight, it_anim->second.tarHeight, scrollSpeed) + 1.0f; // µ¯Ä»¸ß¶È¶¯»­
+            it_anim->second.curHeight = ImLerp(it_anim->second.curHeight, it_anim->second.tarHeight, scrollSpeed) + 1.0f; // å¼¹å¹•é«˜åº¦åŠ¨ç”»
     }
     if (!animating) dirtyState.animating = false;
     ImGui::PopTextWrapPos();
 
     ImGui::EndChild();
-    ImGui::PopStyleColor(); //µ¯³ö±³¾°ÑÕÉ«
+    ImGui::PopStyleColor(); //å¼¹å‡ºèƒŒæ™¯é¢œè‰²
 
     ImGui::Separator();
 
-    // »æÖÆµ×²¿ĞÅÏ¢
+    // ç»˜åˆ¶åº•éƒ¨ä¿¡æ¯
 
     ImGui::SetCursorPosX(10);
     ImGui::PushFont(NULL, *itemStylePtr.fontSize);
     switch (bottomMessageType) {
     case BTM_GIFT:
-        ImGuiStd::TextColoredShadow(ImVec4(1.0f, 84.31f, 0.0f, 1.0f), bottomMessage.c_str()); //½ğÉ«
+        ImGuiStd::TextColoredShadow(ImVec4(1.0f, 84.31f, 0.0f, 1.0f), bottomMessage.c_str()); //é‡‘è‰²
         break;
     case BTM_ENTRY:
-        ImGuiStd::TextColoredShadow(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), bottomMessage.c_str()); //»ÒÉ«
+        ImGuiStd::TextColoredShadow(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), bottomMessage.c_str()); //ç°è‰²
         break;
     case BTM_LIKE:
-        ImGuiStd::TextColoredShadow(ImVec4(0.1f, 1.0f, 0.1f, 1.0f), bottomMessage.c_str()); //ÂÌÉ«
+        ImGuiStd::TextColoredShadow(ImVec4(0.1f, 1.0f, 0.1f, 1.0f), bottomMessage.c_str()); //ç»¿è‰²
         break;
     case BTM_CAPTAIN:
-        ImGuiStd::TextColoredShadow(ImVec4(1.0f, 0.1f, 0.1f, 1.0f), bottomMessage.c_str()); //ºìÉ«
+        ImGuiStd::TextColoredShadow(ImVec4(1.0f, 0.1f, 0.1f, 1.0f), bottomMessage.c_str()); //çº¢è‰²
     default:
         break;
     }
@@ -392,11 +392,11 @@ void DanmakuItem::DrawSettings(const float& bigPadding, const float& centerX, co
 
     ImGui::SetCursorPosX(bigPadding);
     ImGui::SetNextItemWidth(bigItemWidth);
-    ImGuiStd::InputTextStd(u8"µ¯Ä»ÈÕÖ¾ÎÄ¼şÂ·¾¶", logPath);
+    ImGuiStd::InputTextStd(u8"å¼¹å¹•æ—¥å¿—æ–‡ä»¶è·¯å¾„", logPath);
 
     ImGui::SetCursorPosX(bigPadding);
     ImGui::SetNextItemWidth(bigItemWidth);
-    ImGui::InputInt(u8"×î´óµ¯Ä»Êı", &maxDanmakuCount);
+    ImGui::InputInt(u8"æœ€å¤§å¼¹å¹•æ•°", &maxDanmakuCount);
 
     DrawWindowSettings(bigPadding, centerX, itemWidth);
 }

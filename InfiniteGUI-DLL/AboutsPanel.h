@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <thread>
 
 #include "menuRule.h"
@@ -20,21 +20,21 @@ public:
 		ImGui::BeginChild("About", ImVec2(-padding + ImGui::GetStyle().WindowPadding.x, -padding + ImGui::GetStyle().WindowPadding.y), true, flags);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12.0f, 8.0f));
 
-		// ===== ²¼¾Ö²ÎÊı =====
+		// ===== å¸ƒå±€å‚æ•° =====
 		ImGuiStyle& style = ImGui::GetStyle();
 		float basePadding = style.WindowPadding.x;
 		float bigPadding = basePadding * 3.0f;
 
-		// »ñÈ¡´°¿Ú¿ÉÓÃ¿í¶È
+		// è·å–çª—å£å¯ç”¨å®½åº¦
 		float contentWidth = ImGui::GetContentRegionAvail().x;
 		float centerX = contentWidth * 0.5f;
-		// Ã¿¸öÊäÈë¿ò¿í¶È£¨ÁôµãÓàÁ¿£¬±ÜÃâ¶¥µ½±ß£©
+		// æ¯ä¸ªè¾“å…¥æ¡†å®½åº¦ï¼ˆç•™ç‚¹ä½™é‡ï¼Œé¿å…é¡¶åˆ°è¾¹ï¼‰
 		float itemWidth = centerX - bigPadding * 4.0f;
 		float bigItemWidth = centerX * 2.0f - bigPadding * 4.0f;
 		
         ImGui::PushFont(NULL, ImGui::GetFontSize() * 0.8f);
         ImGui::BeginDisabled();
-        ImGuiStd::TextShadow(u8"¹ØÓÚ");
+        ImGuiStd::TextShadow(u8"å…³äº");
         ImGui::EndDisabled();
         ImGui::PopFont();
 
@@ -44,46 +44,46 @@ public:
         std::string appVersion = std::to_string(App::Instance().appVersion.major) + "." + std::to_string(App::Instance().appVersion.minor) + "." + std::to_string(App::Instance().appVersion.build);
         ImGuiStd::TextShadow(("v" + appVersion).c_str());
         ImGui::SameLine();
-        static std::atomic<bool> checkingUpdate = false;   // ÊÇ·ñÔÚ¼ì²é
-        static std::atomic<bool> updateFinished = false;   // ¼ì²éÊÇ·ñÍê³É
-        static bool updateHasNew = false;                  // ÊÇ·ñ·¢ÏÖĞÂ°æ±¾
-        // µã»÷°´Å¥£º¿ªÊ¼Òì²½¼ì²é
-        if (ImGui::Button(u8"¼ì²é¸üĞÂ") && !checkingUpdate)
+        static std::atomic<bool> checkingUpdate = false;   // æ˜¯å¦åœ¨æ£€æŸ¥
+        static std::atomic<bool> updateFinished = false;   // æ£€æŸ¥æ˜¯å¦å®Œæˆ
+        static bool updateHasNew = false;                  // æ˜¯å¦å‘ç°æ–°ç‰ˆæœ¬
+        // ç‚¹å‡»æŒ‰é’®ï¼šå¼€å§‹å¼‚æ­¥æ£€æŸ¥
+        if (ImGui::Button(u8"æ£€æŸ¥æ›´æ–°") && !checkingUpdate)
         {
-            // ´ò¿ª¡°ÕıÔÚ¼ì²é¡±´°¿Ú
-            ImGui::OpenPopup(u8"-->¼ì²é¸üĞÂ...");
+            // æ‰“å¼€â€œæ­£åœ¨æ£€æŸ¥â€çª—å£
+            ImGui::OpenPopup(u8"-->æ£€æŸ¥æ›´æ–°...");
 
             checkingUpdate = true;
             updateFinished = false;
 
             std::thread([] {
                 bool result = App::Instance().CheckUpdate();
-                updateHasNew = !result;   // result=false => ÓĞĞÂ°æ±¾
+                updateHasNew = !result;   // result=false => æœ‰æ–°ç‰ˆæœ¬
                 updateFinished = true;
                 checkingUpdate = false;
                 }).detach();
         }
-        if (ImGui::BeginPopupModal(u8"-->¼ì²é¸üĞÂ...", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        if (ImGui::BeginPopupModal(u8"-->æ£€æŸ¥æ›´æ–°...", NULL, ImGuiWindowFlags_AlwaysAutoResize))
         {
             if (checkingUpdate)
             {
-                ImGuiStd::TextShadow(u8"ÕıÔÚ¼ì²é¸üĞÂ£¬ÇëÉÔºò...");
+                ImGuiStd::TextShadow(u8"æ­£åœ¨æ£€æŸ¥æ›´æ–°ï¼Œè¯·ç¨å€™...");
             }
             else if (updateFinished)
             {
                 if (updateHasNew)
                 {
-                    ImGuiStd::TextShadow(u8"·¢ÏÖĞÂ°æ±¾£¡");
+                    ImGuiStd::TextShadow(u8"å‘ç°æ–°ç‰ˆæœ¬ï¼");
                     std::string cloudVersion =
                         std::to_string(App::Instance().cloudVersion.major) + "." +
                         std::to_string(App::Instance().cloudVersion.minor) + "." +
                         std::to_string(App::Instance().cloudVersion.build);
 
-                    ImGuiStd::TextShadow((u8"×îĞÂ°æ±¾£º" + cloudVersion).c_str());
+                    ImGuiStd::TextShadow((u8"æœ€æ–°ç‰ˆæœ¬ï¼š" + cloudVersion).c_str());
                 }
                 else
-                    ImGuiStd::TextShadow(u8"Ä¿Ç°ÒÑÊÇ×îĞÂ°æ±¾");
-                if (ImGui::Button(u8"È·¶¨"))
+                    ImGuiStd::TextShadow(u8"ç›®å‰å·²æ˜¯æœ€æ–°ç‰ˆæœ¬");
+                if (ImGui::Button(u8"ç¡®å®š"))
                 {
                     ImGui::CloseCurrentPopup();
                 }
@@ -93,7 +93,7 @@ public:
         }
         ImGui::SameLine();
         ImGui::SetCursorPosX(bigPadding + centerX);
-        ImGuiStd::TextShadow(u8"ÓÃ»§Ğ­Òé£º");
+        ImGuiStd::TextShadow(u8"ç”¨æˆ·åè®®ï¼š");
         ImGui::SameLine();
         if (ImGui::Button(u8"InfiniteGui-License"))
         {
@@ -103,7 +103,7 @@ public:
         }
 
         ImGui::SetCursorPosX(bigPadding);
-        ImGuiStd::TextShadow(u8"×÷Õß£º");
+        ImGuiStd::TextShadow(u8"ä½œè€…ï¼š");
         ImGui::SameLine();
         if (ImGui::Button(App::Instance().appAuthor.c_str()))
         {
@@ -112,9 +112,9 @@ public:
 
         ImGui::SameLine();
         ImGui::SetCursorPosX(bigPadding + centerX);
-        ImGuiStd::TextShadow(u8"Ïà¹ØÁ´½Ó£º");
+        ImGuiStd::TextShadow(u8"ç›¸å…³é“¾æ¥ï¼š");
         ImGui::SameLine();
-        if (ImGui::Button(u8"°®·¢µç"))
+        if (ImGui::Button(u8"çˆ±å‘ç”µ"))
         {
             ShellExecute(NULL, NULL, L"https://ifdian.net/a/qc_max", NULL, NULL, SW_SHOWNORMAL);
         }
@@ -131,7 +131,7 @@ public:
 
         ImGui::PushFont(ImGui::GetFont(), ImGui::GetFontSize() * 0.8f);
         ImGui::BeginDisabled();
-        ImGuiStd::TextShadow(u8"¹«¸æ");
+        ImGuiStd::TextShadow(u8"å…¬å‘Š");
         ImGui::EndDisabled();
         ImGui::PopFont();
 
@@ -144,7 +144,7 @@ public:
         ImGui::SetCursorPos(ImVec2(basePadding + centerX, startY));
         ImGui::PushFont(ImGui::GetFont(), ImGui::GetFontSize() * 0.8f);
         ImGui::BeginDisabled();
-        ImGuiStd::TextShadow(u8"¸üĞÂ¼ÇÂ¼");
+        ImGuiStd::TextShadow(u8"æ›´æ–°è®°å½•");
         ImGui::EndDisabled();
         ImGui::PopFont();
 

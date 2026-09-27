@@ -1,4 +1,4 @@
-#include "opengl_hook.h"
+ï»¿#include "opengl_hook.h"
 #include "FileUtils.h"
 #include "ConfigManager.h"
 #include "AudioManager.h"
@@ -17,22 +17,22 @@ inline std::thread g_updateThread;
 inline bool g_uninitialized = false;
 
 inline static std::atomic_bool g_running = ATOMIC_VAR_INIT(true);
-// Ïß³Ìº¯Êı£º¸üĞÂËùÓĞ item ×´Ì¬
+// çº¿ç¨‹å‡½æ•°ï¼šæ›´æ–°æ‰€æœ‰ item çŠ¶æ€
 inline void UpdateThread() {
 	while (g_running.load()) {
-		if(opengl_hook::gui.isInit) ItemManager::Instance().UpdateAll();  // µ÷ÓÃUpdateAll()À´¸üĞÂËùÓĞitem
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));  // ĞİÃß1ms£¬¿ÉÒÔ¸ù¾İÊµ¼ÊĞèÇóµ÷Õû
+		if(opengl_hook::gui.isInit) ItemManager::Instance().UpdateAll();  // è°ƒç”¨UpdateAll()æ¥æ›´æ–°æ‰€æœ‰item
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));  // ä¼‘çœ 1msï¼Œå¯ä»¥æ ¹æ®å®é™…éœ€æ±‚è°ƒæ•´
 	}
 }
 
-// Æô¶¯¸üĞÂÏß³Ì
+// å¯åŠ¨æ›´æ–°çº¿ç¨‹
 inline void StartThreads() {
 	g_updateThread = std::thread(UpdateThread);
-	g_updateThread.detach();  // ½«Ïß³ÌÉèÎªºóÌ¨Ïß³Ì
+	g_updateThread.detach();  // å°†çº¿ç¨‹è®¾ä¸ºåå°çº¿ç¨‹
 
 }
 
-// Í£Ö¹¸üĞÂÏß³Ì
+// åœæ­¢æ›´æ–°çº¿ç¨‹
 inline void StopThreads() {
 	if (g_updateThread.joinable()) {
 		g_updateThread.join();
@@ -53,7 +53,7 @@ inline void Uninit() {
 inline DWORD WINAPI MainApp(LPVOID)
 {
     FileUtils::InitPaths(g_hModule);
-	//¼ÓÔØÅäÖÃÎÄ¼ş
+	//åŠ è½½é…ç½®æ–‡ä»¶
 	ConfigManager::Instance().Init();
 	ConfigManager::Instance().LoadGlobal();
 	GuiFrameLimiter::Instance().Init();
@@ -63,14 +63,14 @@ inline DWORD WINAPI MainApp(LPVOID)
 		std::this_thread::yield();
 	}
 	ConfigManager::Instance().LoadProfile();
-	//³õÊ¼»¯ÒôÆµ¹ÜÀíÆ÷
+	//åˆå§‹åŒ–éŸ³é¢‘ç®¡ç†å™¨
 	AudioManager::Instance().Init();
 	ClickSound::PlayIntroSound();
 	StartThreads();
 	App::Instance().GetAnnouncement();
 	GameKeyBind::Instance().Load(FileUtils::optionsPath);
 	if(!GameKeyBind::Instance().IsSuccess())
-		NotificationItem::Instance().AddNotification(NotificationType_Warning, u8"¶ÁÈ¡ÓÎÏ·¿ì½İ¼üÊ§°Ü£¡\nÇëÔÚÉèÖÃÖĞÊÖ¶¯°ó¶¨ÓÎÏ·¿ì½İ¼ü¡£", 10000);
+		NotificationItem::Instance().AddNotification(NotificationType_Warning, u8"è¯»å–æ¸¸æˆå¿«æ·é”®å¤±è´¥ï¼\nè¯·åœ¨è®¾ç½®ä¸­æ‰‹åŠ¨ç»‘å®šæ¸¸æˆå¿«æ·é”®ã€‚", 10000);
 	while (!opengl_hook::gui.done)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));

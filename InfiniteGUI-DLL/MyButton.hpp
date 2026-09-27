@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "ClickSound.h"
 #include "AnimButtonBase.h"
 #include "imgui\imgui.h"
@@ -23,22 +23,22 @@ public:
 	}
 	~MyButton() = default;
 
-	bool Draw(ImDrawFlags flags = ImDrawFlags_RoundCornersAll) override //·µ»ØÊÇ·ñ±»µã»÷
+	bool Draw(ImDrawFlags flags = ImDrawFlags_RoundCornersAll) override //è¿”å›æ˜¯å¦è¢«ç‚¹å‡»
 	{
-		labelText.font = ImGui::GetFont(); //Ã¿Ö¡»ñÈ¡£¬ÒÔÃâÖ¸ÕëÆ«ÒÆ
+		labelText.font = ImGui::GetFont(); //æ¯å¸§è·å–ï¼Œä»¥å…æŒ‡é’ˆåç§»
 		if (!initialized)
 		{
-			screenPos = ImGui::GetCursorScreenPos(); //³õÊ¼Î»ÖÃÓÉImGui×Ô¶¯¼ÆËã
+			screenPos = ImGui::GetCursorScreenPos(); //åˆå§‹ä½ç½®ç”±ImGuiè‡ªåŠ¨è®¡ç®—
 			lastScreenPos = screenPos;
 			fontSize = ImGui::GetFontSize();
 			lastFontSize = fontSize;
 			SetStateData();
-			//ÉèÖÃm_currentµÄ×´Ì¬
+			//è®¾ç½®m_currentçš„çŠ¶æ€
 			m_current = m_normal;
 			initialized = true;
 		}
 
-		screenPos = ImGui::GetCursorScreenPos(); //³õÊ¼Î»ÖÃÓÉImGui×Ô¶¯¼ÆËã
+		screenPos = ImGui::GetCursorScreenPos(); //åˆå§‹ä½ç½®ç”±ImGuiè‡ªåŠ¨è®¡ç®—
 		if (IsPositionChanged(screenPos, lastScreenPos))
 		{
 			SetStateData();
@@ -56,23 +56,23 @@ public:
 
 		bool pressed = DrawInvisibleButton(m_current.button);
 		if (pressed) ClickSound::Instance().PlayClickSound();
-		rightClicked = ImGui::IsItemClicked(1); //ÓÒ¼üµ¥»÷
+		rightClicked = ImGui::IsItemClicked(1); //å³é”®å•å‡»
 		bool hovered = ImGui::IsItemHovered();
 		bool active = ImGui::IsItemActive();
 
 		// -------------------------------------------------
-		// ×´Ì¬»ú£¨¸ù¾İÊó±êÊÂ¼şÑ¡Ôñ¶¯»­Ä¿±ê£©
+		// çŠ¶æ€æœºï¼ˆæ ¹æ®é¼ æ ‡äº‹ä»¶é€‰æ‹©åŠ¨ç”»ç›®æ ‡ï¼‰
 		// -------------------------------------------------
 
 		if (m_state == Selected)
 		{
 			if (active) m_state = Active;
-			else if (hovered) m_state = Selected; //¸²¸Çhover
+			else if (hovered) m_state = Selected; //è¦†ç›–hover
 			else m_state = Selected;
 		}
 		else
 		{
-			//Õı³£×´Ì¬»ú
+			//æ­£å¸¸çŠ¶æ€æœº
 			if (active)
 				m_state = Active;
 			else if (hovered)
@@ -81,7 +81,7 @@ public:
 				m_state = Normal;
 		}
 
-		// ¸üĞÂ¶¯»­Ä¿±ê
+		// æ›´æ–°åŠ¨ç”»ç›®æ ‡
 		switch (m_state)
 		{
 		case Normal:   m_target = &m_normal;   break;
@@ -90,7 +90,7 @@ public:
 		case Active:   m_target = &m_active;   break;
 		}
 		// -------------------------------------------------
-		// ¶¯»­ Lerp£¨Ã¿Ö¡²åÖµ£©
+		// åŠ¨ç”» Lerpï¼ˆæ¯å¸§æ’å€¼ï¼‰
 		// -------------------------------------------------
 		if (lastState != m_state)
 		{
@@ -107,7 +107,7 @@ public:
 			LerpAll(m_current, *m_target, animSpeed, io.DeltaTime);
 		}
 		// -------------------------------------------------
-		// »æÖÆ
+		// ç»˜åˆ¶
 		// -------------------------------------------------
 		if (ImGui::GetCurrentContext())
 		{
@@ -122,10 +122,10 @@ public:
 		//	ImGui::Text(u8"Animation");
 		//}
 
-		// ÎªÏÂÒ»¸ö¿Ø¼şÉèÖÃ Cursor ScreenPos£¨°´Å¥´¹Ö±¶Ñµş£©
+		// ä¸ºä¸‹ä¸€ä¸ªæ§ä»¶è®¾ç½® Cursor ScreenPosï¼ˆæŒ‰é’®å‚ç›´å †å ï¼‰
 		SetNextCursorScreenPos();
 
-		// ·µ»ØÊÇ·ñ±»µã»÷£¨°´ÏÂ -> ËÉ¿ªµÄÄÇÒ»Ö¡£©
+		// è¿”å›æ˜¯å¦è¢«ç‚¹å‡»ï¼ˆæŒ‰ä¸‹ -> æ¾å¼€çš„é‚£ä¸€å¸§ï¼‰
 		return pressed;
 	}
 
@@ -161,15 +161,15 @@ public:
 	}
 protected:
 
-	//ÎÄ×Ö
+	//æ–‡å­—
 	ButtonText labelText;
 
-	MyButtonStateData m_normal; //Î´¼¤»îÆÕÍ¨×´Ì¬
-	MyButtonStateData m_selected; //¼¤»îµÄÆÕÍ¨×´Ì¬
-	MyButtonStateData m_hovered; //Êó±êĞüÍ£×´Ì¬
-	MyButtonStateData m_active; //Êó±ê°´×¡×´Ì¬
-	MyButtonStateData m_current; //µ±Ç°×´Ì¬
-	MyButtonStateData* m_target; //ÓÃÕâ¸öÖ¸ÕëÉèÖÃÄ¿±ê×´Ì¬
+	MyButtonStateData m_normal; //æœªæ¿€æ´»æ™®é€šçŠ¶æ€
+	MyButtonStateData m_selected; //æ¿€æ´»çš„æ™®é€šçŠ¶æ€
+	MyButtonStateData m_hovered; //é¼ æ ‡æ‚¬åœçŠ¶æ€
+	MyButtonStateData m_active; //é¼ æ ‡æŒ‰ä½çŠ¶æ€
+	MyButtonStateData m_current; //å½“å‰çŠ¶æ€
+	MyButtonStateData* m_target; //ç”¨è¿™ä¸ªæŒ‡é’ˆè®¾ç½®ç›®æ ‡çŠ¶æ€
 
 
 	void ApllyCenterPositionChange() override
@@ -179,14 +179,14 @@ protected:
 		ApllyTextPositionChange(m_current.label, value);
 	}
 
-	void SetNextCursorScreenPos() const //ÏÂÒ»¸ö¿Ø¼şÎ»ÖÃÒ»¶¨ÓÉ³õÊ¼Î»ÖÃ + ³õÊ¼´óĞ¡ + ±ß¾à¾ö¶¨£¬·ñÔò»á·¢ÉúÆ«ÒÆ
+	void SetNextCursorScreenPos() const //ä¸‹ä¸€ä¸ªæ§ä»¶ä½ç½®ä¸€å®šç”±åˆå§‹ä½ç½® + åˆå§‹å¤§å° + è¾¹è·å†³å®šï¼Œå¦åˆ™ä¼šå‘ç”Ÿåç§»
 	{
 		ImVec2 nextPos = screenPos;
 		nextPos.y = screenPos.y + m_normal.button.size.y + m_padding;
 		ImGui::SetCursorScreenPos(nextPos);
 	}
 
-	void SetStateData() override //ÉèÖÃ×´Ì¬Êı¾İ
+	void SetStateData() override //è®¾ç½®çŠ¶æ€æ•°æ®
 	{
 		SetNormalStateData();
 		SetSelectedStateData(m_normal);
@@ -197,10 +197,10 @@ protected:
 	void SetNormalStateData()
 	{
 
-		//¼ÆËãbuttonµÄÖĞĞÄÎ»ÖÃ
+		//è®¡ç®—buttonçš„ä¸­å¿ƒä½ç½®
 		m_normal.button.CalculateCenter(screenPos);
 
-		//ÉèÖÃm_normalµÄ°´Å¥±³¾°ÑÕÉ«
+		//è®¾ç½®m_normalçš„æŒ‰é’®èƒŒæ™¯é¢œè‰²
 		ImVec4 bgColor = ImGui::ColorConvertU32ToFloat4(ImGui::GetColorU32(ImGuiCol_Button));
 		//bgColor.w = 0.35f;
 		m_normal.button.color = bgColor;
@@ -208,8 +208,8 @@ protected:
 		borderColor.w = 0.3f;
 		m_normal.button.borderColor = borderColor;
 
-		//ÉèÖÃm_normalµÄÎÄ×Ö
-		//ÎÄ×Ö¾ÓÖĞÏÔÊ¾£¬Í¸Ã÷¶ÈÎª0
+		//è®¾ç½®m_normalçš„æ–‡å­—
+		//æ–‡å­—å±…ä¸­æ˜¾ç¤ºï¼Œé€æ˜åº¦ä¸º0
 		m_normal.label.fontSize = fontSize * 1.0f;
 		m_normal.label.center = ImVec2(screenPos.x + m_normal.button.size.x / 2, screenPos.y + m_normal.button.size.y / 2);
 		//m_normal.label.CalculatePos();
@@ -219,17 +219,17 @@ protected:
 
 	void SetSelectedStateData(const MyButtonStateData& normal)
 	{
-		//ÉèÖÃm_selectedµÄ°´Å¥
-		//°´Å¥×´Ì¬ÓëÆÕÍ¨×´Ì¬ÏàÍ¬
+		//è®¾ç½®m_selectedçš„æŒ‰é’®
+		//æŒ‰é’®çŠ¶æ€ä¸æ™®é€šçŠ¶æ€ç›¸åŒ
 		m_selected.button.size = normal.button.size;
 		m_selected.button.center = normal.button.center;
 		m_selected.button.color = ImGui::ColorConvertU32ToFloat4(ImGui::GetColorU32(ImGuiCol_ButtonHovered));
 		m_selected.button.borderColor = ImGui::ColorConvertU32ToFloat4(ImGui::GetColorU32(ImGuiCol_Border));
 
-		//ÉèÖÃm_selectedµÄÎÄ×Ö
-		//ÎÄ×ÖÏòÓÒÒÆ¶¯£¬²¢Õı³£ÏÔÊ¾
+		//è®¾ç½®m_selectedçš„æ–‡å­—
+		//æ–‡å­—å‘å³ç§»åŠ¨ï¼Œå¹¶æ­£å¸¸æ˜¾ç¤º
 		ImVec2 buttonPos = m_selected.button.CalculatePos();
-		ImVec2 textCenter = ImVec2(buttonPos.x + m_selected.button.size.x / 2, buttonPos.y + m_selected.button.size.y / 2);		//ÉèÖÃm_hoveredµÄÍ¼±ê
+		ImVec2 textCenter = ImVec2(buttonPos.x + m_selected.button.size.x / 2, buttonPos.y + m_selected.button.size.y / 2);		//è®¾ç½®m_hoveredçš„å›¾æ ‡
 
 		m_selected.label.center = textCenter;
 		m_selected.label.fontSize = fontSize * 1.0f;
@@ -239,8 +239,8 @@ protected:
 
 	void SetHoveredStateData(const MyButtonStateData& normal)
 	{
-		//ÉèÖÃm_hoveredµÄ°´Å¥
-		//hovered °´Å¥ÉÔÉÔÌ§Æğ£¬´óĞ¡ÉÔÉÔ±ä´ó£¬µ«ÊÇ°´Å¥ÒÀ¾ÉË®Æ½¾ÓÖĞ
+		//è®¾ç½®m_hoveredçš„æŒ‰é’®
+		//hovered æŒ‰é’®ç¨ç¨æŠ¬èµ·ï¼Œå¤§å°ç¨ç¨å˜å¤§ï¼Œä½†æ˜¯æŒ‰é’®ä¾æ—§æ°´å¹³å±…ä¸­
 		m_hovered.button.size = ImVec2(normal.button.size.x + buttonSizeOffset, normal.button.size.y + buttonSizeOffset);
 		m_hovered.button.center = ImVec2(normal.button.center.x, normal.button.center.y - buttonHeightOffset);
 		m_hovered.button.color = ImGui::ColorConvertU32ToFloat4(ImGui::GetColorU32(ImGuiCol_ButtonHovered));
@@ -249,10 +249,10 @@ protected:
 		m_hovered.button.borderColor = borderColor;
 
 		ImVec2 buttonPos = m_hovered.button.CalculatePos();
-		ImVec2 textCenter = ImVec2(buttonPos.x + m_hovered.button.size.x / 2, buttonPos.y + m_hovered.button.size.y / 2);		//ÉèÖÃm_hoveredµÄÍ¼±ê
+		ImVec2 textCenter = ImVec2(buttonPos.x + m_hovered.button.size.x / 2, buttonPos.y + m_hovered.button.size.y / 2);		//è®¾ç½®m_hoveredçš„å›¾æ ‡
 
-		//ÉèÖÃm_hoveredµÄÎÄ×Ö
-		//ÎÄ×ÖÏòÓÒÒÆ¶¯£¬²¢Õı³£ÏÔÊ¾
+		//è®¾ç½®m_hoveredçš„æ–‡å­—
+		//æ–‡å­—å‘å³ç§»åŠ¨ï¼Œå¹¶æ­£å¸¸æ˜¾ç¤º
 		m_hovered.label.center = textCenter;
 		m_hovered.label.fontSize = fontSize * 1.0f;
 		m_hovered.label.color = ImGui::ColorConvertU32ToFloat4(ImGui::GetColorU32(ImGuiCol_Text));
@@ -261,8 +261,8 @@ protected:
 
 	void SetActiveStateData(const MyButtonStateData& normal)
 	{
-		//ÉèÖÃm_activeµÄ°´Å¥
-		//°´Å¥±äĞ¡£¬ÖĞĞÄÎ»ÖÃÏòÏÂÒÆ¶¯
+		//è®¾ç½®m_activeçš„æŒ‰é’®
+		//æŒ‰é’®å˜å°ï¼Œä¸­å¿ƒä½ç½®å‘ä¸‹ç§»åŠ¨
 		m_active.button.size = ImVec2(normal.button.size.x - buttonSizeOffset, normal.button.size.y - buttonSizeOffset);
 		m_active.button.center = ImVec2(normal.button.center.x, normal.button.center.y + buttonHeightOffset);
 		m_active.button.color = ImGui::ColorConvertU32ToFloat4(ImGui::GetColorU32(ImGuiCol_ButtonActive));
@@ -271,10 +271,10 @@ protected:
 		m_active.button.borderColor = borderColor;
 
 		ImVec2 buttonPos = m_active.button.CalculatePos();
-		ImVec2 textCenter = ImVec2(buttonPos.x + m_active.button.size.x / 2, buttonPos.y + m_active.button.size.y / 2);		//ÉèÖÃm_hoveredµÄÍ¼±ê
+		ImVec2 textCenter = ImVec2(buttonPos.x + m_active.button.size.x / 2, buttonPos.y + m_active.button.size.y / 2);		//è®¾ç½®m_hoveredçš„å›¾æ ‡
 
-		//ÉèÖÃm_activeµÄÎÄ×Ö
-		//ÎÄ×ÖÏòÓÒÒÆ¶¯£¬²¢Õı³£ÏÔÊ¾
+		//è®¾ç½®m_activeçš„æ–‡å­—
+		//æ–‡å­—å‘å³ç§»åŠ¨ï¼Œå¹¶æ­£å¸¸æ˜¾ç¤º
 		m_active.label.center = textCenter;
 		m_active.label.fontSize = fontSize * 0.9f;
 		m_active.label.color = ImGui::ColorConvertU32ToFloat4(ImGui::GetColorU32(ImGuiCol_Text));

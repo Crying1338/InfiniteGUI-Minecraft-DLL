@@ -1,4 +1,4 @@
-
+ï»¿
 #pragma once
 #include <string>
 
@@ -73,7 +73,7 @@ public:
         ImVec4 targetTextColor = keybox->state ? ImVec4(0.0f, 0.0f, 0.0f, 1.0f) : ImGui::GetStyleColorVec4(ImGuiCol_Text);
         ImVec4 targetBgColor = keybox->state ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImGui::GetStyleColorVec4(ImGuiCol_ChildBg);
 
-        //¼ÆËãËÙ¶È
+        //è®¡ç®—é€Ÿåº¦
         float speed_off = 15.0f * std::clamp(io.DeltaTime, 0.0f, 0.05f);
         float speed_on = speed_off * 2.5f;
         keybox->color.fontColor = ImLerp(keybox->color.fontColor, targetTextColor, keybox->state ? speed_on : speed_off);
@@ -121,7 +121,7 @@ private:
             pos,
             ImVec2(pos.x + size.x, pos.y + size.y),
             ImGui::ColorConvertFloat4ToU32(keybox->color.backgroundColor),
-            ImGui::GetStyle().FrameRounding, // Ô²½Ç
+            ImGui::GetStyle().FrameRounding, // åœ†è§’
             flags
         );
     }
@@ -137,9 +137,9 @@ private:
             pos,
             ImVec2(pos.x + size.x, pos.y + size.y),
             ImGui::GetColorU32(ImGuiCol_Border),
-            ImGui::GetStyle().FrameRounding, // Ô²½Ç
+            ImGui::GetStyle().FrameRounding, // åœ†è§’
             flags,
-            borderSize // Ïß¿í
+            borderSize // çº¿å®½
         );
     }
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Vendored third-party dependencies configuration.
+  本文件为仓库内置的第三方依赖配置：
+    - GLEW 2.2.0 (静态编译, 源码: glew.c + GL/ 头文件)
+    - stb_image.h
+    - nlohmann/json (single header)
+    - jni.h (来自 OpenJDK, 用于 TargetHUD 的 JVM 数据读取)
+  无需 vcpkg / 手动安装 glew32。
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <!-- 仓库源码已统一为 UTF-8 (BOM)，使用 /utf-8 保证各区域设置机器上编译行为一致 -->
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

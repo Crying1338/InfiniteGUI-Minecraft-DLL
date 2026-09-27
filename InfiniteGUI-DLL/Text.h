@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "AffixModule.h"
 #include "WindowModule.h"
 #include "nlohmann/json.hpp"
@@ -21,7 +21,7 @@ public:
     {
         ResetAffix();
         ResetWindow();
-        text = u8"ÇëÊäÈëÎÄ±¾";
+        text = u8"è¯·è¾“å…¥æ–‡æœ¬";
         dirtyState.contentDirty = true;
         dirtyState.animating = true;
     }

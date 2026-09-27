@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "WindowStyleModule.h"
 #include "GlobalWindowStyle.h"
 #include "RenderModule.h"
@@ -42,7 +42,7 @@ public:
     {
         SetStyle();
     }
-    virtual void DrawContent() = 0;       // »æÖÆÄÚÈİ£¨ÎÄ±¾¡¢Í¼ĞÎµÈ£©
+    virtual void DrawContent() = 0;       // ç»˜åˆ¶å†…å®¹ï¼ˆæ–‡æœ¬ã€å›¾å½¢ç­‰ï¼‰
 
 protected:
     virtual void HoverSetting() = 0;
@@ -94,7 +94,7 @@ protected:
             ImGui::PopFont();
             if (ImGui::IsItemHovered())
             {
-                ImGui::SetTooltip(u8"Ê¹ÓÃÈ«¾ÖÑùÊ½");
+                ImGui::SetTooltip(u8"ä½¿ç”¨å…¨å±€æ ·å¼");
             }
             return color;
         }
@@ -106,7 +106,7 @@ public:
     {
         ImGui::PushFont(NULL, ImGui::GetFontSize() * 0.8f);
         ImGui::BeginDisabled();
-        ImGuiStd::TextShadow(u8"´°¿ÚÉèÖÃ");
+        ImGuiStd::TextShadow(u8"çª—å£è®¾ç½®");
         ImGui::EndDisabled();
         ImGui::PopFont();
 
@@ -115,34 +115,34 @@ public:
         ImGui::SetCursorPosX(bigPadding);
         ImGui::SetNextItemWidth(itemWidth);
 
-        ImGui::Checkbox(u8"¹Ì¶¨", &fixed);
+        ImGui::Checkbox(u8"å›ºå®š", &fixed);
         ImGui::SameLine();
         ImGui::SetCursorPosX(bigPadding + centerX);
         ImGui::SetNextItemWidth(itemWidth);
 
-        ImGui::Checkbox(u8"×Ô¶¨Òå´°¿Ú´óĞ¡", &isCustomSize);
+        ImGui::Checkbox(u8"è‡ªå®šä¹‰çª—å£å¤§å°", &isCustomSize);
         if (isCustomSize) {
 
             ImGui::SetCursorPosX(bigPadding);
             ImGui::SetNextItemWidth(itemWidth);
-            ImGui::InputFloat(u8"¿í¶È", &width, 1.0f, 1.0f, "%.1f");
+            ImGui::InputFloat(u8"å®½åº¦", &width, 1.0f, 1.0f, "%.1f");
             ImGui::SameLine();
             ImGui::SetCursorPosX(bigPadding + centerX);
             ImGui::SetNextItemWidth(itemWidth);
-            ImGui::InputFloat(u8"¸ß¶È", &height, 1.0f, 1.0f, "%.1f");
+            ImGui::InputFloat(u8"é«˜åº¦", &height, 1.0f, 1.0f, "%.1f");
         }
 
         ImGui::SetCursorPosX(bigPadding);
         ImGui::SetNextItemWidth(itemWidth);
-        ImGui::InputFloat(u8"´°¿Ú X", &x, 1.0f, 1.0f, "%.1f");
+        ImGui::InputFloat(u8"çª—å£ X", &x, 1.0f, 1.0f, "%.1f");
         ImGui::SameLine();
         ImGui::SetCursorPosX(bigPadding + centerX);
         ImGui::SetNextItemWidth(itemWidth);
-        ImGui::InputFloat(u8"´°¿Ú Y", &y, 1.0f, 1.0f, "%.1f");
+        ImGui::InputFloat(u8"çª—å£ Y", &y, 1.0f, 1.0f, "%.1f");
 
         ImGui::SetCursorPosX(bigPadding);
         ImGui::SetNextItemWidth(bigItemWidth);
-        if (ImGui::SliderFloat(u8"´°¿ÚÔ²½Ç", &itemStyle.windowRounding, 0.0f, 10.0f, "%.1f"))
+        if (ImGui::SliderFloat(u8"çª—å£åœ†è§’", &itemStyle.windowRounding, 0.0f, 10.0f, "%.1f"))
         {
             custom.windowRounding = true;
             //itemStylePtr.windowRounding = &itemStyle.windowRounding;
@@ -160,13 +160,13 @@ public:
             ImGui::PopFont();
             if (ImGui::IsItemHovered())
             {
-                ImGui::SetTooltip(u8"Ê¹ÓÃÈ«¾ÖÑùÊ½");
+                ImGui::SetTooltip(u8"ä½¿ç”¨å…¨å±€æ ·å¼");
             }
         }
 
         ImGui::SetCursorPosX(bigPadding);
         ImGui::SetNextItemWidth(bigItemWidth);
-        if(ImGui::InputFloat(u8"×ÖÌå´óĞ¡", &itemStyle.fontSize, 1.0f, 1.0f, "%.1f"))
+        if(ImGui::InputFloat(u8"å­—ä½“å¤§å°", &itemStyle.fontSize, 1.0f, 1.0f, "%.1f"))
         {
             custom.fontSize = true;
             //itemStylePtr.fontSize = &itemStyle.fontSize;
@@ -184,7 +184,7 @@ public:
             ImGui::PopFont();
             if (ImGui::IsItemHovered())
             {
-                ImGui::SetTooltip(u8"Ê¹ÓÃÈ«¾ÖÑùÊ½");
+                ImGui::SetTooltip(u8"ä½¿ç”¨å…¨å±€æ ·å¼");
             }
         }
 
@@ -193,9 +193,9 @@ public:
         ImGui::SetCursorPosX(bigPadding);
         ImGui::SetNextItemWidth(itemWidth);
 
-        itemStylePtr.fontColor = EditWindowColor(u8"×ÖÌåÑÕÉ«", &itemStyle.fontColor, &GlobalWindowStyle::Instance().GetGlobeStyle().fontColor, custom.fontColor);
+        itemStylePtr.fontColor = EditWindowColor(u8"å­—ä½“é¢œè‰²", &itemStyle.fontColor, &GlobalWindowStyle::Instance().GetGlobeStyle().fontColor, custom.fontColor);
         ImGui::SameLine();
-        if (ImGui::Checkbox(u8"²Êºç", &itemStyle.rainbowFont))
+        if (ImGui::Checkbox(u8"å½©è™¹", &itemStyle.rainbowFont))
         {
             custom.fontColor = true;
         }
@@ -212,15 +212,15 @@ public:
         ImGui::SameLine();
         ImGui::SetCursorPosX(centerX + bigPadding);
         ImGui::SetNextItemWidth(itemWidth);
-        itemStylePtr.bgColor = EditWindowColor(u8"±³¾°ÑÕÉ«", &itemStyle.bgColor, &GlobalWindowStyle::Instance().GetGlobeStyle().bgColor, custom.bgColor);
+        itemStylePtr.bgColor = EditWindowColor(u8"èƒŒæ™¯é¢œè‰²", &itemStyle.bgColor, &GlobalWindowStyle::Instance().GetGlobeStyle().bgColor, custom.bgColor);
        
         ImGui::SetCursorPosX(bigPadding);
         ImGui::SetNextItemWidth(itemWidth);
-        itemStylePtr.borderColor = EditWindowColor(u8"±ß¿òÑÕÉ«", &itemStyle.borderColor, &GlobalWindowStyle::Instance().GetGlobeStyle().borderColor, custom.borderColor);
+        itemStylePtr.borderColor = EditWindowColor(u8"è¾¹æ¡†é¢œè‰²", &itemStyle.borderColor, &GlobalWindowStyle::Instance().GetGlobeStyle().borderColor, custom.borderColor);
     }
 
     // ---------------------------
-//   äÖÈ¾Õû¸ö´°¿Ú£¨Í³Ò»Âß¼­£©
+//   æ¸²æŸ“æ•´ä¸ªçª—å£ï¼ˆç»Ÿä¸€é€»è¾‘ï¼‰
 // ---------------------------
     virtual void RenderGui() override
     {
@@ -236,12 +236,12 @@ public:
                 ImGui::SetNextWindowSize(ImVec2(width, height), ImGuiCond_Always);
         }
 
-        SetStyle();  //Ã÷Ã÷¿ÉÒÔ²»¼ÓÕâ¸öµÄ£¬µ«ÊÇ²»¼Ó»á±À£¬ÎÒÎŞÓï...
+        SetStyle();  //æ˜æ˜å¯ä»¥ä¸åŠ è¿™ä¸ªçš„ï¼Œä½†æ˜¯ä¸åŠ ä¼šå´©ï¼Œæˆ‘æ— è¯­...
         if (isTransparentBg)
         {
-            ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f)); // ±³¾°Í¸Ã÷
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f)); // èƒŒæ™¯é€æ˜
             ImGui::PushStyleColor(ImGuiCol_ChildBg, *itemStylePtr.bgColor);
-            ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0f, 0.0f, 0.0f, 0.0f)); // ±ß¿òÍ¸Ã÷
+            ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0f, 0.0f, 0.0f, 0.0f)); // è¾¹æ¡†é€æ˜
         }
         else
         {
@@ -253,7 +253,7 @@ public:
         if (*itemStylePtr.rainbowFont)
             processRainbowFont();
         else
-            ImGui::PushStyleColor(ImGuiCol_Text, *itemStylePtr.fontColor); // ×ÖÌåÑÕÉ«
+            ImGui::PushStyleColor(ImGuiCol_Text, *itemStylePtr.fontColor); // å­—ä½“é¢œè‰²
         ImGui::PushFont(NULL, *itemStylePtr.fontSize);
 
         HWND g_hwnd = opengl_hook::handle_window;
@@ -274,17 +274,17 @@ public:
         isMoving = ImGui::IsMouseDragging(0, 1.0f) && isHovered;
         if (isHovered)
         {
-            //»ñÈ¡io
+            //è·å–io
             ImGuiIO& io = ImGui::GetIO();
-            //¼ÆËãËÙ¶È
+            //è®¡ç®—é€Ÿåº¦
             float speed = 10.0f * std::clamp(io.DeltaTime, 0.0f, 0.05f);
             alpha = ImLerp(alpha, 0.35f, speed);
-            // ÅĞ¶Ï¶¯»­ÊÇ·ñ½áÊø
+            // åˆ¤æ–­åŠ¨ç”»æ˜¯å¦ç»“æŸ
             if (Anim::AlmostEqual(alpha, 0.35f))
             {
                 alpha = 0.35f;
             }
-            ImGui::PushStyleVar(ImGuiStyleVar_Alpha, alpha);  //Ìí¼Ó°ëÍ¸Ã÷
+            ImGui::PushStyleVar(ImGuiStyleVar_Alpha, alpha);  //æ·»åŠ åŠé€æ˜
         }
         else alpha = 1.0f;
 
@@ -292,27 +292,27 @@ public:
 
         if (isHovered)
         {
-            ImGui::PopStyleVar(); //È¥³ı°ëÍ¸Ã÷
+            ImGui::PopStyleVar(); //å»é™¤åŠé€æ˜
             HoverSetting();
             Sidebar();
         }
         ImGui::PopFont();
-        // ÅĞ¶ÏÍÏ¶¯/ĞŞ¸Ä´óĞ¡ÊÂ¼ş
+        // åˆ¤æ–­æ‹–åŠ¨/ä¿®æ”¹å¤§å°äº‹ä»¶
         if (isMoving)
         {
             HandleDrag(g_hwnd);
         }
         else
         {
-            // µ±Ç°´°¿ÚÎ»ÖÃ´óĞ¡
+            // å½“å‰çª—å£ä½ç½®å¤§å°
             ImVec2 pos = ImGui::GetWindowPos();
             ImVec2 sz = ImGui::GetWindowSize();
 
             WindowSnapper::KeepSnapped(pos, sz, (float)opengl_hook::screen_size.x, (float)opengl_hook::screen_size.y, snapState);
-            // ÉèÖÃÎü¸½ºóµÄÎ»ÖÃ
+            // è®¾ç½®å¸é™„åçš„ä½ç½®
             ImGui::SetWindowPos(pos, ImGuiCond_Always);
 
-            // ±£´æµ½ Item
+            // ä¿å­˜åˆ° Item
             x = pos.x;
             y = pos.y;
         }
@@ -364,7 +364,7 @@ private:
             ImGuiStd::TextShadow(u8"\uE014");
             if (ImGui::IsItemClicked()) fixed = true;
             ImGui::SameLine();
-            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.88f, 0.52f, 0.52f, 1.0f)); // ×ÖÌåÑÕÉ«
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.88f, 0.52f, 0.52f, 1.0f)); // å­—ä½“é¢œè‰²
             ImGuiStd::TextShadow("9");
             ImGui::PopStyleColor();
             if (ImGui::IsItemClicked()) closed = true;
@@ -384,31 +384,31 @@ private:
         else
             isSnapping = false;
 
-        // µ±Ç°´°¿ÚÎ»ÖÃ´óĞ¡
+        // å½“å‰çª—å£ä½ç½®å¤§å°
         ImVec2 pos = ImGui::GetWindowPos();
         ImVec2 sz = ImGui::GetWindowSize();
 
         SnapResult snap;
         if (isSnapping)
         {
-            // ¼ÆËãÎü¸½
+            // è®¡ç®—å¸é™„
             snap = WindowSnapper::ComputeSnap(pos, sz, (float)opengl_hook::screen_size.x, (float)opengl_hook::screen_size.y, SNAP_DISTANCE);
-            // »­Îü¸½Ïß
+            // ç”»å¸é™„çº¿
             WindowSnapper::DrawGuides(snap, (float)opengl_hook::screen_size.x, (float)opengl_hook::screen_size.y, sz);
             //WindowSnapper::ComputeSnapWithWindows(sz, SNAP_DISTANCE, ItemManager::Instance().GetItems(), snap);
         }
         else
             snap = WindowSnapper::ComputeSnap(pos, sz, (float)opengl_hook::screen_size.x, (float)opengl_hook::screen_size.y, 0.0f);
 
-        // ÉèÖÃÎü¸½ºóµÄÎ»ÖÃ
+        // è®¾ç½®å¸é™„åçš„ä½ç½®
         ImGui::SetWindowPos(snap.snappedPos, ImGuiCond_Always);
 
-        // ±£´æµ½ Item
+        // ä¿å­˜åˆ° Item
         x = snap.snappedPos.x;
         y = snap.snappedPos.y;
         snapState = snap.snapState;
 
-        //±£´æ´°¿Ú´óĞ¡
+        //ä¿å­˜çª—å£å¤§å°
         width = ImGui::GetWindowSize().x;
         height = ImGui::GetWindowSize().y;
     }
@@ -478,7 +478,7 @@ protected:
     }
     bool isWindowShow = true;
 
-    bool isCustomSize = false;    //ÊÇ·ñ×Ô¶¨Òå´óĞ¡
+    bool isCustomSize = false;    //æ˜¯å¦è‡ªå®šä¹‰å¤§å°
 
     SnapState snapState = SNAP_NONE;
 

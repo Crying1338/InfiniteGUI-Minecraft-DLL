@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <Windows.h>
 #include "imgui\imgui.h"
@@ -14,9 +14,9 @@ class KeystrokesItem : public Item, public WindowModule, public UpdateModule
 {
 public:
     KeystrokesItem() {
-        type = Hud; // ĞÅÏ¢ÏîÀàĞÍ
-        name = u8"°´¼üÏÔÊ¾";
-        description = u8"ÏÔÊ¾°´¼ü×´Ì¬";
+        type = Hud; // ä¿¡æ¯é¡¹ç±»å‹
+        name = u8"æŒ‰é”®æ˜¾ç¤º";
+        description = u8"æ˜¾ç¤ºæŒ‰é”®çŠ¶æ€";
         icon = u8"\uE05D";
         updateIntervalMs = 5;
         lastUpdateTime = std::chrono::steady_clock::now();

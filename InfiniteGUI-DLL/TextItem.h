@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Item.h"
 #include "WindowModule.h"
 #include "nlohmann/json.hpp"
@@ -9,8 +9,8 @@ class TextItem : public Item, public RenderModule
 public:
     TextItem() {
         type = Hud;
-        name = u8"ÎÄ±¾ÏÔÊ¾";
-        description = u8"ÏÔÊ¾Ò»¶ÎÎÄ±¾";
+        name = u8"æ–‡æœ¬æ˜¾ç¤º";
+        description = u8"æ˜¾ç¤ºä¸€æ®µæ–‡æœ¬";
         icon = "(";
         TextItem::Reset();
     }

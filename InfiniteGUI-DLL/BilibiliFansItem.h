@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Item.h"
 #include "AffixModule.h"
 #include "SoundModule.h"
@@ -13,9 +13,9 @@ struct bilibili_fans_element {
 class BilibiliFansItem : public Item, public AffixModule, public SoundModule, public UpdateModule, public WindowModule {
 public:
     BilibiliFansItem() {
-        type = Hud; // ĞÅÏ¢ÏîÀàĞÍ
-        name = u8"·ÛË¿ÊıÏÔÊ¾";
-        description = u8"ÏÔÊ¾BÕ¾ÓÃ»§µÄ·ÛË¿Êı";
+        type = Hud; // ä¿¡æ¯é¡¹ç±»å‹
+        name = u8"ç²‰ä¸æ•°æ˜¾ç¤º";
+        description = u8"æ˜¾ç¤ºBç«™ç”¨æˆ·çš„ç²‰ä¸æ•°";
         icon = u8"\uE045";
         updateIntervalMs = 3000;
         lastUpdateTime = std::chrono::steady_clock::now();
@@ -34,7 +34,7 @@ public:
         ResetSound();
         ResetWindow();
         isEnabled = false;
-        prefix = u8"[·ÛË¿Êı:";
+        prefix = u8"[ç²‰ä¸æ•°:";
         suffix = "]";
         uid = 399194206;
         fansCount = -1;
@@ -51,11 +51,11 @@ public:
     void Save(nlohmann::json& j) const override;
 
 private:
-    long long uid = 399194206;          // BÕ¾ÓÃ»§UID
-    std::atomic<int> pendingFans{ -1 };   // ºóÌ¨Ïß³ÌĞ´£¬Ö÷Ïß³Ì¶Á
-    int fansCount = -1;                 // Ö÷Ïß³ÌÄÚ²¿Öµ
-    int lastFansCount = -1;             // Ö÷Ïß³ÌÉÏÒ»Ö¡Öµ
-    bool firstLoad = true;              // µÚÒ»´Î¼ÓÔØ
+    long long uid = 399194206;          // Bç«™ç”¨æˆ·UID
+    std::atomic<int> pendingFans{ -1 };   // åå°çº¿ç¨‹å†™ï¼Œä¸»çº¿ç¨‹è¯»
+    int fansCount = -1;                 // ä¸»çº¿ç¨‹å†…éƒ¨å€¼
+    int lastFansCount = -1;             // ä¸»çº¿ç¨‹ä¸Šä¸€å¸§å€¼
+    bool firstLoad = true;              // ç¬¬ä¸€æ¬¡åŠ è½½
 
     bilibili_fans_element color = { ImGui::ColorConvertU32ToFloat4(ImGui::GetColorU32(ImGuiCol_Text)) };
 };

@@ -1,4 +1,4 @@
-#include "Motionblur.h"
+ï»¿#include "Motionblur.h"
 #include <GL/glew.h>
 #include <GL/GL.h>
 
@@ -139,7 +139,7 @@ void Motionblur::Render()
 		first = false;
 	}
 
-	//¼ÆËãblurriness_valueÖµ
+	//è®¡ç®—blurriness_valueå€¼
 	if (velocityAdaptive)
 		velocity_adaptive_blur(GameStateDetector::Instance().IsCameraMoving(), GameStateDetector::Instance().GetCameraSpeed(), &velocity_factor);
 	else
@@ -348,10 +348,10 @@ void Motionblur::velocity_adaptive_blur(bool cameraMoving, float cameraSpeed, fl
 
 void Motionblur::Fps_modulate(const float& fps, const float* blurriness_value, float* cur_blurriness_value)
 {
-	float normalized_fps = std::clamp(fps, 0.0f, 1000.0f) / 1000.0f;  // ¹éÒ»»¯µ½[0,1]
+	float normalized_fps = std::clamp(fps, 0.0f, 1000.0f) / 1000.0f;  // å½’ä¸€åŒ–åˆ°[0,1]
 
-	// Ö¸ÊıË¥¼õ£ºfpsÔ½µÍ£¬Ë¥¼õÔ½Ç¿
-	// µ÷ÕûpowerÖµ¿ÉÒÔ¿ØÖÆÇúÏß¶¸ÇÍ³Ì¶È£¨Ô½´óÔòµÍFPSË¥¼õÔ½Ç¿£©
+	// æŒ‡æ•°è¡°å‡ï¼šfpsè¶Šä½ï¼Œè¡°å‡è¶Šå¼º
+	// è°ƒæ•´powerå€¼å¯ä»¥æ§åˆ¶æ›²çº¿é™¡å³­ç¨‹åº¦ï¼ˆè¶Šå¤§åˆ™ä½FPSè¡°å‡è¶Šå¼ºï¼‰
 	float attenuation_factor = std::pow(normalized_fps, 0.2f);
 
 	*cur_blurriness_value = *blurriness_value * attenuation_factor;
@@ -361,7 +361,7 @@ void Motionblur::Load(const nlohmann::json& j)
 {
 	LoadItem(j);
 	if (j.contains("blurriness")) blurriness_value = j["blurriness"].get<float>();
-	//µ÷Õûblurriness²»³¬¹ı10
+	//è°ƒæ•´blurrinessä¸è¶…è¿‡10
 	blurriness_value = std::clamp(blurriness_value, 0.0f, 10.0f);
 	if (j.contains("velocityAdaptive")) velocityAdaptive = j["velocityAdaptive"].get<bool>();
 	if (j.contains("smooth_blur")) smooth_blur = j["smooth_blur"].get<bool>();
@@ -392,32 +392,32 @@ void Motionblur::DrawSettings(const float& bigPadding, const float& centerX, con
 	ImGui::SetCursorPosX(bigPadding);
 	ImGui::SetNextItemWidth(bigItemWidth);
 	//DrawItemSettings();
-	ImGui::SliderFloat(u8"Ä£ºıÇ¿¶È", &blurriness_value, 0.0f, 10.0f, "%.1f");
+	ImGui::SliderFloat(u8"æ¨¡ç³Šå¼ºåº¦", &blurriness_value, 0.0f, 10.0f, "%.1f");
 
 	ImGui::SetCursorPosX(bigPadding);
 	ImGui::SetNextItemWidth(itemWidth);
-	if (ImGui::Checkbox(u8"²Ëµ¥ÖĞ¿ªÆô", &applyOnMenu))
+	if (ImGui::Checkbox(u8"èœå•ä¸­å¼€å¯", &applyOnMenu))
 	{
 		processApplyOnMenu();
 	}
 	ImGui::SameLine();
 	ImGui::SetCursorPosX(centerX + bigPadding);
 	ImGui::SetNextItemWidth(itemWidth);
-	ImGui::Checkbox(u8"ÓÎÏ·²Ëµ¥ÖĞ¿ªÆô", &applyOnGameMenu);
-	ImGui::SameLine();ImGuiStd::HelpMarker(u8"´ò¿ª±³°ü¡¢ÔİÍ£¡¢´ò×ÖµÈ·ÇÓÎÏ·Ê±GuiµÄÏÔÊ¾¡£");
+	ImGui::Checkbox(u8"æ¸¸æˆèœå•ä¸­å¼€å¯", &applyOnGameMenu);
+	ImGui::SameLine();ImGuiStd::HelpMarker(u8"æ‰“å¼€èƒŒåŒ…ã€æš‚åœã€æ‰“å­—ç­‰éæ¸¸æˆæ—¶Guiçš„æ˜¾ç¤ºã€‚");
 
 	ImGui::SetCursorPosX(bigPadding);
 	ImGui::SetNextItemWidth(itemWidth);
-	ImGui::Checkbox(u8"Ö¡ÂÊµ÷ÖÆ", &FpsModulate);
-	ImGui::SameLine(); ImGuiStd::HelpMarker(u8"Ä£ºıÇ¿¶ÈËæ×ÅÖ¡ÂÊ±ä»¯£¬ÊÊÓÃÓÚÖ¡ÂÊ²»ÎÈ¶¨µÄÇé¿ö¡£");
+	ImGui::Checkbox(u8"å¸§ç‡è°ƒåˆ¶", &FpsModulate);
+	ImGui::SameLine(); ImGuiStd::HelpMarker(u8"æ¨¡ç³Šå¼ºåº¦éšç€å¸§ç‡å˜åŒ–ï¼Œé€‚ç”¨äºå¸§ç‡ä¸ç¨³å®šçš„æƒ…å†µã€‚");
 	ImGui::SameLine();
 	ImGui::SetCursorPosX(centerX + bigPadding);
 	ImGui::SetNextItemWidth(itemWidth);
-	if (ImGui::Checkbox(u8"ËÙ¶È×ÔÊÊÓ¦", &velocityAdaptive))
+	if (ImGui::Checkbox(u8"é€Ÿåº¦è‡ªé€‚åº”", &velocityAdaptive))
 	{
 		if (!velocityAdaptive) smooth_blur = false;
 	}
-	ImGui::SameLine(); ImGuiStd::HelpMarker(u8"¸ù¾İÊÓ½ÇÒÆ¶¯ËÙ¶Èµ÷ÕûÄ£ºıÇ¿¶È£¬ÄÜÓĞĞ§½â¾ö¹íÓ°ÎÊÌâ¡£\n¶ÔÓÚmc1.12¼°ÒÔÏÂ°æ±¾´Ë¹¦ÄÜ½«Ê§Ğ§¡£");
+	ImGui::SameLine(); ImGuiStd::HelpMarker(u8"æ ¹æ®è§†è§’ç§»åŠ¨é€Ÿåº¦è°ƒæ•´æ¨¡ç³Šå¼ºåº¦ï¼Œèƒ½æœ‰æ•ˆè§£å†³é¬¼å½±é—®é¢˜ã€‚\nå¯¹äºmc1.12åŠä»¥ä¸‹ç‰ˆæœ¬æ­¤åŠŸèƒ½å°†å¤±æ•ˆã€‚");
 	ImGui::SetCursorPosX(bigPadding);
 	ImGui::Checkbox(u8"Im Faded~", &clear_color);
 
@@ -426,6 +426,6 @@ void Motionblur::DrawSettings(const float& bigPadding, const float& centerX, con
 		ImGui::SetCursorPosX(bigPadding + centerX);
 		ImGui::SetNextItemWidth(itemWidth);
 
-		ImGui::Checkbox(u8"ÈáºÍÄ£ºı", &smooth_blur); ImGui::SameLine(); ImGuiStd::HelpMarker(u8"ÈáºÍ»¯Ä£ºıÍÏÓ°£¬µ«»áÊ¹MCUIÄ£ºı¡£"); 
+		ImGui::Checkbox(u8"æŸ”å’Œæ¨¡ç³Š", &smooth_blur); ImGui::SameLine(); ImGuiStd::HelpMarker(u8"æŸ”å’ŒåŒ–æ¨¡ç³Šæ‹–å½±ï¼Œä½†ä¼šä½¿MCUIæ¨¡ç³Šã€‚"); 
 	}
 }

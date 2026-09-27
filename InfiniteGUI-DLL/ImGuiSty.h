@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "imgui\imgui.h"
 
@@ -8,7 +8,7 @@ void SetStyleGray()
     // Setup style
     ImGuiStyle& style = ImGui::GetStyle();
     ImVec4* colors = style.Colors;
-    //Ìí¼Ó±ß¿ò
+    //æ·»åŠ è¾¹æ¡†
     style.FrameBorderSize = 1.0f;
     style.WindowBorderSize = 1.0f;
     style.PopupBorderSize = 1.0f;

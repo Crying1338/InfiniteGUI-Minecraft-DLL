@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "imgui\imgui.h"
 #include "Item.h"
 #include "WindowModule.h"
@@ -13,9 +13,9 @@ class CPSItem : public Item, public WindowModule, public AffixModule, public Upd
 {
 public:
     CPSItem() {
-        type = Hud; // ĞÅÏ¢ÏîÀàĞÍ
-        name = u8"CPSÏÔÊ¾";
-        description = u8"ÏÔÊ¾×óÓÒ¼üCPS";
+        type = Hud; // ä¿¡æ¯é¡¹ç±»å‹
+        name = u8"CPSæ˜¾ç¤º";
+        description = u8"æ˜¾ç¤ºå·¦å³é”®CPS";
         icon = "!";
         CPSItem::Reset();
     }

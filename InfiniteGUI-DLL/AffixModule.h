@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <string>
 #include <nlohmann/json.hpp>
@@ -11,19 +11,19 @@ public:
     {
         ImGui::PushFont(NULL, ImGui::GetFontSize() * 0.8f);
         ImGui::BeginDisabled();
-        ImGuiStd::TextShadow(u8"Ç°ºó×ºÉèÖÃ");
+        ImGuiStd::TextShadow(u8"å‰åç¼€è®¾ç½®");
         ImGui::EndDisabled();
         ImGui::PopFont();
 
-        // ===== ×ó£ºÇ°×º =====
+        // ===== å·¦ï¼šå‰ç¼€ =====
         ImGui::SetCursorPosX(bigPadding);
         ImGui::SetNextItemWidth(itemWidth);
-        ImGuiStd::InputTextStd(u8"Ç°×º", prefix);
+        ImGuiStd::InputTextStd(u8"å‰ç¼€", prefix);
         ImGui::SameLine();
-        // ===== ÓÒ£ººó×º£¨ÒÔ´°¿ÚÖĞĞÄÏß + ±ß¾àÎªÆğµã£©=====
+        // ===== å³ï¼šåç¼€ï¼ˆä»¥çª—å£ä¸­å¿ƒçº¿ + è¾¹è·ä¸ºèµ·ç‚¹ï¼‰=====
         ImGui::SetCursorPosX(centerX + bigPadding);
         ImGui::SetNextItemWidth(itemWidth);
-        ImGuiStd::InputTextStd(u8"ºó×º", suffix);
+        ImGuiStd::InputTextStd(u8"åç¼€", suffix);
     }
 protected:
     void LoadAffix(const nlohmann::json& j)

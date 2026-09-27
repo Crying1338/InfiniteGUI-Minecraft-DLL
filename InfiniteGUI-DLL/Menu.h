@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Item.h"
 #include "RenderModule.h"
 #include "WindowStyleModule.h"
@@ -26,8 +26,8 @@ public:
 
     Menu() {
         type = Hud;
-        name = u8"²Ëµ¥";
-        description = u8"ÏÔÊ¾²Ëµ¥";
+        name = u8"èœå•";
+        description = u8"æ˜¾ç¤ºèœå•";
         icon = "J";
         isEnabled = false;
         settingMenu = new SettingMenu();
@@ -61,7 +61,7 @@ public:
         ResetWindowStyle();
         ResetSound();
         soundVolume = 0.1f;
-        keybinds.insert(std::make_pair(u8"²Ëµ¥¿ì½İ¼ü£º", VK_OEM_5));
+        keybinds.insert(std::make_pair(u8"èœå•å¿«æ·é”®ï¼š", VK_OEM_5));
         itemStyle.fontSize = 20.0f;
         itemStyle.bgColor = ImVec4(0.0f, 0.0f, 0.0f, 0.15f);
         needRepos = true;

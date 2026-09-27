@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 static const char* keys[] = {
     "None",

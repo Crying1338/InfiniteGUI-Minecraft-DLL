@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Item.h"
 #include "UpdateModule.h"
 #include <deque>
@@ -105,9 +105,9 @@ class CPSDetector : public Item, public UpdateModule
 {
 public:
     CPSDetector() {
-        type = Hidden; // ĞÅÏ¢ÏîÀàĞÍ
-        name = u8"CPS¼ì²â";
-        description = u8"¼ì²â×óÓÒ¼üCPS";
+        type = Hidden; // ä¿¡æ¯é¡¹ç±»å‹
+        name = u8"CPSæ£€æµ‹";
+        description = u8"æ£€æµ‹å·¦å³é”®CPS";
         icon = "!";
         updateIntervalMs = 2;
         lastUpdateTime = std::chrono::steady_clock::now();
@@ -134,11 +134,11 @@ public:
 private:
     KeyState keyStateHelper;
     click_container cps;
-    //// ¼ì²éÊÇ·ñµ½ÁË¸üĞÂµÄÊ±¼ä
+    //// æ£€æŸ¥æ˜¯å¦åˆ°äº†æ›´æ–°çš„æ—¶é—´
     //bool ShouldCpsUpdate();
 
-    //// ¸üĞÂ²Ù×÷
+    //// æ›´æ–°æ“ä½œ
     //void MarkUpCPSdated();
     //int cpsIntervalMs = 50;
-    //std::chrono::steady_clock::time_point lastCpsTime;  // ¼ÇÂ¼×îºó¸üĞÂÊ±¼ä
+    //std::chrono::steady_clock::time_point lastCpsTime;  // è®°å½•æœ€åæ›´æ–°æ—¶é—´
 };

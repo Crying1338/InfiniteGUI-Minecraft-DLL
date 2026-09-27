@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <string>
 #include <nlohmann/json.hpp>
@@ -11,20 +11,20 @@ public:
     {
         ImGui::PushFont(NULL, ImGui::GetFontSize() * 0.8f);
         ImGui::BeginDisabled();
-        ImGuiStd::TextShadow(u8"ÉùÒôÉèÖÃ");
+        ImGuiStd::TextShadow(u8"å£°éŸ³è®¾ç½®");
         ImGui::EndDisabled();
         ImGui::PopFont();
 
         float bigItemWidth = centerX * 2.0f - bigPadding * 4.0f;
-        // ===== ×ó£ºÌáÊ¾Òô =====
+        // ===== å·¦ï¼šæç¤ºéŸ³ =====
         ImGui::SetCursorPosX(bigPadding);
         ImGui::SetNextItemWidth(itemWidth);
 
-        ImGui::Checkbox(u8"ÌáÊ¾Òô", &isPlaySound);
+        ImGui::Checkbox(u8"æç¤ºéŸ³", &isPlaySound);
 
         ImGui::SetCursorPosX(bigPadding);
         ImGui::SetNextItemWidth(bigItemWidth);
-        ImGui::SliderFloat(u8"ÒôÁ¿", &soundVolume, 0.0f, 1.0f, "%.2f");
+        ImGui::SliderFloat(u8"éŸ³é‡", &soundVolume, 0.0f, 1.0f, "%.2f");
     }
     bool IsPlaySound() const { return isPlaySound; }
     void SetPlaySound(bool playSound) { isPlaySound = playSound; }
@@ -45,5 +45,5 @@ protected:
         soundVolume = 0.5f;
     }
     bool isPlaySound;
-    float soundVolume;    // ÉùÒôÒôÁ¿£¨0.0~1.0£©
+    float soundVolume;    // å£°éŸ³éŸ³é‡ï¼ˆ0.0~1.0ï¼‰
 };

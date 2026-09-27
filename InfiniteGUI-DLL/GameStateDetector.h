@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Item.h"
 #include "UpdateModule.h"
 #include <Windows.h>
@@ -20,9 +20,9 @@ public:
 
 
     GameStateDetector() {
-        type = Hidden; // ĞÅÏ¢ÏîÀàĞÍ
-        name = u8"ÓÎÏ·×´Ì¬¼ì²â";
-        description = u8"¼ì²âÓÎÏ·µ±Ç°×´Ì¬";
+        type = Hidden; // ä¿¡æ¯é¡¹ç±»å‹
+        name = u8"æ¸¸æˆçŠ¶æ€æ£€æµ‹";
+        description = u8"æ£€æµ‹æ¸¸æˆå½“å‰çŠ¶æ€";
         icon = u8"\uE039";
         updateIntervalMs = 10;
         lastUpdateTime = std::chrono::steady_clock::now();
@@ -56,8 +56,8 @@ public:
     void Save(nlohmann::json& j) const override;
     void DrawSettings(const float& bigPadding, const float& centerX, const float& itemWidth) override;
 
-    bool IsInGame() const;          // ÔÚÓÎÏ·ÊÀ½çÖĞ
-    bool IsNeedHide() const;        // ÊÇ·ñĞèÒªÒş²ØĞÅÏ¢Ïî;
+    bool IsInGame() const;          // åœ¨æ¸¸æˆä¸–ç•Œä¸­
+    bool IsNeedHide() const;        // æ˜¯å¦éœ€è¦éšè—ä¿¡æ¯é¡¹;
     GameState GetCurrentState() const;
     WindowState GetWindowState() const;
     bool IsInGameWindow() const;
@@ -83,7 +83,7 @@ private:
     bool isInGameWindow = true;
     int centerLevel = 1;
 
-    float movementThreshold = 1.0f; // Ğ¡ÓÚÕâ¸öÊÓÎª¾²Ö¹£¬ÓÃÓÚ·À¶¶¶¯
-    float cameraSpeed;    // Êó±êÒÆ¶¯ËÙ¶È
+    float movementThreshold = 1.0f; // å°äºè¿™ä¸ªè§†ä¸ºé™æ­¢ï¼Œç”¨äºé˜²æŠ–åŠ¨
+    float cameraSpeed;    // é¼ æ ‡ç§»åŠ¨é€Ÿåº¦
     bool cameraMoving;
 };

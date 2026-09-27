@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <Windows.h>
 
 #include "imgui\imgui.h"
@@ -28,9 +28,9 @@ class Sprint : public WindowModule, public UpdateModule, public KeybindModule, p
 {
 public:
     Sprint() {
-        type = Util; // ĞÅÏ¢ÏîÀàĞÍ
-        name = u8"Ç¿ÖÆ¼²ÅÜ";
-        description = u8"Ç¿ÖÆ¼²ÅÜ";
+        type = Util; // ä¿¡æ¯é¡¹ç±»å‹
+        name = u8"å¼ºåˆ¶ç–¾è·‘";
+        description = u8"å¼ºåˆ¶ç–¾è·‘";
         icon = "o";
         updateIntervalMs = 5;
         lastUpdateTime = std::chrono::steady_clock::now();
@@ -49,12 +49,12 @@ public:
         ResetKeybind();
         ResetAffix();
         ResetSound();
-        isEnabled = false; // ÊÇ·ñÆôÓÃ
+        isEnabled = false; // æ˜¯å¦å¯ç”¨
 
-        keybinds.insert(std::make_pair(u8"¼¤»î¼ü£º", 'I'));
-        gameKeybinds.insert(std::make_pair(u8"Ç°½ø¼ü£º", 'W'));
-        gameKeybinds.insert(std::make_pair(u8"¼²ÅÜ¼ü£º", VK_CONTROL));
-        gameKeybinds.insert(std::make_pair(u8"Ç±ĞĞ¼ü£º", VK_SHIFT));
+        keybinds.insert(std::make_pair(u8"æ¿€æ´»é”®ï¼š", 'I'));
+        gameKeybinds.insert(std::make_pair(u8"å‰è¿›é”®ï¼š", 'W'));
+        gameKeybinds.insert(std::make_pair(u8"ç–¾è·‘é”®ï¼š", VK_CONTROL));
+        gameKeybinds.insert(std::make_pair(u8"æ½œè¡Œé”®ï¼š", VK_SHIFT));
 
         isActivated = false;
         isWalking = false;

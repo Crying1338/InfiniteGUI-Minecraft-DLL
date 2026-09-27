@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 
 struct version
@@ -11,11 +11,11 @@ struct version
 class App
 {
 public:
-	std::string appName = u8"ÎŞÏŞGUI";
+	std::string appName = u8"æ— é™GUI";
 	version appVersion = { 1, 0, 5 };
-	std::string appAuthor = u8"Â·¹ıµÄMax";
+	std::string appAuthor = u8"è·¯è¿‡çš„Max";
 	std::string appDescription = "InfiniteGUI is a library that allows you to create overlays for in-game information.";
-	std::string announcement = u8"ÕâÀïÃ»ÓĞ¹«¸æÄó...";
+	std::string announcement = u8"è¿™é‡Œæ²¡æœ‰å…¬å‘Šæ...";
 	version cloudVersion = { 0, 0, 0 };
 	std::wstring versionUrl = L"https://gitee.com/qc_max/InfiniteGUI/raw/master/version.json";
 	std::wstring announcementUrl = L"https://gitee.com/qc_max/InfiniteGUI/raw/master/announcement.txt";

@@ -1,4 +1,4 @@
-#include "Item.h"
+ï»¿#include "Item.h"
 #include "AffixModule.h"
 #include "UpdateModule.h"
 #include "WindowModule.h"
@@ -11,9 +11,9 @@ class FpsItem : public Item, public AffixModule, public UpdateModule, public Win
 {
 public:
     FpsItem() {
-        type = Hud; // ĞÅÏ¢ÏîÀàĞÍ
-        name = u8"FPSÏÔÊ¾";
-        description = u8"ÏÔÊ¾µ±Ç°Ö¡ÂÊ";
+        type = Hud; // ä¿¡æ¯é¡¹ç±»å‹
+        name = u8"FPSæ˜¾ç¤º";
+        description = u8"æ˜¾ç¤ºå½“å‰å¸§ç‡";
         icon = u8"\uE022";
         updateIntervalMs = 1000;
         lastUpdateTime = std::chrono::steady_clock::now();
@@ -62,7 +62,7 @@ private:
         renderTask.gui = true;
         renderTask.before = true;
     }
-    // Ö¡ÂÊ¼ÆÊıÆ÷
+    // å¸§ç‡è®¡æ•°å™¨
     int frameCount = 0;
     float FPS = 0.0f;
     int guiFrameCount = 0;

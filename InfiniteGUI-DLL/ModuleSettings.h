@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "menuRule.h"
 
 class ModuleSettings
@@ -12,20 +12,20 @@ class ModuleSettings
 			ImGui::BeginChild("Settings", ImVec2(-padding + ImGui::GetStyle().WindowPadding.x, -padding + ImGui::GetStyle().WindowPadding.y), true, flags);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12.0f, 8.0f));
 
-			// ===== ²¼¾Ö²ÎÊı =====
+			// ===== å¸ƒå±€å‚æ•° =====
 			ImGuiStyle& style = ImGui::GetStyle();
 			float basePadding = style.WindowPadding.x;
 			float bigPadding = basePadding * 3.0f;
 
-			// »ñÈ¡´°¿Ú¿ÉÓÃ¿í¶È
+			// è·å–çª—å£å¯ç”¨å®½åº¦
 			float contentWidth = ImGui::GetContentRegionAvail().x;
 			float centerX = contentWidth * 0.5f;
 
-			// Ã¿¸öÊäÈë¿ò¿í¶È£¨ÁôµãÓàÁ¿£¬±ÜÃâ¶¥µ½±ß£©
+			// æ¯ä¸ªè¾“å…¥æ¡†å®½åº¦ï¼ˆç•™ç‚¹ä½™é‡ï¼Œé¿å…é¡¶åˆ°è¾¹ï¼‰
 			float itemWidth = centerX - bigPadding * 4.0f;
 
 
-			//ĞŞ¸Äimgui¿Ø¼şÓë´°¿Ú±ßÔµµÄ¼ä¾à
+			//ä¿®æ”¹imguiæ§ä»¶ä¸çª—å£è¾¹ç¼˜çš„é—´è·
 			ImGui::PushFont(opengl_hook::gui.iconFont);
 			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 20.0f);
 			if(ImGui::Button("i", ImVec2(35.0f, 35.0f)))
@@ -77,7 +77,7 @@ class ModuleSettings
 			ImGui::Separator();
 			ImVec2 childPos = ImGui::GetCursorPos();
 			ImGui::SetCursorPos(ImVec2(0.0f, childPos.y));
-			//Í¸Ã÷±³¾°child
+			//é€æ˜èƒŒæ™¯child
 			ImGui::BeginChild("InnerSettings", ImVec2(ImGui::GetWindowWidth(),ImGui::GetWindowHeight() - childPos.y - ImGui::GetStyle().WindowPadding.y), true, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoScrollbar);
 
 			item->DrawSettings(bigPadding, centerX, itemWidth);
@@ -87,7 +87,7 @@ class ModuleSettings
 			ImGui::EndChild();
 
 			return exit;
-		}//·µ»ØtrueÍË³öÉèÖÃ½çÃæ£¬·µ»Øfalse¼ÌĞøÔËĞĞ
+		}//è¿”å›trueé€€å‡ºè®¾ç½®ç•Œé¢ï¼Œè¿”å›falseç»§ç»­è¿è¡Œ
 	private:
 
 };

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <vector>
 #include <memory>
 #include <minwindef.h>
@@ -31,6 +31,6 @@ public:
     const std::vector<Item*>& GetItems() const { return Items; }
 
 private:
-    std::vector<Item*> Items;                      // È«²¿ item£¨Ö¸Õë£¬²»Îö¹¹£©
+    std::vector<Item*> Items;                      // å…¨éƒ¨ itemï¼ˆæŒ‡é’ˆï¼Œä¸ææ„ï¼‰
 
 };

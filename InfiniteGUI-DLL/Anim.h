@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 #include "imgui\imgui.h"
 #include "imgui\imgui_internal.h"
 class Anim
 {
 public:
 
-	// ��ֵ
+	// 插值
 	template<typename T>
 	static void SmoothLerp(T& cur, const T& target, float damping, float dt)
 	{

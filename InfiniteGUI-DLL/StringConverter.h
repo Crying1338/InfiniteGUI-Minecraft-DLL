@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 #include <string>
 
 namespace StringConverter
@@ -7,11 +7,11 @@ namespace StringConverter
     std::wstring Utf8ToWstring(const std::string& utf8);
     std::string  WstringToUtf8(const std::wstring& wstr);
 
-    // ACP(GBKµ») <-> UTF-16 (wstring)
+    // ACP(GBKÁ≠â) <-> UTF-16 (wstring)
     std::wstring AcpToWstring(const std::string& acp);
     std::string  WstringToAcp(const std::wstring& wstr);
 
-    // ÷±Ω”∑‚◊∞£∫UTF-8 <-> ACP
+    // Áõ¥Êé•Â∞ÅË£ÖÔºöUTF-8 <-> ACP
     std::string  Utf8ToAcp(const std::string& utf8);
     std::string  AcpToUtf8(const std::string& acp);
 }

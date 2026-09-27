@@ -1,4 +1,4 @@
-#include "WindowSnapper.h"
+ï»¿#include "WindowSnapper.h"
 #include <cmath>
 
 #include "GameStateDetector.h"
@@ -23,7 +23,7 @@ SnapResult WindowSnapper::ComputeSnap(
         float cx = pos.x + size.x * 0.5f;
         float cy = pos.y + size.y * 0.5f;
 
-        // ±ßÔµÎü¸½
+        // è¾¹ç¼˜å¸é™„
         if (fabs(pos.x) < snapDist) {
             r.snappedPos.x = 0;
             state = static_cast<SnapState>(state | SNAP_LEFT);
@@ -41,7 +41,7 @@ SnapResult WindowSnapper::ComputeSnap(
             state = static_cast<SnapState>(state | SNAP_BOTTOM);
         }
 
-        // ÖĞĞÄÎü¸½
+        // ä¸­å¿ƒå¸é™„
         if (fabs(cx - screenW * 0.5f) < snapDist) {
             r.snappedPos.x = screenW * 0.5f - size.x * 0.5f;
             state = static_cast<SnapState>(state | SNAP_CENTER_X);
@@ -70,13 +70,13 @@ void WindowSnapper::ComputeSnapWithWindows(
     float cx = r.snappedPos.x + size.x * 0.5f;
     float cy = r.snappedPos.y + size.y * 0.5f;
 
-    // 2. ´¦Àí´°¿Ú¼äÎü¸½
+    // 2. å¤„ç†çª—å£é—´å¸é™„
     float minDistance = snapDist;
     SnapState state = SNAP_NONE;
     ImVec2 windowSnapPos = r.snappedPos;
     bool isWindowNeedHide = false;
     if (GameStateDetector::Instance().IsNeedHide())
-        isWindowNeedHide = true; // Òş²ØËùÓĞ´°¿Ú
+        isWindowNeedHide = true; // éšè—æ‰€æœ‰çª—å£
     for (const auto& item : items) {
         if(!item->isEnabled) continue;
         if (auto ren = dynamic_cast<RenderModule*>(item))
@@ -86,43 +86,43 @@ void WindowSnapper::ComputeSnapWithWindows(
             {
                 if(isWindowNeedHide)
                     continue;
-                // Ìø¹ı×Ô¼º
+                // è·³è¿‡è‡ªå·±
                 if(otherWindow->isMoving == true) continue;
                 float otherRight = otherWindow->x + otherWindow->width;
                 float otherBottom = otherWindow->y + otherWindow->height;
                 float otherCx = otherWindow->x + otherWindow->width * 0.5f;
                 float otherCy = otherWindow->y + otherWindow->height * 0.5f;
 
-                // ¼ì²é±ßÔµ¶ÔÆëÎü¸½
-                // ×ó±ßÔµ¶ÔÆëÆäËû´°¿ÚÓÒ±ßÔµ
+                // æ£€æŸ¥è¾¹ç¼˜å¯¹é½å¸é™„
+                // å·¦è¾¹ç¼˜å¯¹é½å…¶ä»–çª—å£å³è¾¹ç¼˜
                 float distLeftToRight = fabs(r.snappedPos.x - otherRight);
                 if (distLeftToRight < minDistance && distLeftToRight < snapDist) {
                     windowSnapPos.x = otherRight;
                     state = static_cast<SnapState>(state | SNAP_OTHER_LEFT);
                 }
 
-                // ÓÒ±ßÔµ¶ÔÆëÆäËû´°¿Ú×ó±ßÔµ
+                // å³è¾¹ç¼˜å¯¹é½å…¶ä»–çª—å£å·¦è¾¹ç¼˜
                 float distRightToLeft = fabs(right - otherWindow->x);
                 if (distRightToLeft < minDistance && distRightToLeft < snapDist) {
                     windowSnapPos.x = otherWindow->x - size.x;
                     state = static_cast<SnapState>(state | SNAP_OTHER_RIGHT);
                 }
 
-                // ÉÏ±ßÔµ¶ÔÆëÆäËû´°¿ÚÏÂ±ßÔµ
+                // ä¸Šè¾¹ç¼˜å¯¹é½å…¶ä»–çª—å£ä¸‹è¾¹ç¼˜
                 float distTopToBottom = fabs(r.snappedPos.y - otherBottom);
                 if (distTopToBottom < minDistance && distTopToBottom < snapDist) {
                     windowSnapPos.y = otherBottom;
                     state = static_cast<SnapState>(state | SNAP_OTHER_TOP);
                 }
 
-                // ÏÂ±ßÔµ¶ÔÆëÆäËû´°¿ÚÉÏ±ßÔµ
+                // ä¸‹è¾¹ç¼˜å¯¹é½å…¶ä»–çª—å£ä¸Šè¾¹ç¼˜
                 float distBottomToTop = fabs(bottom - otherWindow->y);
                 if (distBottomToTop < minDistance && distBottomToTop < snapDist) {
                     windowSnapPos.y = otherWindow->y - size.y;
                     state = static_cast<SnapState>(state | SNAP_OTHER_BOTTOM);
                 }
 
-                // ÖĞĞÄ¶ÔÆë£¨¿ÉÑ¡£©
+                // ä¸­å¿ƒå¯¹é½ï¼ˆå¯é€‰ï¼‰
                 float distCenterX = fabs(cx - otherCx);
                 if (distCenterX < minDistance && distCenterX < snapDist) {
                     windowSnapPos.x = otherWindow->x + (otherWindow->width - size.x) * 0.5f;
@@ -147,7 +147,7 @@ void WindowSnapper::ComputeSnapWithWindows(
 
 void WindowSnapper::KeepSnapped(ImVec2& pos, const ImVec2& size, float screenW, float screenH, const SnapState& r)
 {
-    //±£³Ö±ßÔµÎü¸½
+    //ä¿æŒè¾¹ç¼˜å¸é™„
     if (r & SNAP_LEFT) {
         pos.x = 0;
     }
@@ -161,7 +161,7 @@ void WindowSnapper::KeepSnapped(ImVec2& pos, const ImVec2& size, float screenW, 
         pos.y = screenH - size.y;
     }
 
-    //±£³ÖÖĞĞÄÎü¸½
+    //ä¿æŒä¸­å¿ƒå¸é™„
     if (r & SNAP_CENTER_X) {
         pos.x = screenW * 0.5f - size.x * 0.5f;
     }

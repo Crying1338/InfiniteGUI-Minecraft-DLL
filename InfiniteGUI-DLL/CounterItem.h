@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Item.h"
 #include "AffixModule.h"
 #include "WindowModule.h"
@@ -14,9 +14,9 @@ class CounterItem : public Item, public AffixModule, public WindowModule, public
 {
 public:
     CounterItem() {
-        type = Hud; // ĞÅÏ¢ÏîÀàĞÍ
-        name = u8"¼ÆÊıÆ÷";
-        description = u8"ÏÔÊ¾¼ÆÊıÆ÷";
+        type = Hud; // ä¿¡æ¯é¡¹ç±»å‹
+        name = u8"è®¡æ•°å™¨";
+        description = u8"æ˜¾ç¤ºè®¡æ•°å™¨";
         icon = "X";
         CounterItem::Reset();
     }
@@ -36,11 +36,11 @@ public:
 
         isEnabled = false;
 
-        keybinds.insert(std::make_pair(u8"Ôö¼Ó¿ì½İ¼ü£º", VK_F6));
-        keybinds.insert(std::make_pair(u8"¼õÉÙ¿ì½İ¼ü£º", VK_F5));
-        keybinds.insert(std::make_pair(u8"Çå¿Õ¿ì½İ¼ü£º", NULL));
+        keybinds.insert(std::make_pair(u8"å¢åŠ å¿«æ·é”®ï¼š", VK_F6));
+        keybinds.insert(std::make_pair(u8"å‡å°‘å¿«æ·é”®ï¼š", VK_F5));
+        keybinds.insert(std::make_pair(u8"æ¸…ç©ºå¿«æ·é”®ï¼š", NULL));
 
-        prefix = u8"[¼ÆÊı:";
+        prefix = u8"[è®¡æ•°:";
         suffix = "]";
 
         count = 0;

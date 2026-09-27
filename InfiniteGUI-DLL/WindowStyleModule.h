@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "imgui\imgui.h"
 #include "ImGuiStd.h"
@@ -23,7 +23,7 @@ public:
     {
         //ImGui::PushFont(NULL, ImGui::GetFontSize() * 0.8f);
         //ImGui::BeginDisabled();
-        //ImGuiStd::TextShadow(u8"´°¿ÚÑùÊ½ÉèÖÃ"); 
+        //ImGuiStd::TextShadow(u8"çª—å£æ ·å¼è®¾ç½®"); 
         //ImGui::EndDisabled();
         //ImGui::PopFont();
 
@@ -32,26 +32,26 @@ public:
         ImGui::SetCursorPosX(bigPadding);
         ImGui::SetNextItemWidth(bigItemWidth);
 
-        ImGui::SliderFloat(u8"´°¿ÚÔ²½Ç", &itemStyle.windowRounding, 0.0f, 10.0f, "%.1f");
-        //×ÖÌå´óĞ¡ÉèÖÃ
+        ImGui::SliderFloat(u8"çª—å£åœ†è§’", &itemStyle.windowRounding, 0.0f, 10.0f, "%.1f");
+        //å­—ä½“å¤§å°è®¾ç½®
         ImGui::SetCursorPosX(bigPadding);
         ImGui::SetNextItemWidth(bigItemWidth);
-        ImGui::InputFloat(u8"×ÖÌå´óĞ¡", &itemStyle.fontSize, 1.0f, 1.0f, "%.1f");
-        //ÑÕÉ«ÉèÖÃ
+        ImGui::InputFloat(u8"å­—ä½“å¤§å°", &itemStyle.fontSize, 1.0f, 1.0f, "%.1f");
+        //é¢œè‰²è®¾ç½®
         ImGui::SetCursorPosX(bigPadding);
         ImGui::SetNextItemWidth(itemWidth);
-        ImGuiStd::EditColor(u8"×ÖÌåÑÕÉ«", itemStyle.fontColor, defaultStyle.fontColor);
+        ImGuiStd::EditColor(u8"å­—ä½“é¢œè‰²", itemStyle.fontColor, defaultStyle.fontColor);
         ImGui::SameLine();
-        ImGui::Checkbox(u8"²Êºç", &itemStyle.rainbowFont);
+        ImGui::Checkbox(u8"å½©è™¹", &itemStyle.rainbowFont);
 
         ImGui::SameLine();
         ImGui::SetCursorPosX(centerX + bigPadding);
         ImGui::SetNextItemWidth(itemWidth);
-        ImGuiStd::EditColor(u8"±³¾°ÑÕÉ«", itemStyle.bgColor, defaultStyle.bgColor);
+        ImGuiStd::EditColor(u8"èƒŒæ™¯é¢œè‰²", itemStyle.bgColor, defaultStyle.bgColor);
 
         ImGui::SetCursorPosX(bigPadding);
         ImGui::SetNextItemWidth(itemWidth);
-        ImGuiStd::EditColor(u8"±ß¿òÑÕÉ«", itemStyle.borderColor, defaultStyle.borderColor);
+        ImGuiStd::EditColor(u8"è¾¹æ¡†é¢œè‰²", itemStyle.borderColor, defaultStyle.borderColor);
     }
 protected:
     void LoadStyle(const nlohmann::json& j)
@@ -76,7 +76,7 @@ protected:
     }
     void InitStyle()
     {
-        //³õÊ¼»¯Ä¬ÈÏÑùÊ½
+        //åˆå§‹åŒ–é»˜è®¤æ ·å¼
         ImGuiStyle& defaultStyle = ImGui::GetStyle();
         itemStyle.windowRounding = defaultStyle.WindowRounding;
         itemStyle.fontSize = defaultStyle.FontSizeBase;

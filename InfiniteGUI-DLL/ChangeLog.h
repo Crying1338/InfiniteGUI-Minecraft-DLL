@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 #include <vector>
 #include <deque>
 
-//Ò»¸översion¶ÔÓ¦Ò»¸ödate
-//Ò»¸översion¶ÔÓ¦¶à¸ölog
+//ä¸€ä¸ªversionå¯¹åº”ä¸€ä¸ªdate
+//ä¸€ä¸ªversionå¯¹åº”å¤šä¸ªlog
 
 struct Info
 {
@@ -14,12 +14,12 @@ struct Info
 
 enum ContentType
 {
-	FIXBUG, //ĞŞ¸´
-	ADD, //ĞÂÔö
-	REMOVE, //ÒÆ³ı
-	OPTIMIZE, //ÓÅ»¯
-	CHANGE, //±ä¸ü
-	INFO //ĞÅÏ¢
+	FIXBUG, //ä¿®å¤
+	ADD, //æ–°å¢
+	REMOVE, //ç§»é™¤
+	OPTIMIZE, //ä¼˜åŒ–
+	CHANGE, //å˜æ›´
+	INFO //ä¿¡æ¯
 };
 
 struct Content
@@ -45,7 +45,7 @@ public:
 		static ChangeLog instance;
 		return instance;
 	}
-	void Draw() const; //»æÖÆÈÕÖ¾
+	void Draw() const; //ç»˜åˆ¶æ—¥å¿—
 	void Init();
 private:
 	void AddContent(const ContentType& type, const std::string& content);

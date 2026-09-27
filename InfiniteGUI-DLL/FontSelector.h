@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <vector>
 
 #include "FileUtils.h"
@@ -24,8 +24,8 @@ public:
         }
 
         if (fontFilesUser.empty()) {
-            // »ñÈ¡ÓÃ»§Ãû
-            wchar_t username[256]; // È·±£×ã¹»¿Õ¼äÀ´´æ´¢ÓÃ»§Ãû
+            // èŽ·å–ç”¨æˆ·å
+            wchar_t username[256]; // ç¡®ä¿è¶³å¤Ÿç©ºé—´æ¥å­˜å‚¨ç”¨æˆ·å
             DWORD usernameSize = sizeof(username) / sizeof(username[0]);
             GetUserNameW(username, &usernameSize);
             fontFilesUser = GetFontsFromDirectory(L"C:\\Users\\" + std::wstring(username) + L"\\AppData\\Local\\Microsoft\\Windows\\Fonts");
@@ -37,17 +37,17 @@ public:
         font_cfg.OversampleV = 1;
         font_cfg.PixelSnapH = true;
         
-        //ÏÔÊ¾µ±Ç°×ÖÌå
-        ImGuiStd::TextShadow(u8"µ±Ç°×ÖÌå:");
+        //æ˜¾ç¤ºå½“å‰å­—ä½“
+        ImGuiStd::TextShadow(u8"å½“å‰å­—ä½“:");
         ImGui::SameLine();
 
 
 
-        ImGuiStd::TextShadow(*fontPath == "default" ? u8"°¢Àï°Í°ÍÆÕ»ÝÌå" : opengl_hook::gui.font->GetDebugName());
+        ImGuiStd::TextShadow(*fontPath == "default" ? u8"é˜¿é‡Œå·´å·´æ™®æƒ ä½“" : opengl_hook::gui.font->GetDebugName());
 
-        if (ImGui::CollapsingHeader(u8"Ä¬ÈÏ×ÖÌå", ImGuiTreeNodeFlags_DefaultOpen))
+        if (ImGui::CollapsingHeader(u8"é»˜è®¤å­—ä½“", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            if (ImGui::Selectable(u8"°¢Àï°Í°ÍÆÕ»ÝÌå")) {
+            if (ImGui::Selectable(u8"é˜¿é‡Œå·´å·´æ™®æƒ ä½“")) {
                 // Load the selected font
                 opengl_hook::gui.font = io.Fonts->AddFontFromMemoryTTF(Fonts::alibaba.data, Fonts::alibaba.size, 20.0f, &font_cfg, io.Fonts->GetGlyphRangesChineseFull());
                 io.FontDefault = opengl_hook::gui.font;
@@ -55,7 +55,7 @@ public:
             }
         }
 
-        if (ImGui::CollapsingHeader(u8"ÓÃ»§×ÖÌå"))
+        if (ImGui::CollapsingHeader(u8"ç”¨æˆ·å­—ä½“"))
         {
             for (size_t i = 0; i < fontFilesUser.size(); ++i) {
                 if (ImGui::Selectable(fontFilesUser[i].name.c_str())) {
@@ -67,7 +67,7 @@ public:
             }
         }
 
-        if (ImGui::CollapsingHeader(u8"ÏµÍ³×ÖÌå"))
+        if (ImGui::CollapsingHeader(u8"ç³»ç»Ÿå­—ä½“"))
         {
             for (size_t i = 0; i < fontFilesSystem.size(); ++i) {
                 if (ImGui::Selectable(fontFilesSystem[i].name.c_str())) {
@@ -97,7 +97,7 @@ private:
                 std::wstring filename = findFileData.cFileName;
                 if (filename.find(L".ttf") != std::string::npos || filename.find(L".otf") != std::string::npos) {
                     FontInfo fontInfo;
-                    //È¥³ýºó×º.ttf
+                    //åŽ»é™¤åŽç¼€.ttf
                     fontInfo.name = StringConverter::WstringToUtf8(filename);
                     fontInfo.name = fontInfo.name.substr(0, fontInfo.name.find_last_of("."));
                     fontInfo.path = directory + L"\\" + filename;

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "menuRule.h"
 #include "ImGuiStd.h"
 #include "imgui/imgui.h"
@@ -14,21 +14,21 @@ public:
         ImGui::BeginChild("About", ImVec2(-padding + ImGui::GetStyle().WindowPadding.x, -padding + ImGui::GetStyle().WindowPadding.y), true, flags);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(12.0f, 8.0f));
 
-        // ===== ²¼¾Ö²ÎÊı =====
+        // ===== å¸ƒå±€å‚æ•° =====
         ImGuiStyle& style = ImGui::GetStyle();
         float basePadding = style.WindowPadding.x;
         float bigPadding = basePadding * 3.0f;
 
-        // »ñÈ¡´°¿Ú¿ÉÓÃ¿í¶È
+        // è·å–çª—å£å¯ç”¨å®½åº¦
         float contentWidth = ImGui::GetContentRegionAvail().x;
         float centerX = contentWidth * 0.5f;
-        // Ã¿¸öÊäÈë¿ò¿í¶È£¨ÁôµãÓàÁ¿£¬±ÜÃâ¶¥µ½±ß£©
+        // æ¯ä¸ªè¾“å…¥æ¡†å®½åº¦ï¼ˆç•™ç‚¹ä½™é‡ï¼Œé¿å…é¡¶åˆ°è¾¹ï¼‰
         float itemWidth = centerX - bigPadding * 4.0f;
         float bigItemWidth = centerX * 2.0f - bigPadding * 4.0f;
 
         ImGui::PushFont(NULL, ImGui::GetFontSize() * 0.8f);
         ImGui::BeginDisabled();
-        ImGuiStd::TextShadow(u8"¸ü¶àÄÚÈİ¾´ÇëÆÚ´ı...");
+        ImGuiStd::TextShadow(u8"æ›´å¤šå†…å®¹æ•¬è¯·æœŸå¾…...");
         ImGui::EndDisabled();
         ImGui::PopFont();
 

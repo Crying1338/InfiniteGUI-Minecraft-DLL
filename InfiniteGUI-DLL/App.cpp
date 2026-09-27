@@ -1,4 +1,4 @@
-#include "App.h"
+ï»¿#include "App.h"
 #include "HttpClient.h"
 #include <nlohmann/json.hpp>
 #include <string>
@@ -18,19 +18,19 @@ bool App::CheckUpdate()
             cloudVersion.build = j["version"]["build"].get<int>();
         }
         catch (...) {
-            // ½âÎöÊ§°Ü£¬·µ»Ø¿Õ¶ÔÏó
-            MessageBox(NULL, L"°æ±¾ĞÅÏ¢½âÎöÊ§°Ü£¬ÇëÁªÏµ×÷Õß", L"ÌáÊ¾", MB_OK);
+            // è§£æå¤±è´¥ï¼Œè¿”å›ç©ºå¯¹è±¡
+            MessageBox(NULL, L"ç‰ˆæœ¬ä¿¡æ¯è§£æå¤±è´¥ï¼Œè¯·è”ç³»ä½œè€…", L"æç¤º", MB_OK);
         }
     }
     else {
-        // ÍøÂçÇëÇóÊ§°Ü£¬·µ»Ø¿Õ¶ÔÏó
-        MessageBox(NULL, L"ÍøÂçÇëÇóÊ§°Ü£¬Çë¼ì²éÍøÂçÁ¬½Ó", L"ÌáÊ¾", MB_OK);
+        // ç½‘ç»œè¯·æ±‚å¤±è´¥ï¼Œè¿”å›ç©ºå¯¹è±¡
+        MessageBox(NULL, L"ç½‘ç»œè¯·æ±‚å¤±è´¥ï¼Œè¯·æ£€æŸ¥ç½‘ç»œè¿æ¥", L"æç¤º", MB_OK);
     }
     long long cloudNum = cloudVersion.major * 100000000 + cloudVersion.minor * 10000 + cloudVersion.build;
     long long appNum = appVersion.major * 100000000 + appVersion.minor * 10000 + appVersion.build;
     if (cloudNum > appNum)
     {
-        // ÓĞĞÂ°æ±¾£¬µ¯³öÌáÊ¾¿ò
+        // æœ‰æ–°ç‰ˆæœ¬ï¼Œå¼¹å‡ºæç¤ºæ¡†
         return false;
     }
     return true;
@@ -43,5 +43,5 @@ void App::GetAnnouncement()
     if (ok)
         announcement = response;
     else
-        MessageBox(NULL, L"»ñÈ¡¹«¸æÊ§°Ü£¬Çë¼ì²éÍøÂçÁ¬½Ó", L"ÌáÊ¾", MB_OK);
+        MessageBox(NULL, L"è·å–å…¬å‘Šå¤±è´¥ï¼Œè¯·æ£€æŸ¥ç½‘ç»œè¿æ¥", L"æç¤º", MB_OK);
 }

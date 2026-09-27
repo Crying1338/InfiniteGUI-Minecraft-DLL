@@ -1,4 +1,4 @@
-#include "GlobalWindowStyle.h"
+ï»¿#include "GlobalWindowStyle.h"
 
 void GlobalWindowStyle::Toggle()
 {
@@ -20,7 +20,7 @@ void GlobalWindowStyle::DrawSettings(const float& bigPadding, const float& cente
 {
 	ImGui::PushFont(NULL, ImGui::GetFontSize() * 0.8f);
 	ImGui::BeginDisabled();
-	ImGuiStd::TextShadow(u8"È«¾Ö´°¿ÚÑùÊ½ÉèÖÃ");
+	ImGuiStd::TextShadow(u8"å…¨å±€çª—å£æ ·å¼è®¾ç½®");
 	ImGui::EndDisabled();
 	ImGui::PopFont();
 	DrawStyleSettings(bigPadding, centerX, itemWidth);

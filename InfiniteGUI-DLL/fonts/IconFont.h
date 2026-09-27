@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 inline unsigned char iconFont[]
 {

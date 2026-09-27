@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "MyButton.hpp"
 
@@ -10,17 +10,17 @@ public:
 
 	~MainMenuButton() = default;
 
-	bool Draw(ImDrawFlags flags = ImDrawFlags_RoundCornersAll) override //·µ»ØÊÇ·ñ±»µã»÷
+	bool Draw(ImDrawFlags flags = ImDrawFlags_RoundCornersAll) override //è¿”å›æ˜¯å¦è¢«ç‚¹å‡»
 	{
-		labelText.font = ImGui::GetFont(); //Ã¿Ö¡»ñÈ¡£¬ÒÔÃâÖ¸ÕëÆ«ÒÆ
+		labelText.font = ImGui::GetFont(); //æ¯å¸§è·å–ï¼Œä»¥å…æŒ‡é’ˆåç§»
 		if (!initialized)
 		{
-			screenPos = ImGui::GetCursorScreenPos(); //³õÊ¼Î»ÖÃÓÉImGui×Ô¶¯¼ÆËã
+			screenPos = ImGui::GetCursorScreenPos(); //åˆå§‹ä½ç½®ç”±ImGuiè‡ªåŠ¨è®¡ç®—
 			lastScreenPos = screenPos;
 			fontSize = ImGui::GetFontSize();
 			lastFontSize = fontSize;
 			SetStateData();
-			//ÉèÖÃm_currentµÄ×´Ì¬
+			//è®¾ç½®m_currentçš„çŠ¶æ€
 			m_current = m_normal;
 			m_target = &m_normal;
 			m_state = Normal;
@@ -28,7 +28,7 @@ public:
 			initialized = true;
 		}
 
-		screenPos = ImGui::GetCursorScreenPos(); //³õÊ¼Î»ÖÃÓÉImGui×Ô¶¯¼ÆËã
+		screenPos = ImGui::GetCursorScreenPos(); //åˆå§‹ä½ç½®ç”±ImGuiè‡ªåŠ¨è®¡ç®—
 		if (IsPositionChanged(screenPos, lastScreenPos))
 		{
 			SetStateData();
@@ -46,23 +46,23 @@ public:
 
 		bool pressed = DrawInvisibleButton(m_current.button);
 		if(pressed) ClickSound::Instance().PlayPopSound();
-		rightClicked = ImGui::IsItemClicked(1); //ÓÒ¼üµ¥»÷
+		rightClicked = ImGui::IsItemClicked(1); //å³é”®å•å‡»
 		bool hovered = ImGui::IsItemHovered();
 		bool active = ImGui::IsItemActive();
 
 		// -------------------------------------------------
-		// ×´Ì¬»ú£¨¸ù¾İÊó±êÊÂ¼şÑ¡Ôñ¶¯»­Ä¿±ê£©
+		// çŠ¶æ€æœºï¼ˆæ ¹æ®é¼ æ ‡äº‹ä»¶é€‰æ‹©åŠ¨ç”»ç›®æ ‡ï¼‰
 		// -------------------------------------------------
 
 		if (m_state == Selected)
 		{
 			if (active) m_state = Active;
-			else if (hovered) m_state = Selected; //¸²¸Çhover
+			else if (hovered) m_state = Selected; //è¦†ç›–hover
 			else m_state = Selected;
 		}
 		else
 		{
-			//Õı³£×´Ì¬»ú
+			//æ­£å¸¸çŠ¶æ€æœº
 			if (active)
 				m_state = Active;
 			else if (hovered)
@@ -71,7 +71,7 @@ public:
 				m_state = Normal;
 		}
 
-		// ¸üĞÂ¶¯»­Ä¿±ê
+		// æ›´æ–°åŠ¨ç”»ç›®æ ‡
 		switch (m_state)
 		{
 		case Normal:   m_target = &m_normal;   break;
@@ -80,21 +80,21 @@ public:
 		case Active:   m_target = &m_active;   break;
 		}
 		// -------------------------------------------------
-		// ¶¯»­ Lerp£¨Ã¿Ö¡²åÖµ£©
+		// åŠ¨ç”» Lerpï¼ˆæ¯å¸§æ’å€¼ï¼‰
 		// -------------------------------------------------
 		ImGuiIO& io = ImGui::GetIO();
 		LerpAll(m_current, *m_target, animSpeed, io.DeltaTime);
 		// -------------------------------------------------
-		// »æÖÆ
+		// ç»˜åˆ¶
 		// -------------------------------------------------
 		DrawWindowBackground(m_current.button);
 		DrawBackground(m_current.button);
 		DrawBorder(m_current.button);
 		DrawLabel(m_current.label, labelText);
 
-		// ÎªÏÂÒ»¸ö¿Ø¼şÉèÖÃ Cursor ScreenPos£¨°´Å¥´¹Ö±¶Ñµş£©
+		// ä¸ºä¸‹ä¸€ä¸ªæ§ä»¶è®¾ç½® Cursor ScreenPosï¼ˆæŒ‰é’®å‚ç›´å †å ï¼‰
 		SetNextCursorScreenPos();
-		// ·µ»ØÊÇ·ñ±»µã»÷£¨°´ÏÂ -> ËÉ¿ªµÄÄÇÒ»Ö¡£©
+		// è¿”å›æ˜¯å¦è¢«ç‚¹å‡»ï¼ˆæŒ‰ä¸‹ -> æ¾å¼€çš„é‚£ä¸€å¸§ï¼‰
 		return pressed;
 	}
 	static void DrawWindowBackground(const ButtonAnimTarget& current, const ImDrawFlags& flags = ImDrawFlags_RoundCornersAll)
@@ -112,7 +112,7 @@ public:
 			pos,
 			ImVec2(pos.x + size.x, pos.y + size.y),
 			ImGui::ColorConvertFloat4ToU32(ImGui::GetStyle().Colors[ImGuiCol_WindowBg]),
-			ImGui::GetStyle().FrameRounding, // Ô²½Ç
+			ImGui::GetStyle().FrameRounding, // åœ†è§’
 			flags
 		);
 	}

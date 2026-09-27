@@ -1,4 +1,4 @@
-#include "CounterItem.h"
+ï»¿#include "CounterItem.h"
 #include "AudioManager.h"
 #include "imgui\imgui.h"
 #include "ImGuiStd.h"
@@ -17,32 +17,32 @@ void CounterItem::Toggle()
 void CounterItem::OnKeyEvent(bool state, bool isRepeat, WPARAM key)
 {
     if(key == NULL || !GameStateDetector::Instance().IsInGame()) return;
-    if(state) //°´¼ü°´ÏÂ
+    if(state) //æŒ‰é”®æŒ‰ä¸‹
     {
-        if (key == keybinds.at(u8"Ôö¼Ó¿ì½Ý¼ü£º"))
+        if (key == keybinds.at(u8"å¢žåŠ å¿«æ·é”®ï¼š"))
         {
             count++;
-            NotificationItem::Instance().AddNotification(NotificationType_Info, u8"¼ÆÊýÆ÷£º+1¡£");
+            NotificationItem::Instance().AddNotification(NotificationType_Info, u8"è®¡æ•°å™¨ï¼š+1ã€‚");
         }
-        else if (key == keybinds.at(u8"¼õÉÙ¿ì½Ý¼ü£º"))
+        else if (key == keybinds.at(u8"å‡å°‘å¿«æ·é”®ï¼š"))
         {
             count--;
-            NotificationItem::Instance().AddNotification(NotificationType_Info, u8"¼ÆÊýÆ÷£º-1¡£");
+            NotificationItem::Instance().AddNotification(NotificationType_Info, u8"è®¡æ•°å™¨ï¼š-1ã€‚");
         }
-        else if (key == keybinds.at(u8"Çå¿Õ¿ì½Ý¼ü£º"))
+        else if (key == keybinds.at(u8"æ¸…ç©ºå¿«æ·é”®ï¼š"))
         {
             count = 0;
-            NotificationItem::Instance().AddNotification(NotificationType_Info, u8"¼ÆÊýÆ÷£ºÇåÁã¡£");
+            NotificationItem::Instance().AddNotification(NotificationType_Info, u8"è®¡æ•°å™¨ï¼šæ¸…é›¶ã€‚");
         }
         if (count > lastCount)
         {
-            color.color = ImVec4(0.1f, 1.0f, 0.1f, 1.0f); //ÂÌÉ«
+            color.color = ImVec4(0.1f, 1.0f, 0.1f, 1.0f); //ç»¿è‰²
             lastCount = count;
             if (isPlaySound) AudioManager::Instance().playSound("counter\\counter_up.wav", soundVolume);
         }
         else if (count < lastCount)
         {
-            color.color = ImVec4(1.0f, 0.1f, 0.1f, 1.0f); //ºìÉ«
+            color.color = ImVec4(1.0f, 0.1f, 0.1f, 1.0f); //çº¢è‰²
             lastCount = count;
             if (isPlaySound) AudioManager::Instance().playSound("counter\\counter_down.wav", soundVolume);
         }
@@ -66,12 +66,12 @@ void CounterItem::DrawContent()
     }
     ImVec4 targetTextColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
 
-    //»ñÈ¡io
+    //èŽ·å–io
     ImGuiIO& io = ImGui::GetIO();
-    //¼ÆËãËÙ¶È
+    //è®¡ç®—é€Ÿåº¦
     float speed = 3.0f * std::clamp(io.DeltaTime, 0.0f, 0.05f);
     color.color = ImLerp(color.color, targetTextColor, speed);
-    // ÅÐ¶Ï¶¯»­ÊÇ·ñ½áÊø
+    // åˆ¤æ–­åŠ¨ç”»æ˜¯å¦ç»“æŸ
     if (Anim::AlmostEqual(color.color, targetTextColor))
     {
         color.color = targetTextColor;
@@ -90,7 +90,7 @@ void CounterItem::DrawSettings(const float& bigPadding, const float& centerX, co
 
     ImGui::SetCursorPosX(bigPadding);
     ImGui::SetNextItemWidth(itemWidth);
-    ImGui::InputInt(u8"¼ÆÊýÖµ", &count);
+    ImGui::InputInt(u8"è®¡æ•°å€¼", &count);
 
     DrawKeybindSettings(bigPadding, centerX, itemWidth);
     DrawAffixSettings(bigPadding, centerX, itemWidth);

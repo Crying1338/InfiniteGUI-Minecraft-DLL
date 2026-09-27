@@ -1,4 +1,4 @@
-#include "KeystrokesItem.h"
+ï»¿#include "KeystrokesItem.h"
 #include "imgui\imgui.h"
 #include "imgui\imgui_internal.h"
 #include "ImGuiStd.h"
@@ -40,7 +40,7 @@ void KeystrokesItem::DrawContent()
         isEnabled = false;
         closed = false;
     }
-    //»ñÈ¡io
+    //è·å–io
     ImGuiIO& io = ImGui::GetIO();
     ImVec2 window_padding = ImGui::GetStyle().WindowPadding;
     ImVec2 cursorPos;
@@ -67,8 +67,8 @@ void KeystrokesItem::DrawContent()
             cursorPos.x += key_box.width + padding;
     }
     if (!animating) dirtyState.animating = false;
-    ImGui::PopStyleVar(); //´°¿ÚÔ²½Ç
-    ImGui::PopStyleColor(); //ÊÇ·ñÏÔÊ¾±ß¿ò
+    ImGui::PopStyleVar(); //çª—å£åœ†è§’
+    ImGui::PopStyleColor(); //æ˜¯å¦æ˜¾ç¤ºè¾¹æ¡†
 }
 
 void KeystrokesItem::DrawSettings(const float& bigPadding, const float& centerX, const float& itemWidth)
@@ -77,23 +77,23 @@ void KeystrokesItem::DrawSettings(const float& bigPadding, const float& centerX,
 
     ImGui::SetCursorPosX(bigPadding);
     ImGui::SetNextItemWidth(itemWidth);
-    ImGui::Checkbox(u8"ÏÔÊ¾¿Õ¸ñ", &showSpace);
+    ImGui::Checkbox(u8"æ˜¾ç¤ºç©ºæ ¼", &showSpace);
     ImGui::SameLine();
     ImGui::SetCursorPosX(bigPadding + centerX);
     ImGui::SetNextItemWidth(itemWidth);
-    ImGui::Checkbox(u8"ÏÔÊ¾Êó±ê", &showMouse);
-    //ImGui::Checkbox(u8"ÏÔÊ¾CPS", &showCps);
+    ImGui::Checkbox(u8"æ˜¾ç¤ºé¼ æ ‡", &showMouse);
+    //ImGui::Checkbox(u8"æ˜¾ç¤ºCPS", &showCps);
     //ImGui::Separator();
     bool needResize = false;
     ImGui::SetCursorPosX(bigPadding);
     ImGui::SetNextItemWidth(bigItemWidth);
-    if(ImGui::SliderFloat(u8"°´¼ü±ß³¤", &min_box_size, 12.0f, 108.0f, "%.1f"))
+    if(ImGui::SliderFloat(u8"æŒ‰é”®è¾¹é•¿", &min_box_size, 12.0f, 108.0f, "%.1f"))
     {
         needResize = true;
     }
     ImGui::SetCursorPosX(bigPadding);
     ImGui::SetNextItemWidth(bigItemWidth);
-    if(ImGui::SliderFloat(u8"°´¼ü¼ä¸ô", &padding, 1.0f, 18.0f, "%.1f"))
+    if(ImGui::SliderFloat(u8"æŒ‰é”®é—´éš”", &padding, 1.0f, 18.0f, "%.1f"))
     {
         needResize = true;
     }

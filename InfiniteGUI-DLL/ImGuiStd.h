@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
 #include <string>
@@ -51,7 +51,7 @@ namespace ImGuiStd {
 
         ImVec2 pos = ImGui::GetCursorScreenPos();
 
-        // ÒõÓ°
+        // é˜´å½±
         draw->AddText(
             font,
             size,
@@ -60,7 +60,7 @@ namespace ImGuiStd {
             text
         );
 
-        // ÕıÎÄ
+        // æ­£æ–‡
         draw->AddText(
             font,
             size,
@@ -69,7 +69,7 @@ namespace ImGuiStd {
             text
         );
 
-        // ÊÖ¶¯ÍÆ½ø¹â±ê£¨¹Ø¼ü£©
+        // æ‰‹åŠ¨æ¨è¿›å…‰æ ‡ï¼ˆå…³é”®ï¼‰
         ImVec2 text_size = ImGui::CalcTextSize(text);
         ImGui::Dummy(ImVec2(text_size.x, text_size.y));
     }
@@ -90,13 +90,13 @@ namespace ImGuiStd {
 
         ImVec2 pos = ImGui::GetCursorScreenPos();
 
-        // ×Ô¶¯»»ĞĞ¿í¶È£¨Ä¬ÈÏÓÃ´°¿ÚÊ£Óà¿í¶È£©
+        // è‡ªåŠ¨æ¢è¡Œå®½åº¦ï¼ˆé»˜è®¤ç”¨çª—å£å‰©ä½™å®½åº¦ï¼‰
         if (wrap_width <= 0.0f)
         {
             wrap_width = ImGui::GetContentRegionAvail().x;
         }
 
-        // ÒõÓ°
+        // é˜´å½±
         draw->AddText(
             font,
             size,
@@ -107,7 +107,7 @@ namespace ImGuiStd {
             wrap_width
         );
 
-        // ÕıÎÄ
+        // æ­£æ–‡
         draw->AddText(
             font,
             size,
@@ -118,7 +118,7 @@ namespace ImGuiStd {
             wrap_width
         );
 
-        // ÍÆ½ø¹â±ê£¨±ØĞëÓÃ Wrapped °æ±¾£©
+        // æ¨è¿›å…‰æ ‡ï¼ˆå¿…é¡»ç”¨ Wrapped ç‰ˆæœ¬ï¼‰
         ImVec2 text_size =
             ImGui::CalcTextSize(text, nullptr, false, wrap_width);
 
@@ -144,15 +144,15 @@ namespace ImGuiStd {
         const char* ellipsis = "...";
         float ellipsis_width = ImGui::CalcTextSize(ellipsis).x;
 
-        // Èç¹ûÕû¸öÎÄ±¾ÄÜ·ÅÏÂ£¬Ö±½Ó»­
+        // å¦‚æœæ•´ä¸ªæ–‡æœ¬èƒ½æ”¾ä¸‹ï¼Œç›´æ¥ç”»
         ImVec2 full_size = ImGui::CalcTextSize(text);
         if (full_size.x <= max_width)
         {
-            // ÒõÓ°
+            // é˜´å½±
             draw->AddText(font, size, ImVec2(pos.x + offset.x, pos.y + offset.y),
                 ImGui::GetColorU32(shadow_col), text);
 
-            // ÕıÎÄ
+            // æ­£æ–‡
             draw->AddText(font, size, pos,
                 ImGui::GetColorU32(ImGuiCol_Text), text);
 
@@ -160,11 +160,11 @@ namespace ImGuiStd {
             return;
         }
 
-        // ===== ĞèÒªÊ¡ÂÔ =====
+        // ===== éœ€è¦çœç•¥ =====
         const char* text_end = text + strlen(text);
         const char* visible_end = text_end;
 
-        // ´ÓºóÍùÇ°²Ã¼ô£¬Ö±µ½ÄÜ·ÅÏÂ + ...
+        // ä»åå¾€å‰è£å‰ªï¼Œç›´åˆ°èƒ½æ”¾ä¸‹ + ...
         while (visible_end > text)
         {
             float w = ImGui::CalcTextSize(text, visible_end).x;
@@ -174,7 +174,7 @@ namespace ImGuiStd {
             visible_end = ImGui::FindRenderedTextEnd(text, visible_end - 1);
         }
 
-        // ÒõÓ°
+        // é˜´å½±
         draw->AddText(
             font, size,
             ImVec2(pos.x + offset.x, pos.y + offset.y),
@@ -188,7 +188,7 @@ namespace ImGuiStd {
             ellipsis
         );
 
-        // ÕıÎÄ
+        // æ­£æ–‡
         draw->AddText(
             font, size,
             pos,
@@ -210,10 +210,10 @@ namespace ImGuiStd {
     {
         ImVec2 pos = ImGui::GetCursorPos();
         ImGui::SetCursorPos(ImVec2(pos.x + offset.x, pos.y + offset.y));
-        ImGui::TextColored(shadowColor, text);  // ÒõÓ°²ã
+        ImGui::TextColored(shadowColor, text);  // é˜´å½±å±‚
 
         ImGui::SetCursorPos(pos);
-        ImGui::TextColored(color, text);  // Õı³£ÎÄ×Ö
+        ImGui::TextColored(color, text);  // æ­£å¸¸æ–‡å­—
     }
 
     static void TextColoredShadow(ImVec4 color, const char* text, ...)
@@ -221,10 +221,10 @@ namespace ImGuiStd {
         ImVec2 pos = ImGui::GetCursorPos();
         float shadowOffset =/* ImGui::GetFontSize() * 0.08f*/ 1.0f;
         ImGui::SetCursorPos(ImVec2(pos.x + shadowOffset, pos.y + shadowOffset));
-        ImGui::TextColored(ImVec4(0, 0, 0, 0.6f), text);  // ÒõÓ°²ã
+        ImGui::TextColored(ImVec4(0, 0, 0, 0.6f), text);  // é˜´å½±å±‚
 
         ImGui::SetCursorPos(pos);
-        ImGui::TextColored(color, text);  // Õı³£ÎÄ×Ö
+        ImGui::TextColored(color, text);  // æ­£å¸¸æ–‡å­—
     }
     struct keybind_element
     {
@@ -236,7 +236,7 @@ namespace ImGuiStd {
 
     static void Keybind(const char* text, int &key)
     {
-        std::string label = text ? text : std::string(); // Á¢¼´¿½±´£¬±£Ö¤ÓĞĞ§
+        std::string label = text ? text : std::string(); // ç«‹å³æ‹·è´ï¼Œä¿è¯æœ‰æ•ˆ
         static std::map<std::string, keybind_element> keybind_elements;
         if (keybind_elements.find(label) == keybind_elements.end())
         {
@@ -262,7 +262,7 @@ namespace ImGuiStd {
         }
         if (ImGui::BeginPopup(label.c_str()))
         {
-            ImGui::Text(u8"°ó¶¨¿ì½İ¼ü");
+            ImGui::Text(u8"ç»‘å®šå¿«æ·é”®");
             ImGui::Separator();
             for (int i = 0; i < IM_ARRAYSIZE(keys); i++)
             {
@@ -317,12 +317,12 @@ namespace ImGuiStd {
         ImGuiStyle& style = ImGui::GetStyle();
         ImVec2 windowSize = ImGui::GetWindowSize();
         ImVec2 btnSize = buttonSize;
-        // ¼ÆËã°´Å¥×ó²àÓ¦¸Ã¿Õ¶àÉÙÏñËØ
+        // è®¡ç®—æŒ‰é’®å·¦ä¾§åº”è¯¥ç©ºå¤šå°‘åƒç´ 
         btnSize.x = (windowSize.x - buttonSize.x) * 0.5f;
 
         btnSize.y = (windowSize.y - buttonSize.y) * 0.5f;
         ImGui::SetCursorPos(ImVec2(btnSize.x, btnSize.y));
-        // »æÖÆ°´Å¥
+        // ç»˜åˆ¶æŒ‰é’®
         if (ImGui::Button(label, buttonSize))
         {
             return true;
@@ -349,7 +349,7 @@ namespace ImGuiStd {
         edit_color_element& element = edit_color_elements[label];\
         ImVec2 target_size = ImVec2(338 * ImGui::GetFontSize() / 20.0f, 369 * ImGui::GetFontSize() / 20.0f);
         float speed = 10.0f * ImGui::GetIO().DeltaTime;
-        std::string text = label + std::string(u8"£º");
+        std::string text = label + std::string(u8"ï¼š");
 
         TextShadow(text.c_str());
         ImGui::SameLine();
@@ -379,7 +379,7 @@ namespace ImGuiStd {
             ImGui::PopFont();
             if (ImGui::IsItemHovered())
             {
-                ImGui::SetTooltip(u8"»¹Ô­³õÊ¼ÑùÊ½");
+                ImGui::SetTooltip(u8"è¿˜åŸåˆå§‹æ ·å¼");
             }
 
         }
@@ -399,7 +399,7 @@ namespace ImGuiStd {
         edit_color_element& element = edit_color_elements[label];
             static ImVec2 target_size = ImVec2(338 * ImGui::GetFontSize() / 20.0f, 368 * ImGui::GetFontSize() / 20.0f);
         float speed = 10.0f * ImGui::GetIO().DeltaTime;
-        std::string text = label + std::string(u8"£º");
+        std::string text = label + std::string(u8"ï¼š");
 
         TextShadow(text.c_str());
         ImGui::SameLine();

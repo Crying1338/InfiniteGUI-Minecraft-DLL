@@ -1,89 +1,89 @@
-#include "imgui\imgui.h"
+ï»¿#include "imgui\imgui.h"
 #include "ImGuiStd.h"
 #include "ChangeLog.h"
 
 void ChangeLog::Init()
 {
     NewVersion("B0.9.0", "25.11.30");
-    AddContent(INFO, u8"·¢²¼µÚÒ»Ö§²âÊÔ°æ±¾");
+    AddContent(INFO, u8"å‘å¸ƒç¬¬ä¸€æ”¯æµ‹è¯•ç‰ˆæœ¬");
 
     NewVersion("B0.9.1", "25.12.05");
-    AddContent(OPTIMIZE, u8"ÓÅ»¯×ÊÔ´ÎÄ¼ş¼ĞÎ»ÖÃ");
-    AddContent(ADD, u8"Ìí¼Ó´°¿ÚÑùÊ½×Ô¶¨Òå");
-    AddContent(ADD, u8"Ìí¼Ó´°¿Ú²Êºç×Ö");
-    AddContent(ADD, u8"Ìí¼Ó¶¯Ì¬Ä£ºı");
+    AddContent(OPTIMIZE, u8"ä¼˜åŒ–èµ„æºæ–‡ä»¶å¤¹ä½ç½®");
+    AddContent(ADD, u8"æ·»åŠ çª—å£æ ·å¼è‡ªå®šä¹‰");
+    AddContent(ADD, u8"æ·»åŠ çª—å£å½©è™¹å­—");
+    AddContent(ADD, u8"æ·»åŠ åŠ¨æ€æ¨¡ç³Š");
 
     NewVersion("B0.9.2", "25.12.09");
-    AddContent(OPTIMIZE, u8"ÓÅ»¯ChangeLog½çÃæ");
-    AddContent(OPTIMIZE, u8"ÓÅ»¯/ÃÀ»¯¶¯Ì¬Ä£ºı");
-    AddContent(FIXBUG, u8"ĞŞ¸´×ÖÌå²ÊÉ«°ó¶¨ÎÊÌâ");
-    AddContent(ADD, u8"Ìí¼Ó²Ëµ¥±³¾°Ä£ºı");
-    AddContent(ADD, u8"Ìí¼Ó¶àÅäÖÃ¹ÜÀíÏµÍ³");
+    AddContent(OPTIMIZE, u8"ä¼˜åŒ–ChangeLogç•Œé¢");
+    AddContent(OPTIMIZE, u8"ä¼˜åŒ–/ç¾åŒ–åŠ¨æ€æ¨¡ç³Š");
+    AddContent(FIXBUG, u8"ä¿®å¤å­—ä½“å½©è‰²ç»‘å®šé—®é¢˜");
+    AddContent(ADD, u8"æ·»åŠ èœå•èƒŒæ™¯æ¨¡ç³Š");
+    AddContent(ADD, u8"æ·»åŠ å¤šé…ç½®ç®¡ç†ç³»ç»Ÿ");
 
     NewVersion("B0.9.3", "25.12.18");
-    AddContent(OPTIMIZE, u8"¶¯Ì¬Ä£ºıÌí¼ÓFPSµ÷ÖÆ");
-    AddContent(ADD, u8"È«ĞÂUI´ó¸üĞÂ");
-    AddContent(ADD, u8"Ìí¼Óµã»÷ÌØĞ§");
-    AddContent(CHANGE, u8"¸ü¸ÄÄ¬ÈÏ×ÖÌåÎªÆ½»¬×ÖÌå");
-    AddContent(CHANGE, u8"°´¼üÏÔÊ¾¿Õ¸ñ¸ÄÎªÖ±Ïß");
-    AddContent(CHANGE, u8"¸Ä½ø¼Ü¹¹,½öÎÄ±¾ÏÔÊ¾¿É¶àÀı");
-    AddContent(ADD, u8"ÍêÃÀÊµÏÖÍË³ö(detach)");
+    AddContent(OPTIMIZE, u8"åŠ¨æ€æ¨¡ç³Šæ·»åŠ FPSè°ƒåˆ¶");
+    AddContent(ADD, u8"å…¨æ–°UIå¤§æ›´æ–°");
+    AddContent(ADD, u8"æ·»åŠ ç‚¹å‡»ç‰¹æ•ˆ");
+    AddContent(CHANGE, u8"æ›´æ”¹é»˜è®¤å­—ä½“ä¸ºå¹³æ»‘å­—ä½“");
+    AddContent(CHANGE, u8"æŒ‰é”®æ˜¾ç¤ºç©ºæ ¼æ”¹ä¸ºç›´çº¿");
+    AddContent(CHANGE, u8"æ”¹è¿›æ¶æ„,ä»…æ–‡æœ¬æ˜¾ç¤ºå¯å¤šä¾‹");
+    AddContent(ADD, u8"å®Œç¾å®ç°é€€å‡º(detach)");
 
     NewVersion("B0.9.4", "25.12.20");
-    AddContent(OPTIMIZE, u8"Ö¡ÂÊ¸ßÊ±detach²»ÔÙ±À¶Ë");
-    AddContent(OPTIMIZE, u8"ÓÅ»¯Ö¡ÂÊ£¬½µµÍCPUĞÔÄÜ¿ªÏú");
-    AddContent(ADD, u8"Ìí¼Óµ¯´°");
-    AddContent(ADD, u8"ĞÂÔöUIÒôĞ§");
-    AddContent(CHANGE, u8"¸Ä½øUIÅäÉ«£¬ÏÖÔÚ¸üÈáºÍ");
+    AddContent(OPTIMIZE, u8"å¸§ç‡é«˜æ—¶detachä¸å†å´©ç«¯");
+    AddContent(OPTIMIZE, u8"ä¼˜åŒ–å¸§ç‡ï¼Œé™ä½CPUæ€§èƒ½å¼€é”€");
+    AddContent(ADD, u8"æ·»åŠ å¼¹çª—");
+    AddContent(ADD, u8"æ–°å¢UIéŸ³æ•ˆ");
+    AddContent(CHANGE, u8"æ”¹è¿›UIé…è‰²ï¼Œç°åœ¨æ›´æŸ”å’Œ");
 
     NewVersion("B0.9.5", "25.12.23");
-    AddContent(OPTIMIZE, u8"¼æÈİ¾É°æmc(lwjgl2)");
-    AddContent(OPTIMIZE, u8"½â¾ö²Ëµ¥Êó±ê±»À§´°¿ÚÄÚµÄÎÊÌâ");
-    AddContent(FIXBUG, u8"ĞŞ¸´Ç¿ÖÆ¼²ÅÜ¿¨¼üBug");
-    AddContent(FIXBUG, u8"ĞŞ¸´Ö¡ÂÊµ÷ÖÆÊ§Ğ§Bug");
-    AddContent(ADD, u8"ÍêÉÆµ¯´°ÏÔÊ¾");
+    AddContent(OPTIMIZE, u8"å…¼å®¹æ—§ç‰ˆmc(lwjgl2)");
+    AddContent(OPTIMIZE, u8"è§£å†³èœå•é¼ æ ‡è¢«å›°çª—å£å†…çš„é—®é¢˜");
+    AddContent(FIXBUG, u8"ä¿®å¤å¼ºåˆ¶ç–¾è·‘å¡é”®Bug");
+    AddContent(FIXBUG, u8"ä¿®å¤å¸§ç‡è°ƒåˆ¶å¤±æ•ˆBug");
+    AddContent(ADD, u8"å®Œå–„å¼¹çª—æ˜¾ç¤º");
 
     NewVersion("V1.0.0", "25.12.26");
-    AddContent(CHANGE, u8"²Ëµ¥´ò¿ªÊ±»á·µ»ØÄ¬ÈÏ×´Ì¬");
-    AddContent(FIXBUG, u8"ĞŞ¸´¶¯Ì¬Ä£ºıÒÅÁôÎÊÌâ");
-    AddContent(FIXBUG, u8"ĞŞ¸´°´¼üÏÔÊ¾ÍÏ×§ÎÊÌâ");
-    AddContent(INFO, u8"·¢²¼µÚÒ»Ö§ÕıÊ½°æ±¾");
+    AddContent(CHANGE, u8"èœå•æ‰“å¼€æ—¶ä¼šè¿”å›é»˜è®¤çŠ¶æ€");
+    AddContent(FIXBUG, u8"ä¿®å¤åŠ¨æ€æ¨¡ç³Šé—ç•™é—®é¢˜");
+    AddContent(FIXBUG, u8"ä¿®å¤æŒ‰é”®æ˜¾ç¤ºæ‹–æ‹½é—®é¢˜");
+    AddContent(INFO, u8"å‘å¸ƒç¬¬ä¸€æ”¯æ­£å¼ç‰ˆæœ¬");
 
     NewVersion("V1.0.1", "26.01.02");
-    AddContent(CHANGE, u8"¶¯Ì¬Ä£ºı¿ÉÔÚÓÎÏ·ÔİÍ£Ê±¹Ø±Õ");
-    AddContent(FIXBUG, u8"½â¾ö1.8È«ÆÁÓÎÏ·×´Ì¬³ö´íµÄÎÊÌâ");
+    AddContent(CHANGE, u8"åŠ¨æ€æ¨¡ç³Šå¯åœ¨æ¸¸æˆæš‚åœæ—¶å…³é—­");
+    AddContent(FIXBUG, u8"è§£å†³1.8å…¨å±æ¸¸æˆçŠ¶æ€å‡ºé”™çš„é—®é¢˜");
 
     NewVersion("V1.0.2", "26.01.05");
-    AddContent(OPTIMIZE, u8"ÓÅ»¯¶¯Ì¬Ä£ºıµÄÄ£ºı¶ÈÇúÏß");
-    AddContent(ADD, u8"Ìí¼Ó´ò¿ªÅäÖÃÎÄ¼ş¼ĞµÄ°´Å¥");
-    AddContent(ADD, u8"ÊµÏÖ´°¿Ú´ÅÌù");
-    AddContent(FIXBUG, u8"½â¾ö³õÊ¼ÅäÖÃ´íÂÒµÄBug");
+    AddContent(OPTIMIZE, u8"ä¼˜åŒ–åŠ¨æ€æ¨¡ç³Šçš„æ¨¡ç³Šåº¦æ›²çº¿");
+    AddContent(ADD, u8"æ·»åŠ æ‰“å¼€é…ç½®æ–‡ä»¶å¤¹çš„æŒ‰é’®");
+    AddContent(ADD, u8"å®ç°çª—å£ç£è´´");
+    AddContent(FIXBUG, u8"è§£å†³åˆå§‹é…ç½®é”™ä¹±çš„Bug");
 
     NewVersion("V1.0.3", "26.01.10");
-    AddContent(ADD, u8"ÊµÏÖÎŞ±ß¿òÈ«ÆÁ");
-    AddContent(FIXBUG, u8"½â¾ö²¿·ÖÓÃ»§¼¤»î±À¶ËÎÊÌâ");
-    AddContent(FIXBUG, u8"ĞŞ¸´¶¯Ì¬Ä£ºı»¨ÆÁÎÊÌâ");
-    AddContent(FIXBUG, u8"ĞŞ¸´Ç¿ÖÆ¼²ÅÜÎó¼¤»îÎÊÌâ");
+    AddContent(ADD, u8"å®ç°æ— è¾¹æ¡†å…¨å±");
+    AddContent(FIXBUG, u8"è§£å†³éƒ¨åˆ†ç”¨æˆ·æ¿€æ´»å´©ç«¯é—®é¢˜");
+    AddContent(FIXBUG, u8"ä¿®å¤åŠ¨æ€æ¨¡ç³ŠèŠ±å±é—®é¢˜");
+    AddContent(FIXBUG, u8"ä¿®å¤å¼ºåˆ¶ç–¾è·‘è¯¯æ¿€æ´»é—®é¢˜");
 
     NewVersion("V1.0.4", "26.01.24");
-    AddContent(ADD, u8"Ìí¼ÓAutoText");
-    AddContent(ADD, u8"Ìí¼ÓÒôÀÖĞÅÏ¢ÏÔÊ¾");
-    AddContent(ADD, u8"Ìí¼Óµ¯´°½ø¶È±³¾°Ìõ£¬ÓÅ»¯µ¯´°");
-    AddContent(OPTIMIZE, u8"ÓÅ»¯¶à´¦Ï¸½Ú");
-    AddContent(FIXBUG, u8"ĞŞ¸´Ä£×éÓÒ²à°´Å¥²»Í¬²½µÄÎÊÌâ");
-    AddContent(REMOVE, u8"È¥³ı´°¿Ú°ëÍ¸Ã÷£¬ÓÅ»¯Ö¡ÂÊ");
+    AddContent(ADD, u8"æ·»åŠ AutoText");
+    AddContent(ADD, u8"æ·»åŠ éŸ³ä¹ä¿¡æ¯æ˜¾ç¤º");
+    AddContent(ADD, u8"æ·»åŠ å¼¹çª—è¿›åº¦èƒŒæ™¯æ¡ï¼Œä¼˜åŒ–å¼¹çª—");
+    AddContent(OPTIMIZE, u8"ä¼˜åŒ–å¤šå¤„ç»†èŠ‚");
+    AddContent(FIXBUG, u8"ä¿®å¤æ¨¡ç»„å³ä¾§æŒ‰é’®ä¸åŒæ­¥çš„é—®é¢˜");
+    AddContent(REMOVE, u8"å»é™¤çª—å£åŠé€æ˜ï¼Œä¼˜åŒ–å¸§ç‡");
 
     NewVersion("V1.0.5", "26.01.27");
-    AddContent(ADD, u8"Êó±êĞüÍ£ÔÚ´°¿ÚÉÏÊ±Ìí¼Ó¹Ì¶¨/É¾³ı°´Å¥");
-    AddContent(ADD, u8"ÒôÀÖÏÔÊ¾ÏÖÔÚÓĞ°´Å¥¿ÉÒÔÔİÍ£/²¥·Å¡¢Ìø¹ı");
-    AddContent(ADD, u8"Ìí¼ÓÓÎÏ·°´¼ü°ó¶¨¶ÁÈ¡ÏµÍ³");
-    AddContent(ADD, u8"Ìí¼Ó×Ô¶¯±£´æ");
-    AddContent(FIXBUG, u8"½â¾ö´ò¿ª²Ëµ¥Ê±ÓÎÏ·´°¿ÚÎŞ·¨µ÷Õû/¹Ø±ÕµÄÎÊÌâ");
-    AddContent(FIXBUG, u8"½â¾ö¹Ø±ÕMCÊ±ÓÎÏ·½ø³Ì¹Ø²»¸É¾»µÄÎÊÌâ");
-    AddContent(CHANGE, u8"ÏÖÔÚ°´×¡CtrlÎü¸½±ßÔµ£¬°´×¡ShiftÎü¸½ÆäËü´°¿Ú");
-    AddContent(CHANGE, u8"´ò¿ª²Ëµ¥Ê±»á»Ö¸´¾ÓÖĞ£¬½â¾öµ÷Õû´°¿Ú´óĞ¡ºó²Ëµ¥ÏûÊ§Æ«ÒÆµÄÎÊÌâ");
+    AddContent(ADD, u8"é¼ æ ‡æ‚¬åœåœ¨çª—å£ä¸Šæ—¶æ·»åŠ å›ºå®š/åˆ é™¤æŒ‰é’®");
+    AddContent(ADD, u8"éŸ³ä¹æ˜¾ç¤ºç°åœ¨æœ‰æŒ‰é’®å¯ä»¥æš‚åœ/æ’­æ”¾ã€è·³è¿‡");
+    AddContent(ADD, u8"æ·»åŠ æ¸¸æˆæŒ‰é”®ç»‘å®šè¯»å–ç³»ç»Ÿ");
+    AddContent(ADD, u8"æ·»åŠ è‡ªåŠ¨ä¿å­˜");
+    AddContent(FIXBUG, u8"è§£å†³æ‰“å¼€èœå•æ—¶æ¸¸æˆçª—å£æ— æ³•è°ƒæ•´/å…³é—­çš„é—®é¢˜");
+    AddContent(FIXBUG, u8"è§£å†³å…³é—­MCæ—¶æ¸¸æˆè¿›ç¨‹å…³ä¸å¹²å‡€çš„é—®é¢˜");
+    AddContent(CHANGE, u8"ç°åœ¨æŒ‰ä½Ctrlå¸é™„è¾¹ç¼˜ï¼ŒæŒ‰ä½Shiftå¸é™„å…¶å®ƒçª—å£");
+    AddContent(CHANGE, u8"æ‰“å¼€èœå•æ—¶ä¼šæ¢å¤å±…ä¸­ï¼Œè§£å†³è°ƒæ•´çª—å£å¤§å°åèœå•æ¶ˆå¤±åç§»çš„é—®é¢˜");
 
-} //ÎÒĞ´Õâ¸öÕæÊÇ¸öÌì²Å£¬ÕâÑù¾Í²»ÓÃÊÖÇÃImgui´úÂëÁË£¬Ìì²ÅÌì²ÅÌì²ÅÌì
+} //æˆ‘å†™è¿™ä¸ªçœŸæ˜¯ä¸ªå¤©æ‰ï¼Œè¿™æ ·å°±ä¸ç”¨æ‰‹æ•²Imguiä»£ç äº†ï¼Œå¤©æ‰å¤©æ‰å¤©æ‰å¤©
 
 ChangeLog::ChangeLog()
 {
@@ -136,36 +136,36 @@ void ChangeLog::DrawContent(const Content& content)
     std::string contentStr = content.content;
     //std::string finalStr;
     ImVec4 * prefixColor = nullptr;
-    static ImVec4 COLOR_INFO = ImVec4(0.88f, 0.76f, 0.42f, 1.0f); // ½ğÉ«£¨ĞÅÏ¢£©
-    static ImVec4 COLOR_OPTIMIZE = ImVec4(0.70f, 0.58f, 0.80f, 1.0f); // ×ÏÉ«£¨ÓÅ»¯£©
-    static ImVec4 COLOR_ADD = ImVec4(0.55f, 0.78f, 0.60f, 1.0f); // ÂÌÉ«£¨ĞÂÔö£© 
-    static ImVec4 COLOR_FIXBUG = ImVec4(0.55f, 0.70f, 0.85f, 1.0f); // À¶É«£¨ĞŞ¸´£©
-    static ImVec4 COLOR_REMOVE = ImVec4(0.88f, 0.52f, 0.52f, 1.0f); // ºìÉ«£¨ÒÆ³ı£©
-    static ImVec4 COLOR_CHANGE = ImVec4(0.65f, 0.65f, 0.65f, 1.0f); // »ÒÉ«£¨±ä¸ü£©
+    static ImVec4 COLOR_INFO = ImVec4(0.88f, 0.76f, 0.42f, 1.0f); // é‡‘è‰²ï¼ˆä¿¡æ¯ï¼‰
+    static ImVec4 COLOR_OPTIMIZE = ImVec4(0.70f, 0.58f, 0.80f, 1.0f); // ç´«è‰²ï¼ˆä¼˜åŒ–ï¼‰
+    static ImVec4 COLOR_ADD = ImVec4(0.55f, 0.78f, 0.60f, 1.0f); // ç»¿è‰²ï¼ˆæ–°å¢ï¼‰ 
+    static ImVec4 COLOR_FIXBUG = ImVec4(0.55f, 0.70f, 0.85f, 1.0f); // è“è‰²ï¼ˆä¿®å¤ï¼‰
+    static ImVec4 COLOR_REMOVE = ImVec4(0.88f, 0.52f, 0.52f, 1.0f); // çº¢è‰²ï¼ˆç§»é™¤ï¼‰
+    static ImVec4 COLOR_CHANGE = ImVec4(0.65f, 0.65f, 0.65f, 1.0f); // ç°è‰²ï¼ˆå˜æ›´ï¼‰
     switch (content.type)
     {
     case INFO:
-        prefix = u8"[ĞÅÏ¢]";
+        prefix = u8"[ä¿¡æ¯]";
         prefixColor = &COLOR_INFO;
         break;
     case OPTIMIZE:
-        prefix = u8"[ÓÅ»¯]";
+        prefix = u8"[ä¼˜åŒ–]";
         prefixColor = &COLOR_OPTIMIZE;
         break;
     case ADD:
-        prefix = u8"[ĞÂÔö]";
+        prefix = u8"[æ–°å¢]";
         prefixColor = &COLOR_ADD;
         break;
     case FIXBUG:
-        prefix = u8"[ĞŞ¸´]";
+        prefix = u8"[ä¿®å¤]";
         prefixColor = &COLOR_FIXBUG;
         break;
     case REMOVE:
-        prefix = u8"[ÒÆ³ı]";
+        prefix = u8"[ç§»é™¤]";
         prefixColor = &COLOR_REMOVE;
         break;
     case CHANGE:
-        prefix = u8"[±ä¸ü]";
+        prefix = u8"[å˜æ›´]";
         prefixColor = &COLOR_CHANGE;
         break;
     }

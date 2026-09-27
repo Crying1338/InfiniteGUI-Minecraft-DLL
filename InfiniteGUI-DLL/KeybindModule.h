@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <Windows.h>
 #include <vector>
@@ -16,14 +16,14 @@ public:
     {
         ImGui::PushFont(NULL, ImGui::GetFontSize() * 0.8f);
         ImGui::BeginDisabled();
-        ImGuiStd::TextShadow(u8"°´¼ü°ó¶¨ÉèÖÃ");
+        ImGuiStd::TextShadow(u8"æŒ‰é”®ç»‘å®šè®¾ç½®");
         ImGui::EndDisabled();
         ImGui::PopFont();
 
         ImGui::SetCursorPosX(bigPadding);
         ImGui::SetNextItemWidth(itemWidth);
-        ImGui::Checkbox(u8"×Ô¶¨ÒåÓÎÏ·°´¼ü°ó¶¨", &customGameKeybinds);
-        // µ±Ç°ÆğÊ¼ Y
+        ImGui::Checkbox(u8"è‡ªå®šä¹‰æ¸¸æˆæŒ‰é”®ç»‘å®š", &customGameKeybinds);
+        // å½“å‰èµ·å§‹ Y
         float startY = ImGui::GetCursorPosY();
         float itemHeight = ImGui::GetFrameHeightWithSpacing();
 

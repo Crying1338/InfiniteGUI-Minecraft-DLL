@@ -1,12 +1,12 @@
-#pragma once
+ï»¿#pragma once
 #include "Item.h"
 #include "RenderModule.h"
 class Motionblur : public Item, public RenderModule {
 public:
     Motionblur() {
-        type = Visual; // ĞÅÏ¢ÏîÀàĞÍ
-        name = u8"¶¯Ì¬Ä£ºı";
-        description = u8"²ÉÓÃÖ¡»ìºÏ¼¼ÊõÊµÏÖµÄ¶¯Ì¬Ä£ºı";
+        type = Visual; // ä¿¡æ¯é¡¹ç±»å‹
+        name = u8"åŠ¨æ€æ¨¡ç³Š";
+        description = u8"é‡‡ç”¨å¸§æ··åˆæŠ€æœ¯å®ç°çš„åŠ¨æ€æ¨¡ç³Š";
         icon = u8"\uE059";
         Motionblur::Reset();
     }

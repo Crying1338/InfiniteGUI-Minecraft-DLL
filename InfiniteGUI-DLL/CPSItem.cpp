@@ -1,4 +1,4 @@
-#include "CPSItem.h"
+ï»¿#include "CPSItem.h"
 
 #include "Anim.h"
 #include "App.h"
@@ -41,12 +41,12 @@ void CPSItem::DrawContent()
     std::string text = left + middleFix + right;
 
     ImVec4 targetTextColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
-    //»ñÈ¡io
+    //è·å–io
     ImGuiIO& io = ImGui::GetIO();
-    //¼ÆËãËÙ¶È
+    //è®¡ç®—é€Ÿåº¦
     float speed = 3.0f * std::clamp(io.DeltaTime, 0.0f, 0.05f);
     color.color = ImLerp(color.color, targetTextColor, speed);
-    // ÅĞ¶Ï¶¯»­ÊÇ·ñ½áÊø
+    // åˆ¤æ–­åŠ¨ç”»æ˜¯å¦ç»“æŸ
     if (Anim::AlmostEqual(color.color, targetTextColor))
     {
         color.color = targetTextColor;
@@ -64,12 +64,12 @@ void CPSItem::DrawSettings(const float& bigPadding, const float& centerX, const 
 
     ImGui::SetCursorPosX(bigPadding);
     ImGui::SetNextItemWidth(itemWidth);
-    ImGui::Checkbox(u8"×ó¼ü", &showLeft);
+    ImGui::Checkbox(u8"å·¦é”®", &showLeft);
 
     ImGui::SameLine();
     ImGui::SetCursorPosX(bigPadding + centerX);
     ImGui::SetNextItemWidth(itemWidth);
-    ImGui::Checkbox(u8"ÓÒ¼ü", &showRight);
+    ImGui::Checkbox(u8"å³é”®", &showRight);
 
     DrawAffixSettings(bigPadding, centerX, itemWidth);
     DrawWindowSettings(bigPadding, centerX, itemWidth);

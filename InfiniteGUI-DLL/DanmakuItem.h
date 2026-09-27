@@ -1,4 +1,4 @@
-#include "Item.h"
+ï»¿#include "Item.h"
 #include "UpdateModule.h"
 #include "WindowModule.h"
 #include <vector>
@@ -33,9 +33,9 @@ class DanmakuItem : public Item, public UpdateModule, public WindowModule {
 public:
     DanmakuItem()
     {
-        type = Hud; // ĞÅÏ¢ÏîÀàĞÍ
-        name = u8"BÕ¾µ¯Ä»ÏÔÊ¾";
-        description = u8"ÏÔÊ¾BÕ¾Ö±²¥¼äµÄµ¯Ä»(ĞèÅäºÏBÕ¾µ¯Ä»¼§)";
+        type = Hud; // ä¿¡æ¯é¡¹ç±»å‹
+        name = u8"Bç«™å¼¹å¹•æ˜¾ç¤º";
+        description = u8"æ˜¾ç¤ºBç«™ç›´æ’­é—´çš„å¼¹å¹•(éœ€é…åˆBç«™å¼¹å¹•å§¬)";
         icon = u8"\uE021";
         updateIntervalMs = 50;
         lastUpdateTime = std::chrono::steady_clock::now();
@@ -67,7 +67,7 @@ public:
 
 private:
 
-    // ¸üĞÂµ¯Ä»ÄÚÈİ
+    // æ›´æ–°å¼¹å¹•å†…å®¹
     void AddDanmaku(const std::string& username, const std::string& message);
     void AddCaptain(const std::string& username, const std::string& captainName, const std::string& captainCount);
     void AddGift(const std::string& username, const std::string& giftName, const std::string& giftCount);
@@ -75,7 +75,7 @@ private:
     void AddUserLike(const std::string& username);
 
 
-    // µ¯Ä»ÄÚÈİ
+    // å¼¹å¹•å†…å®¹
     std::deque<Danmaku> danmakuList;
 
     std::string bottomMessage = "";
@@ -87,10 +87,10 @@ private:
     FILETIME lastWriteTime = {};
     bool isScrollable = false;
 
-    // ×î´óµ¯Ä»ÊıÁ¿
+    // æœ€å¤§å¼¹å¹•æ•°é‡
     int maxDanmakuCount = 16;
 
-    //µ¯Ä»ÈÕÖ¾Î»ÖÃ
+    //å¼¹å¹•æ—¥å¿—ä½ç½®
     std::string logPath = "lastrun.txt";
 
 

@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 #include <chrono>
 class UpdateModule
 {
 public:
 	virtual void Update() = 0;
 
-    // ¼ì²éÊÇ·ñµ½ÁË¸üĞÂµÄÊ±¼ä
+    // æ£€æŸ¥æ˜¯å¦åˆ°äº†æ›´æ–°çš„æ—¶é—´
     bool ShouldUpdate() {
         //if (updateIntervalMs == -1) return false;
         auto now = std::chrono::steady_clock::now();
@@ -13,11 +13,11 @@ public:
         return elapsedTime >= updateIntervalMs;
     }
 
-    // ¸üĞÂ²Ù×÷
+    // æ›´æ–°æ“ä½œ
     void MarkUpdated() {
         lastUpdateTime = std::chrono::steady_clock::now();
     }
 protected:
 	int updateIntervalMs;
-	std::chrono::steady_clock::time_point lastUpdateTime = std::chrono::steady_clock::now();  // ¼ÇÂ¼×îºó¸üĞÂÊ±¼ä
+	std::chrono::steady_clock::time_point lastUpdateTime = std::chrono::steady_clock::now();  // è®°å½•æœ€åæ›´æ–°æ—¶é—´
 };

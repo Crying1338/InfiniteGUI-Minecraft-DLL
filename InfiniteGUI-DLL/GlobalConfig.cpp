@@ -1,4 +1,4 @@
-#include "GlobalConfig.h"
+﻿#include "GlobalConfig.h"
 #include "ConfigManager.h"
 void GlobalConfig::Load(const nlohmann::json& j)
 {

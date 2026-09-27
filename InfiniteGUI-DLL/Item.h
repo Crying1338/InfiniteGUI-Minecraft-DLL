@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 #include "imgui/imgui.h"
 #include <nlohmann/json.hpp>
@@ -11,7 +11,7 @@ enum ItemType{
     Server,
     Hidden,
     All
-}; //¸Ä³É¿ÉÍ¬Ê±ÓµÓĞ¶à¸öÀàĞÍ
+}; //æ”¹æˆå¯åŒæ—¶æ‹¥æœ‰å¤šä¸ªç±»å‹
 
 class Item {
 public:
@@ -19,7 +19,7 @@ public:
     virtual ~Item() = default;
 
     // ---------------------------
-    //   ±ØĞë±»×ÓÀàÊµÏÖµÄ½Ó¿Ú
+    //   å¿…é¡»è¢«å­ç±»å®ç°çš„æ¥å£
     // ---------------------------
     virtual void Toggle() = 0;
     virtual void Reset() = 0;
@@ -29,7 +29,7 @@ public:
 
     void DrawItemSettings(const float& bigPadding, const float& centerX, const float& itemWidth)
     {
-        if(ImGui::Checkbox(u8"ÆôÓÃ", &isEnabled)) Toggle();
+        if(ImGui::Checkbox(u8"å¯ç”¨", &isEnabled)) Toggle();
     }
 
     void LoadItem(const nlohmann::json& j)
@@ -42,10 +42,10 @@ public:
         j["isEnabled"] = isEnabled;
     }
 
-    bool isEnabled = true; // ÊÇ·ñÆôÓÃ¸ÃĞÅÏ¢Ïî
-    ItemType type = ItemType::Hud; // ĞÅÏ¢ÏîÀàĞÍ
-    std::string name = "Item"; // ĞÅÏ¢ÏîÃû³Æ
-    std::string description = "No description"; // ĞÅÏ¢ÏîÃèÊö
-    std::string icon = "R"; // ĞÅÏ¢ÏîÍ¼±êÂ·¾¶
-    //std::string icon; // ĞÅÏ¢ÏîÍ¼±êÂ·¾¶
+    bool isEnabled = true; // æ˜¯å¦å¯ç”¨è¯¥ä¿¡æ¯é¡¹
+    ItemType type = ItemType::Hud; // ä¿¡æ¯é¡¹ç±»å‹
+    std::string name = "Item"; // ä¿¡æ¯é¡¹åç§°
+    std::string description = "No description"; // ä¿¡æ¯é¡¹æè¿°
+    std::string icon = "R"; // ä¿¡æ¯é¡¹å›¾æ ‡è·¯å¾„
+    //std::string icon; // ä¿¡æ¯é¡¹å›¾æ ‡è·¯å¾„
 };
