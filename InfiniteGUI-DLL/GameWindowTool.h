@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Item.h"
 #include "UpdateModule.h"
 #include <windows.h>
@@ -42,7 +42,7 @@ public:
         gameKeybinds.insert(std::make_pair(u8"游戏全屏快捷键：", GameKeyBind::Instance().IsSuccess() ? GameKeyBind::Instance().GetVK(GameAction::Fullscreen) : NULL));
     }
     int GetFullscreenVK() const {
-        return GameKeyBind::Instance().IsSuccess() ? GameKeyBind::Instance().GetVK(GameAction::Fullscreen) : gameKeybinds.at(u8"游戏全屏快捷键：");
+        return GameKeyBind::Instance().IsSuccess() ? GameKeyBind::Instance().GetVK(GameAction::Fullscreen) : GetGameKeybindValue(u8"游戏全屏快捷键：", 0);
     }
     void OnKeyEvent(bool state, bool isRepeat, WPARAM key) override;
     void Update() override;

@@ -1,4 +1,4 @@
-﻿#include "CounterItem.h"
+#include "CounterItem.h"
 #include "AudioManager.h"
 #include "imgui\imgui.h"
 #include "ImGuiStd.h"
@@ -19,17 +19,20 @@ void CounterItem::OnKeyEvent(bool state, bool isRepeat, WPARAM key)
     if(key == NULL || !GameStateDetector::Instance().IsInGame()) return;
     if(state) //按键按下
     {
-        if (key == keybinds.at(u8"增加快捷键："))
+        const int keyAdd = GetKeybindValue(u8"增加快捷键：", VK_F6);
+        const int keySub = GetKeybindValue(u8"减少快捷键：", VK_F5);
+        const int keyClear = GetKeybindValue(u8"清空快捷键：", 0);
+        if (key != 0 && key == keyAdd)
         {
             count++;
             NotificationItem::Instance().AddNotification(NotificationType_Info, u8"计数器：+1。");
         }
-        else if (key == keybinds.at(u8"减少快捷键："))
+        else if (key != 0 && key == keySub)
         {
             count--;
             NotificationItem::Instance().AddNotification(NotificationType_Info, u8"计数器：-1。");
         }
-        else if (key == keybinds.at(u8"清空快捷键："))
+        else if (key != 0 && key == keyClear)
         {
             count = 0;
             NotificationItem::Instance().AddNotification(NotificationType_Info, u8"计数器：清零。");

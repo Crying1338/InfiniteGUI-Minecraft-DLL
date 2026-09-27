@@ -1,4 +1,4 @@
-﻿#include "opengl_hook.h"
+#include "opengl_hook.h"
 #include <Windows.h>
 #include "detours\titan_hook.h"
 #include <iostream>
@@ -17,6 +17,7 @@
 #include "Init.hpp"
 #include "Motionblur.h"
 #include "MusicInfoItem.h"
+#include "Log.hpp"
 
 //#include <base/voyage.h>
 //#include <mutex>
@@ -55,7 +56,7 @@ static void WndprocDestory()
 	}
 }
 
-static LRESULT CALLBACK wndproc_hook(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+static LRESULT wndproc_hook_impl(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	bool isRepeat = (lParam & (1 << 30)) != 0;
 	switch (message)
@@ -177,6 +178,29 @@ static LRESULT CALLBACK wndproc_hook(HWND hWnd, UINT message, WPARAM wParam, LPA
 	return CallWindowProcW(opengl_hook::o_wndproc, hWnd, message, wParam, lParam);
 }
 
+// ------------------------------------------------------------
+// 异常防火墙
+// 模块回调抛出的 C++ 异常如果穿透到 GLFW / JVM，会直接把游戏进程打崩
+// （hs_err: EXCEPTION_UNCAUGHT_CXX_EXCEPTION 0xe06d7363）。
+// 这里统一捕获、记日志，并让游戏继续正常工作。
+// ------------------------------------------------------------
+static LRESULT CALLBACK wndproc_hook(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	try
+	{
+		return wndproc_hook_impl(hWnd, message, wParam, lParam);
+	}
+	catch (const std::exception& ex)
+	{
+		InfGuiLogLimited("wndproc_hook", ex.what());
+	}
+	catch (...)
+	{
+		InfGuiLogLimited("wndproc_hook", "未知异常");
+	}
+	return CallWindowProcW(opengl_hook::o_wndproc, hWnd, message, wParam, lParam);
+}
+
 
 
 TitanHook<decltype(&detour_wgl_swap_buffers)>wgl_swap_buffers_hook;
@@ -215,7 +239,7 @@ bool opengl_hook::clean()
 	return false;
 }
 
-bool detour_wgl_swap_buffers(HDC hdc)
+static bool detour_wgl_swap_buffers_impl(HDC hdc)
 {
 	if (opengl_hook::gui.done)
 	{
@@ -271,6 +295,26 @@ bool detour_wgl_swap_buffers(HDC hdc)
 	}
 	wglMakeCurrent(hdc, opengl_hook::o_gl_ctx);
 	//glPopMatrix();
+	opengl_hook::rendering = false;
+	return wgl_swap_buffers_hook.GetOrignalFunc()(hdc);
+}
+
+// 渲染路径的异常防火墙：任何模块渲染时抛异常都要兜住，并保证
+// rendering 标志复位（否则 Gui::clean / init 会永久自旋）
+static bool detour_wgl_swap_buffers(HDC hdc)
+{
+	try
+	{
+		return detour_wgl_swap_buffers_impl(hdc);
+	}
+	catch (const std::exception& ex)
+	{
+		InfGuiLogLimited("swap_buffers", ex.what());
+	}
+	catch (...)
+	{
+		InfGuiLogLimited("swap_buffers", "未知异常");
+	}
 	opengl_hook::rendering = false;
 	return wgl_swap_buffers_hook.GetOrignalFunc()(hdc);
 }

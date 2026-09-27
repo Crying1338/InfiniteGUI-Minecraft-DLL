@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Sprint.h"
 
 #include "Anim.h"
@@ -40,7 +40,7 @@ void Sprint::OnKeyEvent(bool state, bool isRepeat, WPARAM key)
 
 void Sprint::GetSneaking()
 {
-    if (KeyState::GetKeyDown(customGameKeybinds ? gameKeybinds.at(u8"潜行键：") : GameKeyBind::Instance().GetVK(GameAction::Sneak)) && GameStateDetector::Instance().IsInGame())
+    if (KeyState::GetKeyDown(customGameKeybinds ? GetGameKeybindValue(u8"潜行键：", VK_SHIFT) : GameKeyBind::Instance().GetVK(GameAction::Sneak)) && GameStateDetector::Instance().IsInGame())
     {
         state = Sneaking;
     }
@@ -48,7 +48,7 @@ void Sprint::GetSneaking()
 
 void Sprint::GetWalking()
 {
-    if (KeyState::GetKeyDown(customGameKeybinds ? gameKeybinds.at(u8"前进键：") : GameKeyBind::Instance().GetVK(GameAction::Forward)) && GameStateDetector::Instance().IsInGame())
+    if (KeyState::GetKeyDown(customGameKeybinds ? GetGameKeybindValue(u8"前进键：", 'W') : GameKeyBind::Instance().GetVK(GameAction::Forward)) && GameStateDetector::Instance().IsInGame())
     {
         state = isActivated ? Sprinting : Walking;
     }
@@ -58,11 +58,11 @@ void Sprint::SetSprinting() const
 {
     if (state == Sprinting)
     {
-	    KeyState::SetKeyDown(customGameKeybinds ? gameKeybinds.at(u8"疾跑键：") : GameKeyBind::Instance().GetVK(GameAction::Sprint), inputMode);
+	    KeyState::SetKeyDown(customGameKeybinds ? GetGameKeybindValue(u8"疾跑键：", VK_CONTROL) : GameKeyBind::Instance().GetVK(GameAction::Sprint), inputMode);
     }
     if (state != Sprinting && lastState == Sprinting)
     {
-	    KeyState::SetKeyUp(customGameKeybinds ? gameKeybinds.at(u8"疾跑键：") : GameKeyBind::Instance().GetVK(GameAction::Sprint), inputMode);
+	    KeyState::SetKeyUp(customGameKeybinds ? GetGameKeybindValue(u8"疾跑键：", VK_CONTROL) : GameKeyBind::Instance().GetVK(GameAction::Sprint), inputMode);
     }
 }
 
@@ -72,7 +72,7 @@ void Sprint::Update()
     if(!GameStateDetector::Instance().IsInGameWindow()) state = OutOfWindow;
     else
     {
-        if (GameStateDetector::Instance().IsInGame() && keyStateHelper.GetKeyClick(keybinds.at(u8"激活键：")))
+        if (GameStateDetector::Instance().IsInGame() && keyStateHelper.GetKeyClick(GetKeybindValue(u8"激活键：", 'I')))
         {
             isActivated = !isActivated;
             if (isActivated)

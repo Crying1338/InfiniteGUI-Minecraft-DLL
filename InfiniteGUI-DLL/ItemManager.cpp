@@ -1,4 +1,4 @@
-﻿#include <Windows.h>
+#include <Windows.h>
 #include "ItemManager.h"
 #include "TimeItem.h"
 #include "FpsItem.h"
@@ -30,6 +30,7 @@
 
 #include "ArrayListModule.h"
 #include "TargetHudItem.h"
+#include "Log.hpp"
 
 // ------------------------------------------------
 ItemManager::ItemManager()
@@ -40,34 +41,46 @@ ItemManager::ItemManager()
 void ItemManager::Init()
 {
     // 注册默认 Singleton
-    AddItem(&Menu::Instance());
+    // 每个模块的构造函数单独隔离：任一模块构造抛异常（例如 WinRT / 资源初始化失败）
+    // 只跳过该模块，不能让整个 ItemManager 单例构造失败（否则后续每次访问都会重新抛出异常）
+    auto addSafe = [this](const char* label, auto factory)
+    {
+        try
+        {
+            AddItem(factory());
+        }
+        catch (const std::exception& ex)
+        {
+            InfGuiLogLimited("ItemCtor", (std::string(label) + " -> " + ex.what()).c_str());
+        }
+        catch (...)
+        {
+            InfGuiLogLimited("ItemCtor", (std::string(label) + " -> 未知异常").c_str());
+        }
+    };
 
-    AddItem(&Sprint::Instance());
-    AddItem(&AutoText::Instance());
-
-    AddItem(&Motionblur::Instance());
-    AddItem(&ClickEffect::Instance());
-
-    AddItem(&TimeItem::Instance());
-    AddItem(&FpsItem::Instance());
-    AddItem(&DanmakuItem::Instance());
-    AddItem(&KeystrokesItem::Instance());
-    AddItem(&CPSItem::Instance());
-    AddItem(&BilibiliFansItem::Instance());
-    AddItem(&TextItem::Instance());
-    AddItem(&FileCountItem::Instance());
-    AddItem(&CounterItem::Instance());
-    AddItem(&MusicInfoItem::Instance());
-
-    AddItem(&ArrayListModule::Instance());
-    AddItem(&TargetHudItem::Instance());
-
-    AddItem(&NotificationItem::Instance());
-
-    AddItem(&GlobalWindowStyle::Instance());
-    AddItem(&GameStateDetector::Instance());
-    AddItem(&GameWindowTool::Instance());
-    AddItem(&CPSDetector::Instance());
+    addSafe("菜单", []() -> Item* { return &Menu::Instance(); });
+    addSafe("强制疾跑", []() -> Item* { return &Sprint::Instance(); });
+    addSafe("自动消息", []() -> Item* { return &AutoText::Instance(); });
+    addSafe("动态模糊", []() -> Item* { return &Motionblur::Instance(); });
+    addSafe("点击特效", []() -> Item* { return &ClickEffect::Instance(); });
+    addSafe("时间显示", []() -> Item* { return &TimeItem::Instance(); });
+    addSafe("FPS显示", []() -> Item* { return &FpsItem::Instance(); });
+    addSafe("B站弹幕显示", []() -> Item* { return &DanmakuItem::Instance(); });
+    addSafe("按键显示", []() -> Item* { return &KeystrokesItem::Instance(); });
+    addSafe("CPS显示", []() -> Item* { return &CPSItem::Instance(); });
+    addSafe("粉丝数显示", []() -> Item* { return &BilibiliFansItem::Instance(); });
+    addSafe("文本显示", []() -> Item* { return &TextItem::Instance(); });
+    addSafe("文件数量显示", []() -> Item* { return &FileCountItem::Instance(); });
+    addSafe("计数器", []() -> Item* { return &CounterItem::Instance(); });
+    addSafe("音乐信息显示", []() -> Item* { return &MusicInfoItem::Instance(); });
+    addSafe("ArrayList", []() -> Item* { return &ArrayListModule::Instance(); });
+    addSafe("TargetHUD", []() -> Item* { return &TargetHudItem::Instance(); });
+    addSafe("提示弹窗", []() -> Item* { return &NotificationItem::Instance(); });
+    addSafe("全局窗口样式", []() -> Item* { return &GlobalWindowStyle::Instance(); });
+    addSafe("游戏状态检测", []() -> Item* { return &GameStateDetector::Instance(); });
+    addSafe("窗口工具", []() -> Item* { return &GameWindowTool::Instance(); });
+    addSafe("CPS检测", []() -> Item* { return &CPSDetector::Instance(); });
 }
 
 // ------------------------------------------------
@@ -82,13 +95,25 @@ void ItemManager::UpdateAll() const
     for (auto item : Items)
     {
         if (!item->isEnabled) continue;
-        if (auto upd = dynamic_cast<UpdateModule*>(item))
+        // 单个模块抛异常不应该连带其它模块或整局游戏（异常穿透 JVM = 崩溃）
+        try
         {
-            if (upd->ShouldUpdate())
+            if (auto upd = dynamic_cast<UpdateModule*>(item))
             {
-                upd->Update();
-                upd->MarkUpdated();
+                if (upd->ShouldUpdate())
+                {
+                    upd->Update();
+                    upd->MarkUpdated();
+                }
             }
+        }
+        catch (const std::exception& ex)
+        {
+            InfGuiLogLimited("Update", (item->name + " -> " + ex.what()).c_str());
+        }
+        catch (...)
+        {
+            InfGuiLogLimited("Update", (item->name + " -> 未知异常").c_str());
         }
     }
 }
@@ -102,12 +127,23 @@ void ItemManager::RenderAllGui() const
     for (auto item : Items)
     {
         if (!item->isEnabled) continue;
-        if (auto ren = dynamic_cast<RenderModule*>(item))
+        try
         {
-            if(!ren->IsRenderGui()) continue;
-            if (dynamic_cast<WindowModule*>(ren) && isWindowNeedHide)
-                continue;
-            ren->RenderGui();
+            if (auto ren = dynamic_cast<RenderModule*>(item))
+            {
+                if(!ren->IsRenderGui()) continue;
+                if (dynamic_cast<WindowModule*>(ren) && isWindowNeedHide)
+                    continue;
+                ren->RenderGui();
+            }
+        }
+        catch (const std::exception& ex)
+        {
+            InfGuiLogLimited("RenderGui", (item->name + " -> " + ex.what()).c_str());
+        }
+        catch (...)
+        {
+            InfGuiLogLimited("RenderGui", (item->name + " -> 未知异常").c_str());
         }
     }
 }
@@ -118,11 +154,19 @@ void ItemManager::RenderAllBeforeGui() const
     for (auto item : Items)
     {
         if (!item->isEnabled) continue;
-        if (auto ren = dynamic_cast<RenderModule*>(item))
+        try
         {
-            if (!ren->IsRenderBeforeGui()) continue;
-            ren->RenderBeforeGui();
+            if (auto ren = dynamic_cast<RenderModule*>(item))
+            {
+                if (!ren->IsRenderBeforeGui()) continue;
+                ren->RenderBeforeGui();
+            }
         }
+        catch (const std::exception& ex)
+        {
+            InfGuiLogLimited("RenderBeforeGui", (item->name + " -> " + ex.what()).c_str());
+        }
+        catch (...) {}
     }
 }
 
@@ -132,11 +176,19 @@ void ItemManager::RenderAllAfterGui() const
     for (auto item : Items)
     {
         if (!item->isEnabled) continue;
-        if (auto ren = dynamic_cast<RenderModule*>(item))
+        try
         {
-            if (!ren->IsRenderAfterGui()) continue;
-            ren->RenderAfterGui();
+            if (auto ren = dynamic_cast<RenderModule*>(item))
+            {
+                if (!ren->IsRenderAfterGui()) continue;
+                ren->RenderAfterGui();
+            }
         }
+        catch (const std::exception& ex)
+        {
+            InfGuiLogLimited("RenderAfterGui", (item->name + " -> " + ex.what()).c_str());
+        }
+        catch (...) {}
     }
 }
 
@@ -171,12 +223,25 @@ void ItemManager::ProcessKeyEvents(bool state, bool isRepeat, WPARAM key) const
 {
     for (auto item : Items)
     {
-        if (auto kbd = dynamic_cast<KeybindModule*>(item))
+        // 逐模块隔离：某个模块的按键回调抛异常（例如 std::map::at 抛 out_of_range），
+        // 异常一旦穿透 WndProc -> GLFW -> JVM 就会导致游戏崩溃（hs_err 0xe06d7363）
+        try
         {
-            if (auto menu = dynamic_cast<Menu*>(kbd))
-                menu->OnKeyEvent(state, isRepeat, key);
-            if (!item->isEnabled) continue;
-            kbd->OnKeyEvent(state, isRepeat, key);
+            if (auto kbd = dynamic_cast<KeybindModule*>(item))
+            {
+                if (auto menu = dynamic_cast<Menu*>(kbd))
+                    menu->OnKeyEvent(state, isRepeat, key);
+                if (!item->isEnabled) continue;
+                kbd->OnKeyEvent(state, isRepeat, key);
+            }
+        }
+        catch (const std::exception& ex)
+        {
+            InfGuiLogLimited("ProcessKeyEvents", (item->name + " -> " + ex.what()).c_str());
+        }
+        catch (...)
+        {
+            InfGuiLogLimited("ProcessKeyEvents", (item->name + " -> 未知异常").c_str());
         }
     }
 }
@@ -191,15 +256,23 @@ void ItemManager::Load(const nlohmann::json& j) const
     {
         for (auto& node : j["Items"])
         {
-            std::string type = node["type"];
-            for (auto item : Items)
+            try
             {
-                if (item->name == type)
+                std::string type = node["type"];
+                for (auto item : Items)
                 {
-                    item->Load(node);
-                    break;
+                    if (item->name == type)
+                    {
+                        item->Load(node);
+                        break;
+                    }
                 }
             }
+            catch (const std::exception& ex)
+            {
+                InfGuiLogLimited("ItemLoad", ex.what());
+            }
+            catch (...) {}
         }
     }
 }
@@ -210,9 +283,18 @@ void ItemManager::Save(nlohmann::json& j) const
     j["Items"] = nlohmann::json::array();
     for (auto item : Items)
     {
-        nlohmann::json node;
-        item->Save(node);
-        j["Items"].push_back(node);
+        // 单个模块序列化失败不影响整体保存（nlohmann::json 可能抛 type_error）
+        try
+        {
+            nlohmann::json node;
+            item->Save(node);
+            j["Items"].push_back(node);
+        }
+        catch (const std::exception& ex)
+        {
+            InfGuiLogLimited("ItemSave", (item->name + " -> " + ex.what()).c_str());
+        }
+        catch (...) {}
     }
 
 }

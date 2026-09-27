@@ -1,4 +1,4 @@
-﻿#include "Menu.h"
+#include "Menu.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_internal.h"
 #include "ImGuiStd.h"
@@ -89,7 +89,7 @@ void Menu::OnKeyEvent(bool state, bool isRepeat, WPARAM key)
 
 int Menu::GetKeyBind()
 {
-    return keybinds.at(u8"菜单快捷键：");
+    return GetKeybindValue(u8"菜单快捷键：", VK_OEM_5);
 }
 
 MainMenuButton* myButton;

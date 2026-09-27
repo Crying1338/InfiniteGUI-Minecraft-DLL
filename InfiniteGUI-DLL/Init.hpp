@@ -1,4 +1,4 @@
-﻿#include "opengl_hook.h"
+#include "opengl_hook.h"
 #include "FileUtils.h"
 #include "ConfigManager.h"
 #include "AudioManager.h"
@@ -12,6 +12,7 @@
 #include "ItemManager.h"
 #include "GuiFrameLimiter.h"
 #include "NotificationItem.h"
+#include "Log.hpp"
 inline HMODULE g_hModule = NULL;
 inline std::thread g_updateThread;
 inline bool g_uninitialized = false;
@@ -20,7 +21,19 @@ inline static std::atomic_bool g_running = ATOMIC_VAR_INIT(true);
 // 线程函数：更新所有 item 状态
 inline void UpdateThread() {
 	while (g_running.load()) {
-		if(opengl_hook::gui.isInit) ItemManager::Instance().UpdateAll();  // 调用UpdateAll()来更新所有item
+		// 异常防火墙：std::thread 里逃出的异常会触发 std::terminate 直接崩游戏
+		try
+		{
+			if (opengl_hook::gui.isInit) ItemManager::Instance().UpdateAll();  // 调用UpdateAll()来更新所有item
+		}
+		catch (const std::exception& ex)
+		{
+			InfGuiLogLimited("UpdateThread", ex.what());
+		}
+		catch (...)
+		{
+			InfGuiLogLimited("UpdateThread", "未知异常");
+		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));  // 休眠1ms，可以根据实际需求调整
 	}
 }
@@ -52,6 +65,8 @@ inline void Uninit() {
 
 inline DWORD WINAPI MainApp(LPVOID)
 {
+  try
+  {
     FileUtils::InitPaths(g_hModule);
 	//加载配置文件
 	ConfigManager::Instance().Init();
@@ -82,4 +97,14 @@ inline DWORD WINAPI MainApp(LPVOID)
 	if(opengl_hook::exitByMenu) std::this_thread::sleep_for(std::chrono::milliseconds(300));
 	Uninit();
 	FreeLibraryAndExitThread(g_hModule, 0);
+  }
+  catch (const std::exception& ex)
+  {
+	InfGuiLog("MainApp: 初始化/主循环异常，已中止: %s", ex.what());
+  }
+  catch (...)
+  {
+	InfGuiLog("MainApp: 初始化/主循环未知异常，已中止");
+  }
+  return 0;
 }

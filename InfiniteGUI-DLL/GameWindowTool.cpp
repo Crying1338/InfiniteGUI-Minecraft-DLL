@@ -1,4 +1,4 @@
-﻿#include "GameWindowTool.h"
+#include "GameWindowTool.h"
 
 #include "GameStateDetector.h"
 #include "NotificationItem.h"
@@ -19,7 +19,7 @@ void GameWindowTool::OnKeyEvent(bool state, bool isRepeat, WPARAM key)
 void GameWindowTool::Update()
 {
     if (!GameStateDetector::Instance().IsInGameWindow() || GameStateDetector::Instance().GetCurrentState() == InMenu) return;
-    if (keyStateHelper.GetKeyClick(keybinds.at(u8"无边框全屏快捷键：")))
+    if (keyStateHelper.GetKeyClick(GetKeybindValue(u8"无边框全屏快捷键：", 0)))
     {
         SetBorderlessFullscreen(opengl_hook::handle_window);
         RECT area;
