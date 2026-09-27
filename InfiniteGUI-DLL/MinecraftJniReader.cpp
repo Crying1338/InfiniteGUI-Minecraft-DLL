@@ -3,6 +3,8 @@
 #include <Windows.h>
 #include <cstdarg>
 
+#include "Log.hpp"
+
 // ============================================================
 // MinecraftJniReader 实现
 //
@@ -106,14 +108,14 @@ bool MinecraftJniReader::EnsureJvm()
 // 解析游戏类；成功时 mcClass 为全局引用，mGetInstance / fHitResult / playerClass 均有效
 bool MinecraftJniReader::EnsureClass()
 {
-	if (mcClass && mGetInstance && fHitResult && playerClass)
+	if (mcClass && mGetInstance && fHitResult)
 	{
 		status = Status_Ready;
 		return true;
 	}
 
 	// 半初始化状态：整体回退，避免用到无效 ID
-	if (mcClass && (!mGetInstance || !fHitResult || !playerClass))
+	if (mcClass && (!mGetInstance || !fHitResult))
 	{
 		env->DeleteGlobalRef(mcClass);
 		mcClass = nullptr;
@@ -252,6 +254,7 @@ bool MinecraftJniReader::EnsureClass()
 	if (!foundGlobal)
 	{
 		status = Status_ClassNotFound;
+		InfGuiLog("JNI: 未找到 net.minecraft.client.Minecraft（非 Forge/官方映射运行时？）");
 		return false;
 	}
 
@@ -282,7 +285,8 @@ bool MinecraftJniReader::EnsureClass()
 		env->PopLocalFrame(nullptr);
 	}
 
-	if (!mGetInstance || !fHitResult || !playerClass)
+	// 注意：playerClass 解析失败不再直接失败 —— 会用类名判定回退，仍然只显示玩家
+	if (!mGetInstance || !fHitResult)
 	{
 		if (playerClass) { env->DeleteGlobalRef(playerClass); playerClass = nullptr; }
 		env->DeleteGlobalRef(mcClass);
@@ -291,10 +295,14 @@ bool MinecraftJniReader::EnsureClass()
 		fHitResult = nullptr;
 		fPlayer = nullptr;
 		status = Status_InitFailed;
+		InfGuiLog("JNI: 映射不匹配 (getInstance=%d hitResult=%d player字段=%d)",
+			mGetInstance != nullptr, fHitResult != nullptr, fPlayer != nullptr);
 		return false;
 	}
 
 	status = Status_Ready;
+	InfGuiLog("JNI: 就绪 (Player类=%s, 本地玩家字段=%s)",
+		playerClass ? "已解析" : "未解析(改用类名判定)", fPlayer ? "有" : "无");
 	return true;
 }
 
@@ -330,6 +338,53 @@ jclass MinecraftJniReader::FindGameClass(const char* name)
 	if (cls) result = reinterpret_cast<jclass>(e->NewGlobalRef(cls));
 	e->DeleteLocalRef(jname);
 	return result;
+}
+
+// 目标是否是玩家：优先 Player 类型判定；playerClass 未解析时按类名层级回退
+bool MinecraftJniReader::IsPlayerEntity(jobject entity, jclass clsEntity)
+{
+	JNIEnv* e = env;
+	if (!e || !entity || !clsEntity) return false;
+
+	// 1) 类型判定（最可靠）
+	if (playerClass)
+		return e->IsInstanceOf(entity, playerClass) == JNI_TRUE;
+
+	// 2) 回退：遍历类名（自身 + 最多 8 层父类）
+	if (!mClassName)
+	{
+		jclass clsClass = e->FindClass("java/lang/Class");
+		if (clsClass)
+		{
+			mClassName = e->GetMethodID(clsClass, "getName", "()Ljava/lang/String;");
+			if (e->ExceptionCheck()) { e->ExceptionClear(); mClassName = nullptr; }
+			e->DeleteLocalRef(clsClass);
+		}
+	}
+	if (!mClassName) return false;
+
+	jclass cur = clsEntity;
+	for (int depth = 0; depth < 8 && cur; depth++)
+	{
+		jstring js = reinterpret_cast<jstring>(e->CallObjectMethod(cur, mClassName));
+		if (e->ExceptionCheck()) { e->ExceptionClear(); break; }
+		if (js)
+		{
+			const char* c = e->GetStringUTFChars(js, nullptr);
+			std::string name = c ? c : "";
+			if (c) e->ReleaseStringUTFChars(js, c);
+
+			if (name.find("LocalPlayer") != std::string::npos) return false;    // 自己
+			if (name == "net.minecraft.world.entity.player.Player") return true;
+			if (name.find(".player.") != std::string::npos) return true;        // RemotePlayer / AbstractClientPlayer
+		}
+
+		jclass super = e->GetSuperclass(cur);
+		if (e->ExceptionCheck()) { e->ExceptionClear(); break; }
+		if (!super) break;
+		cur = super;
+	}
+	return false;
 }
 
 bool MinecraftJniReader::ReadTargetLocked(JniTargetSnapshot& out)
@@ -402,9 +457,12 @@ bool MinecraftJniReader::ReadTargetLocked(JniTargetSnapshot& out)
 	if (e->ExceptionCheck()) { e->ExceptionClear(); return false; }
 	if (!entity) return false;
 
+	jclass clsEntity = e->GetObjectClass(entity);
+	if (!clsEntity) return false;
+
 	// ---- 仅识别玩家（对应 Rise 的 AbstractClientPlayer 过滤）----
 	// 怪物 / 动物 / 盔甲架等一律忽略，避免 TargetHUD 对着生物乱显示
-	if (playerClass && !e->IsInstanceOf(entity, playerClass))
+	if (!IsPlayerEntity(entity, clsEntity))
 		return false;
 
 	// ---- 排除本地玩家自己 ----
@@ -415,9 +473,6 @@ bool MinecraftJniReader::ReadTargetLocked(JniTargetSnapshot& out)
 		if (localPlayer && e->IsSameObject(localPlayer, entity))
 			return false;
 	}
-
-	jclass clsEntity = e->GetObjectClass(entity);
-	if (!clsEntity) return false;
 
 	if (!mGetId)
 	{

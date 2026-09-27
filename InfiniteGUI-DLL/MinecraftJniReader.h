@@ -65,6 +65,8 @@ private:
 	bool ReadTargetLocked(JniTargetSnapshot& out);
 	// 用记录下来的游戏类加载器解析类（找不到时回退到 FindClass）
 	jclass FindGameClass(const char* name);
+	// 目标是否是玩家（优先 Player 类型判定，失败时按类名层级回退）
+	bool IsPlayerEntity(jobject entity, jclass clsEntity);
 
 	std::mutex mutex;
 	Status status = Status_NotTried;
@@ -94,4 +96,5 @@ private:
 	jmethodID mGetName = nullptr;
 	jmethodID mGetString = nullptr;
 	jmethodID mGetText = nullptr;
+	jmethodID mClassName = nullptr;   // java/lang/Class.getName（玩家判定回退用）
 };

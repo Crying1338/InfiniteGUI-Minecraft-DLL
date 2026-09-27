@@ -47,6 +47,7 @@ void TargetHudItem::Reset()
 	positionInitialized = false;
 
 	itemStyle.fontSize = 20.0f;
+	isTransparentBg = true;   // 面板由绘制代码自己画，避免窗口背景重复叠一层
 
 	dirtyState.contentDirty = true;
 	dirtyState.animating = true;

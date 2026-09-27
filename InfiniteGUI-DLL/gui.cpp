@@ -16,6 +16,7 @@
 #include "GlobalConfig.h"
 #include "GuiFrameLimiter.h"
 #include "FileUtils.h"
+#include "CursorBridge.hpp"
 
 #include <cstdarg>
 #include <cstdio>
@@ -159,6 +160,9 @@ void Gui::render()
 	// 菜单打开时游戏会隐藏系统光标，改由 ImGui 自绘
 	HCURSOR prevCursor = GetCursor();
 	io.MouseDrawCursor = menuOpen;
+
+	// 关键：让 GLFW 放开/恢复光标抓取，否则游戏内 ImGui 收不到鼠标输入（菜单能显示但点不动）
+	CursorBridge::SetMenuCursor(menuOpen);
 
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplWin32_NewFrame();

@@ -52,6 +52,7 @@ void ArrayListModule::Reset()
 	positionInitialized = false;
 
 	itemStyle.fontSize = 20.0f;
+	isTransparentBg = true;   // Rise 风格没有窗口背景框，只画条目本身
 
 	dirtyState.contentDirty = true;
 	dirtyState.animating = true;
