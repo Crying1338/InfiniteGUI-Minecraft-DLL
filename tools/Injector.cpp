@@ -376,22 +376,36 @@ int wmain(int argc, wchar_t** argv)
 	}
 	Print("[+] LoadLibraryW 返回成功\n");
 
-	// 验证
-	Sleep(1500);
-	if (!IsModuleLoaded(pid, MODULE_NAME))
+	// 验证（轮询等待 DLL 初始化线程启动，避免误报）
+	bool loaded = false;
+	ULONGLONG base = 0, size = 0;
+	int tcount = 0;
+	for (int i = 0; i < 16; i++)   // 最多等 8 秒
+	{
+		Sleep(500);
+		if (!IsModuleLoaded(pid, MODULE_NAME))
+		{
+			// 模块短暂消失或尚未登记，继续等
+			continue;
+		}
+		loaded = true;
+		GetModuleRange(pid, MODULE_NAME, base, size);
+		tcount = CountThreadsInModule(pid, base, size);
+		if (tcount > 0) break;
+	}
+
+	if (!loaded)
 	{
 		Print("[x] 注入返回成功，但模块列表中未找到该 DLL（可能已被卸载）。\n");
 		return 1;
 	}
-	ULONGLONG base = 0, size = 0;
-	GetModuleRange(pid, MODULE_NAME, base, size);
-	Print("[+] 模块已加载: 基址 0x%llX  大小 %llu KB\n", base, size / 1024);
 
-	int tcount = CountThreadsInModule(pid, base, size);
+	Print("[+] 模块已加载: 基址 0x%llX  大小 %llu KB\n", base, size / 1024);
 	if (tcount > 0)
-		Print("[+] DLL 内线程数 = %d —— 初始化成功（Hook 已安装）\n", tcount);
+		Print("[+] DLL 内线程数 = %d —— 初始化成功（Hook 已安装、渲染管线已启动）\n", tcount);
 	else
-		Print("[!] 未检测到 DLL 内线程（可能仍在初始化，或初始化失败）\n");
+		Print("[!] 未检测到 DLL 内线程（初始化可能失败，请看日志 "
+			"%APPDATA%\\InfiniteGUI\\logs\\infinitegui.log）\n");
 
 	HANDLE target = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
 	if (target)

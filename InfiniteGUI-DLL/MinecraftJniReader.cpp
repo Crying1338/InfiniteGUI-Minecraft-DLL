@@ -26,7 +26,10 @@ MinecraftJniReader::~MinecraftJniReader()
 	if (env)
 	{
 		if (mcClass) env->DeleteGlobalRef(mcClass);
+		if (playerClass) env->DeleteGlobalRef(playerClass);
 		if (hitTypeClass) env->DeleteGlobalRef(hitTypeClass);
+		if (gameClassLoader) env->DeleteGlobalRef(gameClassLoader);
+		if (clsClassRef) env->DeleteGlobalRef(clsClassRef);
 	}
 	if (vm && attached)
 		vm->DetachCurrentThread();
@@ -100,22 +103,24 @@ bool MinecraftJniReader::EnsureJvm()
 	return true;
 }
 
-// 解析游戏类；成功时 mcClass 为全局引用，mGetInstance / fHitResult 均有效
+// 解析游戏类；成功时 mcClass 为全局引用，mGetInstance / fHitResult / playerClass 均有效
 bool MinecraftJniReader::EnsureClass()
 {
-	if (mcClass && mGetInstance && fHitResult)
+	if (mcClass && mGetInstance && fHitResult && playerClass)
 	{
 		status = Status_Ready;
 		return true;
 	}
 
 	// 半初始化状态：整体回退，避免用到无效 ID
-	if (mcClass && (!mGetInstance || !fHitResult))
+	if (mcClass && (!mGetInstance || !fHitResult || !playerClass))
 	{
 		env->DeleteGlobalRef(mcClass);
 		mcClass = nullptr;
 		mGetInstance = nullptr;
 		fHitResult = nullptr;
+		fPlayer = nullptr;
+		if (playerClass) { env->DeleteGlobalRef(playerClass); playerClass = nullptr; }
 	}
 
 	JNIEnv* e = env;
@@ -194,6 +199,12 @@ bool MinecraftJniReader::EnsureClass()
 
 				if (arr && clsClass && mForName)
 				{
+					// 记录 Class.forName 供后续解析其它游戏类（玩家类）复用
+					if (!clsClassRef)
+						clsClassRef = reinterpret_cast<jclass>(e->NewGlobalRef(clsClass));
+					if (!mClassForName)
+						mClassForName = mForName;
+
 					jsize count = e->GetArrayLength(arr);
 					if (count > kMaxThreadScan) count = kMaxThreadScan;
 
@@ -219,7 +230,12 @@ bool MinecraftJniReader::EnsureClass()
 											static_cast<jboolean>(JNI_TRUE), loader));
 									if (e->ExceptionCheck()) { e->ExceptionClear(); cls = nullptr; }
 									if (cls)
+									{
 										foundGlobal = reinterpret_cast<jclass>(e->NewGlobalRef(cls));
+										// 记住这个能加载游戏类的类加载器（后面解析玩家类要用）
+										if (!gameClassLoader)
+											gameClassLoader = e->NewGlobalRef(loader);
+									}
 								}
 							}
 						}
@@ -247,18 +263,73 @@ bool MinecraftJniReader::EnsureClass()
 	fHitResult = env->GetFieldID(mcClass, "hitResult", "Lnet/minecraft/world/phys/HitResult;");
 	if (env->ExceptionCheck()) { env->ExceptionClear(); fHitResult = nullptr; }
 
-	if (!mGetInstance || !fHitResult)
+	// 本地玩家字段（用于排除自己）；字段声明类型在不同版本略有差异，逐级回退
+	if (!fPlayer)
 	{
+		fPlayer = env->GetFieldID(mcClass, "player", "Lnet/minecraft/client/player/LocalPlayer;");
+		if (env->ExceptionCheck()) { env->ExceptionClear(); fPlayer = nullptr; }
+	}
+	if (!fPlayer)
+	{
+		fPlayer = env->GetFieldID(mcClass, "player", "Lnet/minecraft/client/player/AbstractClientPlayer;");
+		if (env->ExceptionCheck()) { env->ExceptionClear(); fPlayer = nullptr; }
+	}
+
+	// 玩家类：TargetHUD 仅识别玩家（对应 Rise 的 AbstractClientPlayer 过滤）
+	if (env->PushLocalFrame(16) == JNI_OK)
+	{
+		playerClass = FindGameClass("net/minecraft/world/entity/player/Player");
+		env->PopLocalFrame(nullptr);
+	}
+
+	if (!mGetInstance || !fHitResult || !playerClass)
+	{
+		if (playerClass) { env->DeleteGlobalRef(playerClass); playerClass = nullptr; }
 		env->DeleteGlobalRef(mcClass);
 		mcClass = nullptr;
 		mGetInstance = nullptr;
 		fHitResult = nullptr;
+		fPlayer = nullptr;
 		status = Status_InitFailed;
 		return false;
 	}
 
 	status = Status_Ready;
 	return true;
+}
+
+// 用记录下来的游戏类加载器解析类；失败返回 nullptr（会抛的异常一律清掉）
+jclass MinecraftJniReader::FindGameClass(const char* name)
+{
+	JNIEnv* e = env;
+	if (!e || !name) return nullptr;
+
+	// 1) 系统类加载器
+	jclass direct = e->FindClass(name);
+	if (direct)
+	{
+		jclass g = reinterpret_cast<jclass>(e->NewGlobalRef(direct));
+		e->DeleteLocalRef(direct);
+		return g;
+	}
+	if (e->ExceptionCheck()) e->ExceptionClear();
+
+	// 2) 游戏类加载器（Forge/NeoForge 的 TransformingClassLoader 等）
+	if (!gameClassLoader || !mClassForName || !clsClassRef)
+		return nullptr;
+
+	jstring jname = e->NewStringUTF(name);
+	if (!jname) return nullptr;
+
+	jclass cls = reinterpret_cast<jclass>(
+		e->CallStaticObjectMethod(clsClassRef, mClassForName, jname,
+			static_cast<jboolean>(JNI_TRUE), gameClassLoader));
+	if (e->ExceptionCheck()) { e->ExceptionClear(); cls = nullptr; }
+
+	jclass result = nullptr;
+	if (cls) result = reinterpret_cast<jclass>(e->NewGlobalRef(cls));
+	e->DeleteLocalRef(jname);
+	return result;
 }
 
 bool MinecraftJniReader::ReadTargetLocked(JniTargetSnapshot& out)
@@ -330,6 +401,20 @@ bool MinecraftJniReader::ReadTargetLocked(JniTargetSnapshot& out)
 	jobject entity = e->CallObjectMethod(hit, mGetEntity);
 	if (e->ExceptionCheck()) { e->ExceptionClear(); return false; }
 	if (!entity) return false;
+
+	// ---- 仅识别玩家（对应 Rise 的 AbstractClientPlayer 过滤）----
+	// 怪物 / 动物 / 盔甲架等一律忽略，避免 TargetHUD 对着生物乱显示
+	if (playerClass && !e->IsInstanceOf(entity, playerClass))
+		return false;
+
+	// ---- 排除本地玩家自己 ----
+	if (fPlayer)
+	{
+		jobject localPlayer = e->GetObjectField(instance, fPlayer);
+		if (e->ExceptionCheck()) { e->ExceptionClear(); localPlayer = nullptr; }
+		if (localPlayer && e->IsSameObject(localPlayer, entity))
+			return false;
+	}
 
 	jclass clsEntity = e->GetObjectClass(entity);
 	if (!clsEntity) return false;

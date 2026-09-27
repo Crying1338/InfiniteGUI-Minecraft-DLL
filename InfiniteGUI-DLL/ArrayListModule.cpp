@@ -24,16 +24,25 @@ void ArrayListModule::Reset()
 
 	listSide = Side_Right;
 	sortMode = Sort_Width;
+	styleMode = Style_Rise;
 
-	// 默认紫色渐变
-	gradientStart = ImVec4(0.36f, 0.09f, 0.92f, 0.90f);
-	gradientEnd = ImVec4(0.78f, 0.38f, 1.00f, 0.90f);
+	// 默认 Rise「MAGIC」紫色渐变 (#4A00E0 -> #8E2DE2)
+	gradientStart = ImVec4(0.290f, 0.000f, 0.878f, 1.00f);
+	gradientEnd = ImVec4(0.557f, 0.176f, 0.886f, 1.00f);
 	useGradient = true;
-	gradientAcrossList = false;
+	gradientAcrossList = true;
+	gradientAnimated = false;
+	gradientSpeed = 0.05f;
 	rainbowAccent = false;
+
+	textGradient = true;
+	showSidebar = true;
+	entryBackground = false;
+	entryBgColor = ImVec4(0.078f, 0.055f, 0.118f, 0.43f);
 
 	barWidth = 220.0f;
 	barRounding = 0.0f;
+	rowSpacing = 2.0f;
 
 	{
 		std::lock_guard<std::mutex> lock(entriesMutex);
@@ -169,10 +178,11 @@ void ArrayListModule::DrawContent()
 	ImGuiIO& io = ImGui::GetIO();
 	float dt = std::clamp(io.DeltaTime, 0.0f, 0.05f);
 
+	const bool riseStyle = (styleMode == Style_Rise);
 	float fontSize = ImGui::GetFontSize();
 	float barPaddingX = 10.0f;
-	float barHeight = fontSize + 8.0f;
-	float barGap = 3.0f;
+	float barHeight = riseStyle ? (fontSize + 6.0f) : (fontSize + 8.0f);
+	float barGap = rowSpacing;
 
 	struct LayoutEntry
 	{
@@ -249,61 +259,88 @@ void ArrayListModule::DrawContent()
 				: origin.x - slideOffset;
 			float x1 = x0 + l.width;
 
-			ImVec2 barMin(x0, y);
-			ImVec2 barMax(x1, y + barHeight);
+			// ---- 本条目在整列渐变上的取色（Rise 的流动效果）----
+			float t = 0.0f;
+			if (gradientAcrossList && rowCount > 0)
+				t = (float)row / (float)rowCount;
+			if (gradientAnimated)
+				t = fmodf(t + (float)ImGui::GetTime() * gradientSpeed, 1.0f);
 
-			// ---- 底条配色 ----
-			ImVec4 colA, colB;
+			ImVec4 entryCol;
 			if (rainbowAccent)
-			{
-				colA = colB = accent;
-			}
+				entryCol = accent;
 			else if (useGradient)
+				entryCol = ImLerp(gradientStart, gradientEnd, t);
+			else
+				entryCol = gradientStart;
+
+			if (riseStyle)
 			{
-				if (gradientAcrossList && rowCount > 0)
+				// ===== Rise Modern：渐变彩色文字 + 右侧细高亮条（+可选深色底）=====
+				const float sidebarW = 2.0f;
+				const float sidebarH = fontSize * 0.55f;
+				const float sidebarGap = 3.0f;
+				float rowRight = origin.x + barWidth;
+				float textRight = rowRight - sidebarW - sidebarGap;
+				float textX = textRight - l.width;
+				float textY = y + (barHeight - fontSize) * 0.5f;
+
+				if (entryBackground)
 				{
-					float t0 = (float)row / (float)rowCount;
+					ImVec4 bg = entryBgColor;
+					bg.w *= anim;
+					drawList->AddRectFilled(ImVec2(textX - 4.0f, y), ImVec2(rowRight, y + barHeight),
+						ImGui::GetColorU32(bg), 3.0f);
+				}
+
+				ImVec4 textCol = textGradient ? entryCol : ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+				textCol.w *= anim;
+				drawList->AddText(ImVec2(textX + 1.0f, textY + 1.0f),
+					ImGui::GetColorU32(ImVec4(0.0f, 0.0f, 0.0f, 0.6f * anim)), l.entry->name.c_str());
+				drawList->AddText(ImVec2(textX, textY), ImGui::GetColorU32(textCol), l.entry->name.c_str());
+
+				if (showSidebar)
+				{
+					ImVec4 sc = entryCol;
+					sc.w *= anim;
+					float sy = y + (barHeight - sidebarH) * 0.5f;
+					drawList->AddRectFilled(ImVec2(rowRight - sidebarW, sy), ImVec2(rowRight, sy + sidebarH),
+						ImGui::GetColorU32(sc), 1.0f);
+				}
+			}
+			else
+			{
+				// ===== 渐变底条 + 白字 =====
+				ImVec2 barMin(x0, y);
+				ImVec2 barMax(x1, y + barHeight);
+
+				ImVec4 ca(entryCol.x, entryCol.y, entryCol.z, entryCol.w * anim);
+				ImVec4 cb = ca;
+				if (useGradient && gradientAcrossList && rowCount > 0)
+				{
 					float t1 = (float)(row + 1) / (float)rowCount;
-					colA = ImLerp(gradientStart, gradientEnd, t0);
-					colB = ImLerp(gradientStart, gradientEnd, t1);
+					if (gradientAnimated)
+						t1 = fmodf(t1 + (float)ImGui::GetTime() * gradientSpeed, 1.0f);
+					ImVec4 c2 = ImLerp(gradientStart, gradientEnd, t1);
+					cb = ImVec4(c2.x, c2.y, c2.z, c2.w * anim);
 				}
+
+				if (ca.x == cb.x && ca.y == cb.y && ca.z == cb.z)
+					drawList->AddRectFilled(barMin, barMax, ImGui::GetColorU32(ca), barRounding);
 				else
-				{
-					colA = gradientStart;
-					colB = gradientEnd;
-				}
-			}
-			else
-			{
-				colA = gradientStart;
-				colB = gradientEnd;
-			}
+					drawList->AddRectFilledMultiColor(barMin, barMax,
+						ImGui::GetColorU32(ca), ImGui::GetColorU32(cb),
+						ImGui::GetColorU32(cb), ImGui::GetColorU32(ca));
 
-			ImVec4 ca(colA.x, colA.y, colA.z, colA.w * anim);
-			ImVec4 cb(colB.x, colB.y, colB.z, colB.w * anim);
-
-			if (ca.x == cb.x && ca.y == cb.y && ca.z == cb.z)
-			{
-				// 纯色条
-				drawList->AddRectFilled(barMin, barMax, ImGui::GetColorU32(ca), barRounding);
+				float textX = alignRight ? (x1 - barPaddingX - l.width) : (x0 + barPaddingX);
+				float textY = y + (barHeight - fontSize) * 0.5f;
+				drawList->AddText(ImVec2(textX + 1.0f, textY + 1.0f),
+					ImGui::GetColorU32(ImVec4(0.0f, 0.0f, 0.0f, 0.55f * anim)),
+					l.entry->name.c_str());
+				drawList->AddText(ImVec2(textX, textY),
+					ImGui::GetColorU32(ImVec4(1.0f, 1.0f, 1.0f, anim)),
+					l.entry->name.c_str());
 			}
-			else
-			{
-				// 水平渐变条（左上 -> 右上 -> 右下 -> 左下）
-				drawList->AddRectFilledMultiColor(barMin, barMax,
-					ImGui::GetColorU32(ca), ImGui::GetColorU32(cb),
-					ImGui::GetColorU32(cb), ImGui::GetColorU32(ca));
-			}
-
-			// ---- 文字（白色 + 阴影）----
-			float textX = alignRight ? (x1 - barPaddingX - l.width) : (x0 + barPaddingX);
-			float textY = y + (barHeight - fontSize) * 0.5f;
-			drawList->AddText(ImVec2(textX + 1.0f, textY + 1.0f),
-				ImGui::GetColorU32(ImVec4(0.0f, 0.0f, 0.0f, 0.55f * anim)),
-				l.entry->name.c_str());
-			drawList->AddText(ImVec2(textX, textY),
-				ImGui::GetColorU32(ImVec4(1.0f, 1.0f, 1.0f, anim)),
-				l.entry->name.c_str());
 		}
 
 		y += barHeight + barGap;
@@ -331,10 +368,16 @@ void ArrayListModule::DrawSettings(const float& bigPadding, const float& centerX
 	const char* sortNames[] = { u8"按宽度排序", u8"按名称排序" };
 	ImGui::Combo(u8"排序方式", &sortMode, sortNames, IM_ARRAYSIZE(sortNames));
 
+	ImGui::SetCursorPosX(bigPadding);
+	ImGui::SetNextItemWidth(bigItemWidth);
+	const char* styleNames[] = { u8"渐变底条（Drip）", u8"Rise Modern（彩色渐变文字 + 右侧高亮条）" };
+	if (ImGui::Combo(u8"列表风格", &styleMode, styleNames, IM_ARRAYSIZE(styleNames)))
+		dirtyState.contentDirty = true;
+
 	// ---- 配色 ----
 	ImGui::SetCursorPosX(bigPadding);
 	ImGui::SetNextItemWidth(itemWidth);
-	if (ImGui::Checkbox(u8"渐变底条", &useGradient)) dirtyState.contentDirty = true;
+	if (ImGui::Checkbox(u8"启用渐变", &useGradient)) dirtyState.contentDirty = true;
 	ImGui::SameLine();
 	ImGui::SetCursorPosX(bigPadding + centerX);
 	ImGui::SetNextItemWidth(itemWidth);
@@ -351,8 +394,13 @@ void ArrayListModule::DrawSettings(const float& bigPadding, const float& centerX
 		if (ImGuiStd::EditColor(u8"渐变止色", gradientEnd)) dirtyState.contentDirty = true;
 
 		ImGui::SetCursorPosX(bigPadding);
-		ImGui::SetNextItemWidth(bigItemWidth);
-		if (ImGui::Checkbox(u8"整列渐变（每根条取整段渐变的一段）", &gradientAcrossList))
+		ImGui::SetNextItemWidth(itemWidth);
+		if (ImGui::Checkbox(u8"整列渐变", &gradientAcrossList))
+			dirtyState.contentDirty = true;
+		ImGui::SameLine();
+		ImGui::SetCursorPosX(bigPadding + centerX);
+		ImGui::SetNextItemWidth(itemWidth);
+		if (ImGui::Checkbox(u8"渐变流动", &gradientAnimated))
 			dirtyState.contentDirty = true;
 	}
 	else if (!rainbowAccent)
@@ -362,15 +410,46 @@ void ArrayListModule::DrawSettings(const float& bigPadding, const float& centerX
 		if (ImGuiStd::EditColor(u8"底条颜色", gradientStart)) dirtyState.contentDirty = true;
 	}
 
-	ImGui::SetCursorPosX(bigPadding);
-	ImGui::SetNextItemWidth(bigItemWidth);
-	if (ImGui::SliderFloat(u8"条形宽度", &barWidth, 100.0f, 400.0f, "%.0f"))
-		dirtyState.contentDirty = true;
+	// ---- Rise 风格专属 ----
+	if (styleMode == Style_Rise)
+	{
+		ImGui::SetCursorPosX(bigPadding);
+		ImGui::SetNextItemWidth(itemWidth);
+		if (ImGui::Checkbox(u8"彩色渐变文字", &textGradient)) dirtyState.contentDirty = true;
+		ImGui::SameLine();
+		ImGui::SetCursorPosX(bigPadding + centerX);
+		ImGui::SetNextItemWidth(itemWidth);
+		if (ImGui::Checkbox(u8"右侧高亮条", &showSidebar)) dirtyState.contentDirty = true;
+
+		ImGui::SetCursorPosX(bigPadding);
+		ImGui::SetNextItemWidth(itemWidth);
+		if (ImGui::Checkbox(u8"每条深色底", &entryBackground)) dirtyState.contentDirty = true;
+		if (entryBackground)
+		{
+			ImGui::SameLine();
+			ImGui::SetCursorPosX(bigPadding + centerX);
+			ImGui::SetNextItemWidth(itemWidth);
+			if (ImGuiStd::EditColor(u8"底色", entryBgColor)) dirtyState.contentDirty = true;
+		}
+	}
 
 	ImGui::SetCursorPosX(bigPadding);
 	ImGui::SetNextItemWidth(bigItemWidth);
-	if (ImGui::SliderFloat(u8"圆角", &barRounding, 0.0f, 8.0f, "%.1f"))
+	if (ImGui::SliderFloat(u8"列表宽度", &barWidth, 80.0f, 400.0f, "%.0f"))
 		dirtyState.contentDirty = true;
+
+	ImGui::SetCursorPosX(bigPadding);
+	ImGui::SetNextItemWidth(itemWidth);
+	if (ImGui::SliderFloat(u8"条目间距", &rowSpacing, 0.0f, 12.0f, "%.1f"))
+		dirtyState.contentDirty = true;
+	ImGui::SameLine();
+	ImGui::SetCursorPosX(bigPadding + centerX);
+	ImGui::SetNextItemWidth(itemWidth);
+	if (styleMode == Style_Bars)
+	{
+		if (ImGui::SliderFloat(u8"圆角", &barRounding, 0.0f, 8.0f, "%.1f"))
+			dirtyState.contentDirty = true;
+	}
 
 	ImGui::PushFont(NULL, ImGui::GetFontSize() * 0.8f);
 	ImGui::SetCursorPosX(bigPadding);
@@ -388,13 +467,21 @@ void ArrayListModule::Load(const nlohmann::json& j)
 	LoadWindow(j);
 	if (j.contains("listSide")) listSide = j["listSide"];
 	if (j.contains("sortMode")) sortMode = j["sortMode"];
+	if (j.contains("styleMode")) styleMode = j["styleMode"];
 	if (j.contains("useGradient")) useGradient = j["useGradient"];
 	if (j.contains("gradientAcrossList")) gradientAcrossList = j["gradientAcrossList"];
+	if (j.contains("gradientAnimated")) gradientAnimated = j["gradientAnimated"];
+	if (j.contains("gradientSpeed")) gradientSpeed = j["gradientSpeed"];
 	if (j.contains("rainbowAccent")) rainbowAccent = j["rainbowAccent"];
+	if (j.contains("textGradient")) textGradient = j["textGradient"];
+	if (j.contains("showSidebar")) showSidebar = j["showSidebar"];
+	if (j.contains("entryBackground")) entryBackground = j["entryBackground"];
 	if (j.contains("barWidth")) barWidth = j["barWidth"];
 	if (j.contains("barRounding")) barRounding = j["barRounding"];
+	if (j.contains("rowSpacing")) rowSpacing = j["rowSpacing"];
 	ImGuiStd::LoadImVec4(j, "gradientStart", gradientStart);
 	ImGuiStd::LoadImVec4(j, "gradientEnd", gradientEnd);
+	ImGuiStd::LoadImVec4(j, "entryBgColor", entryBgColor);
 
 	// 兼容旧配置：只有 accentColor 时迁移到渐变色
 	if (!j.contains("gradientStart") && j.contains("accentColor"))
@@ -411,11 +498,19 @@ void ArrayListModule::Save(nlohmann::json& j) const
 	SaveWindow(j);
 	j["listSide"] = listSide;
 	j["sortMode"] = sortMode;
+	j["styleMode"] = styleMode;
 	j["useGradient"] = useGradient;
 	j["gradientAcrossList"] = gradientAcrossList;
+	j["gradientAnimated"] = gradientAnimated;
+	j["gradientSpeed"] = gradientSpeed;
 	j["rainbowAccent"] = rainbowAccent;
+	j["textGradient"] = textGradient;
+	j["showSidebar"] = showSidebar;
+	j["entryBackground"] = entryBackground;
 	j["barWidth"] = barWidth;
 	j["barRounding"] = barRounding;
+	j["rowSpacing"] = rowSpacing;
 	ImGuiStd::SaveImVec4(j, "gradientStart", gradientStart);
 	ImGuiStd::SaveImVec4(j, "gradientEnd", gradientEnd);
+	ImGuiStd::SaveImVec4(j, "entryBgColor", entryBgColor);
 }

@@ -32,6 +32,12 @@ public:
 		Sort_Alphabet = 1, // 按名称排序
 	};
 
+	enum StyleMode
+	{
+		Style_Bars = 0, // 渐变底条 + 白字
+		Style_Rise = 1, // Rise Modern：彩色渐变文字 + 右侧细高亮条（默认）
+	};
+
 	ArrayListModule() {
 		type = Visual;
 		name = u8"ArrayList";
@@ -75,15 +81,25 @@ private:
 
 	int listSide = Side_Right;
 	int sortMode = Sort_Width;
+	int styleMode = Style_Rise;   // 默认 Rise Modern 观感
 
-	// ---- 配色（默认紫色渐变）----
-	ImVec4 gradientStart = ImVec4(0.36f, 0.09f, 0.92f, 0.90f); // 深紫
-	ImVec4 gradientEnd = ImVec4(0.78f, 0.38f, 1.00f, 0.90f);   // 亮紫
+	// ---- 配色（默认 Rise 的 MAGIC 紫色渐变 #4A00E0 -> #8E2DE2）----
+	ImVec4 gradientStart = ImVec4(0.290f, 0.000f, 0.878f, 1.00f); // #4A00E0
+	ImVec4 gradientEnd = ImVec4(0.557f, 0.176f, 0.886f, 1.00f);   // #8E2DE2
 	bool useGradient = true;
-	bool gradientAcrossList = false; // true = 整列共用一段渐变（每根条取一段）
+	bool gradientAcrossList = true;  // 整列共用一段渐变（Rise 的流动效果）
+	bool gradientAnimated = false;   // 渐变随时间流动
+	float gradientSpeed = 0.05f;
 	bool rainbowAccent = false;
+
+	// ---- Rise Modern 风格选项 ----
+	bool textGradient = true;        // 文字使用渐变彩色（关闭则白色）
+	bool showSidebar = true;         // 文字右侧的细高亮条
+	bool entryBackground = false;    // 每条深色圆角底
+	ImVec4 entryBgColor = ImVec4(0.078f, 0.055f, 0.118f, 0.43f); // #14121E
 
 	float barWidth = 220.0f;
 	float barRounding = 0.0f;
+	float rowSpacing = 2.0f;         // 条目间距
 	bool positionInitialized = false;
 };

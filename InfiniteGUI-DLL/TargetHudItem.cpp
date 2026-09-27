@@ -3,6 +3,7 @@
 #include "Anim.h"
 #include "GameStateDetector.h"
 #include "opengl_hook.h"
+#include "Log.hpp"
 
 #include <algorithm>
 #include <cstdio>
@@ -20,9 +21,8 @@ void TargetHudItem::Reset()
 	ResetWindow();
 	isEnabled = false;
 
-	// 默认点击跟踪：JNI 实时读取在新版 JVM + 模组加载器组合下仍属实验性，
-	// 需要真实目标数据时可在设置里切到「仅 JNI 实时数据」
-	dataMode = Mode_Manual;
+	// 默认自动：优先 JNI 读取准星前的玩家（仅玩家），失败自动回退点击跟踪
+	dataMode = Mode_Auto;
 	manualName = u8"Target";
 	manualHealth = 20.0f;
 	showHpText = true;
@@ -59,6 +59,14 @@ void TargetHudItem::UpdateJniTracking(std::chrono::steady_clock::time_point now,
 
 	if (fresh)
 	{
+		// 目标切换时记录日志（限流），便于从日志确认锁定的确实是玩家
+		if (snapshot.entityId != lastEntityId)
+		{
+			InfGuiLogLimited("TargetHUD", (std::string(u8"锁定玩家: ") + snapshot.name
+				+ " hp=" + std::to_string((int)snapshot.health)
+				+ "/" + std::to_string((int)snapshot.maxHealth)).c_str());
+		}
+
 		std::lock_guard<std::mutex> lock(snapshotMutex);
 		lastJni = snapshot;
 		jniHasTarget = true;
@@ -78,8 +86,8 @@ void TargetHudItem::UpdateJniTracking(std::chrono::steady_clock::time_point now,
 		lastEntityHealth = snapshot.health;
 	}
 
-	// 目标信息保留 800ms（准星短暂移开时面板不闪烁）
-	jniVisible = jniHasTarget && (now - lastJniFreshTime) < std::chrono::milliseconds(800);
+	// 目标信息保留 1200ms（对齐 Rise：攻击/指向玩家后保留约 1 秒）
+	jniVisible = jniHasTarget && (now - lastJniFreshTime) < std::chrono::milliseconds(1200);
 }
 
 void TargetHudItem::UpdateManualTracking(std::chrono::steady_clock::time_point now, bool& manualVisible)

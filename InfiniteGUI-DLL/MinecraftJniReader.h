@@ -63,6 +63,8 @@ private:
 	bool EnsureJvm();
 	bool EnsureClass();
 	bool ReadTargetLocked(JniTargetSnapshot& out);
+	// 用记录下来的游戏类加载器解析类（找不到时回退到 FindClass）
+	jclass FindGameClass(const char* name);
 
 	std::mutex mutex;
 	Status status = Status_NotTried;
@@ -73,11 +75,16 @@ private:
 	JNIEnv* env = nullptr;
 	bool attached = false;
 
-	jclass mcClass = nullptr;      // GlobalRef
-	jclass hitTypeClass = nullptr; // GlobalRef
+	jclass mcClass = nullptr;         // GlobalRef
+	jclass playerClass = nullptr;     // GlobalRef  net/minecraft/world/entity/player/Player
+	jclass hitTypeClass = nullptr;    // GlobalRef
+	jobject gameClassLoader = nullptr;// GlobalRef  找到 Minecraft 的类加载器（Forge/NeoForge 分层加载器）
+	jclass clsClassRef = nullptr;     // GlobalRef  java/lang/Class
+	jmethodID mClassForName = nullptr;// Class.forName(String, boolean, ClassLoader)
 
 	jmethodID mGetInstance = nullptr;
 	jfieldID fHitResult = nullptr;
+	jfieldID fPlayer = nullptr;       // Minecraft.player（本地玩家，用于排除自己）
 	jmethodID mGetType = nullptr;
 	jfieldID fEntityEnum = nullptr;
 	jmethodID mGetEntity = nullptr;
