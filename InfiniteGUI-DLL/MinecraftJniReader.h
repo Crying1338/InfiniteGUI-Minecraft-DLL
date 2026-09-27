@@ -5,6 +5,7 @@
 #include <chrono>
 
 #include "jni/jni.h"
+#include "jni/jvmti.h"
 
 // ============================================================
 // JniTargetSnapshot · 准星目标数据快照
@@ -65,6 +66,8 @@ private:
 	bool ReadTargetLocked(JniTargetSnapshot& out);
 	// 用记录下来的游戏类加载器解析类（找不到时回退到 FindClass）
 	jclass FindGameClass(const char* name);
+	// 用 JVMTI GetLoadedClasses 在 JVM 已加载的类里按名字查找（Forge/ModLauncher 上最可靠）
+	jclass FindLoadedClassJvmti(const char* name);
 	// 目标是否是玩家（优先 Player 类型判定，失败时按类名层级回退）
 	bool IsPlayerEntity(jobject entity, jclass clsEntity);
 
@@ -75,6 +78,7 @@ private:
 
 	JavaVM* vm = nullptr;
 	JNIEnv* env = nullptr;
+	jvmtiEnv* jvmti = nullptr;   // JVMTI 环境（GetLoadedClasses 用）
 	bool attached = false;
 
 	jclass mcClass = nullptr;         // GlobalRef

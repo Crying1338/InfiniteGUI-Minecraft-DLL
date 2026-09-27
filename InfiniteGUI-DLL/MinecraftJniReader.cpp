@@ -102,7 +102,49 @@ bool MinecraftJniReader::EnsureJvm()
 	}
 
 	env = localEnv;
+
+	// ---- 获取 JVMTI 环境：用 GetLoadedClasses 直接枚举已加载的类，
+	//      这是 Forge/ModLauncher 分层类加载器下最可靠的查找方式 ----
+	//      注：GetLoadedClasses 不需要申请任何 capability
+	if (!jvmti)
+	{
+		jvmtiEnv* jt = nullptr;
+		if (vm->GetEnv(reinterpret_cast<void**>(&jt), JVMTI_VERSION_1_2) == JNI_OK && jt)
+		{
+			jvmti = jt;
+			InfGuiLog("JNI: JVMTI 已就绪（可按已加载类查找）");
+		}
+	}
+
 	return true;
+}
+
+// 在 JVM 已加载的类里按名字查找（签名形如 Lnet/minecraft/client/Minecraft;）
+jclass MinecraftJniReader::FindLoadedClassJvmti(const char* name)
+{
+	if (!jvmti || !env || !name) return nullptr;
+
+	std::string want = std::string("L") + name + ";";
+
+	jint count = 0;
+	jclass* classes = nullptr;
+	if (jvmti->GetLoadedClasses(&count, &classes) != JVMTI_ERROR_NONE || !classes)
+		return nullptr;
+
+	jclass result = nullptr;
+	for (jint i = 0; i < count && !result; i++)
+	{
+		char* sig = nullptr;
+		if (jvmti->GetClassSignature(classes[i], &sig, nullptr) == JVMTI_ERROR_NONE && sig)
+		{
+			if (want == sig)
+				result = reinterpret_cast<jclass>(env->NewGlobalRef(classes[i]));
+			jvmti->Deallocate(reinterpret_cast<unsigned char*>(sig));
+		}
+	}
+
+	jvmti->Deallocate(reinterpret_cast<unsigned char*>(classes));
+	return result;
 }
 
 // 解析游戏类；成功时 mcClass 为全局引用，mGetInstance / fHitResult / playerClass 均有效
@@ -147,7 +189,15 @@ bool MinecraftJniReader::EnsureClass()
 		}
 	}
 
-	// ---------------- 2) 遍历线程 ContextClassLoader（Forge/NeoForge 分层类加载器）----------------
+	// ---------------- 2) JVMTI：在 JVM 已加载的类里查找（Forge/ModLauncher 下最可靠）----------------
+	if (!foundGlobal)
+	{
+		foundGlobal = FindLoadedClassJvmti("net/minecraft/client/Minecraft");
+		if (foundGlobal)
+			InfGuiLog("JNI: 通过 JVMTI 已加载类找到 Minecraft");
+	}
+
+	// ---------------- 3) 遍历线程 ContextClassLoader（兜底）----------------
 	if (!foundGlobal)
 	{
 		jclass clsThread = e->FindClass("java/lang/Thread");
@@ -322,7 +372,13 @@ jclass MinecraftJniReader::FindGameClass(const char* name)
 	}
 	if (e->ExceptionCheck()) e->ExceptionClear();
 
-	// 2) 游戏类加载器（Forge/NeoForge 的 TransformingClassLoader 等）
+	// 2) JVMTI：在已加载类里查（Forge/ModLauncher 下最可靠）
+	{
+		jclass viaJvmti = FindLoadedClassJvmti(name);
+		if (viaJvmti) return viaJvmti;
+	}
+
+	// 3) 游戏类加载器（Forge/NeoForge 的 TransformingClassLoader 等）
 	if (!gameClassLoader || !mClassForName || !clsClassRef)
 		return nullptr;
 

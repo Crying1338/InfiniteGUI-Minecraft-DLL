@@ -52,12 +52,24 @@ namespace CursorBridge
 	inline void SetMenuCursor(bool menuOpen)
 	{
 		if (!EnsureLoaded()) return;
-		if (menuOpen == g_released) return;   // 状态没变，不重复调用
+		// 打开时每帧强制放开：Minecraft 在若干事件里会把光标重新抓回去，
+		// 只改一次会出现“有时候能点、有时候点不了”
+		if (menuOpen)
+		{
+			void* window = g_getCurrentContext();
+			if (window)
+				g_setInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			g_released = true;
+			return;
+		}
 
-		void* window = g_getCurrentContext();
-		if (!window) return;
-
-		g_setInputMode(window, GLFW_CURSOR, menuOpen ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
-		g_released = menuOpen;
+		// 关闭时只恢复一次
+		if (!g_released) return;
+		{
+			void* window = g_getCurrentContext();
+			if (window)
+				g_setInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			g_released = false;
+		}
 	}
 }

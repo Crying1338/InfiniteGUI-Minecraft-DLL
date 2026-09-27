@@ -167,9 +167,13 @@ void Gui::render()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 
-	// 窗口尺寸兜底（全屏切换/客户区读取失败时）
-	if (opengl_hook::screen_size.x > 0 && opengl_hook::screen_size.y > 0)
-		io.DisplaySize = ImVec2((float)opengl_hook::screen_size.x, (float)opengl_hook::screen_size.y);
+	// 尺寸兜底：正常情况下 ImGui_ImplWin32_NewFrame 已按客户区算好尺寸，
+	// 用缓存值覆盖会导致鼠标坐标偏移（表现为点不中控件 / 文本框点不动）
+	if (io.DisplaySize.x <= 0.0f || io.DisplaySize.y <= 0.0f)
+	{
+		if (opengl_hook::screen_size.x > 0 && opengl_hook::screen_size.y > 0)
+			io.DisplaySize = ImVec2((float)opengl_hook::screen_size.x, (float)opengl_hook::screen_size.y);
+	}
 
 	// 菜单关闭时恢复游戏原本的光标，避免 Win32 后端每帧 SetCursor(nullptr) 干扰游戏 GUI
 	if (!menuOpen) SetCursor(prevCursor);

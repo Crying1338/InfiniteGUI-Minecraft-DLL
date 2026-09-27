@@ -364,7 +364,10 @@ void TargetHudItem::DrawSettings(const float& bigPadding, const float& centerX, 
 		ImVec4 stColor = st == MinecraftJniReader::Status_Ready
 			? ImVec4(0.3f, 1.0f, 0.4f, 1.0f)
 			: (st == MinecraftJniReader::Status_NotTried ? ImVec4(0.7f, 0.7f, 0.7f, 1.0f) : ImVec4(1.0f, 0.45f, 0.4f, 1.0f));
-		ImGuiStd::TextColoredShadow(stColor, u8"JNI 状态：%s", MinecraftJniReader::Instance().GetStatusText());
+
+		// 直接用拼好的字符串渲染（不走 printf，避免出现 "null" 之类的显示）
+		std::string statusText = std::string(u8"JNI 状态：") + MinecraftJniReader::Instance().GetStatusText();
+		ImGuiStd::TextColoredShadow(stColor, statusText.c_str());
 		ImGui::PopFont();
 	}
 
