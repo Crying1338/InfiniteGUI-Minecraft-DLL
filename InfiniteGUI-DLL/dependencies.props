@@ -13,8 +13,10 @@
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <!-- 仓库源码已统一为 UTF-8 (BOM)，使用 /utf-8 保证各区域设置机器上编译行为一致 -->
-      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <!-- 源码已统一 UTF-8(BOM)：带 BOM 文件在所有机器上都按 UTF-8 读取。
+           不加 /utf-8：执行字符集跟随系统 ACP，保证窄字符串字面量的运行时字节与原版(GBK 机器)完全一致；
+           u8 前缀字面量恒为 UTF-8，不受影响 -->
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
