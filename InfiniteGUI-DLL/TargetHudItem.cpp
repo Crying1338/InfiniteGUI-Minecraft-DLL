@@ -37,7 +37,7 @@ void TargetHudItem::Reset()
 	}
 	comboJni = 0;
 	comboManual = 0;
-	lastEntityId = -1;
+	lastTargetName.clear();
 	lastEntityHealth = -1.0f;
 	targetVisible = false;
 	usingJni = false;
@@ -60,8 +60,10 @@ void TargetHudItem::UpdateJniTracking(std::chrono::steady_clock::time_point now,
 
 	if (fresh)
 	{
+		const bool targetChanged = (snapshot.name != lastTargetName);
+
 		// 目标切换时记录日志（限流），便于从日志确认锁定的确实是玩家
-		if (snapshot.entityId != lastEntityId)
+		if (targetChanged)
 		{
 			InfGuiLogLimited("TargetHUD", (std::string(u8"锁定玩家: ") + snapshot.name
 				+ " hp=" + std::to_string((int)snapshot.health)
@@ -74,7 +76,7 @@ void TargetHudItem::UpdateJniTracking(std::chrono::steady_clock::time_point now,
 		lastJniFreshTime = now;
 
 		// 连击：同一目标血量下降视为一次命中
-		if (snapshot.entityId != lastEntityId)
+		if (targetChanged)
 		{
 			comboJni = 0;
 		}
@@ -83,7 +85,7 @@ void TargetHudItem::UpdateJniTracking(std::chrono::steady_clock::time_point now,
 			comboJni++;
 			lastHurtFlash = now;
 		}
-		lastEntityId = snapshot.entityId;
+		lastTargetName = snapshot.name;
 		lastEntityHealth = snapshot.health;
 	}
 

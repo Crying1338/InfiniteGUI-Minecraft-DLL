@@ -72,7 +72,7 @@ private:
 	// ---- 连击 ----
 	int comboJni = 0;
 	int comboManual = 0;
-	int lastEntityId = -1;
+	std::string lastTargetName;   // 目标切换判定（不依赖实体 ID，避免映射依赖）
 	float lastEntityHealth = -1.0f;
 	std::chrono::steady_clock::time_point lastHurtFlash{};
 
